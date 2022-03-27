@@ -92,15 +92,15 @@ class Emini(Spider):
                 'sequence_text': '',
                 'method': 'Emini'
             },
-            callback=self.results_page)
+            callback=self.get_results)
 
-    def results_page(self, response):
-        url = 'http://tools.iedb.org/bcell/result/'
-        yield scrapy.Request(url=url, callback=self.get_results, dont_filter=True)
+    #def results_page(self, response):
+    #    url = 'http://tools.iedb.org/bcell/result/'
+    #    yield scrapy.Request(url=url, callback=self.get_results, dont_filter=True)
 
-    def get_results(self, results):
+    def get_results(self, results_page):
         row = []
-        for cell in results.xpath('/html/body/div[3]/table[2]/tbody/tr'):
+        for cell in results_page.xpath('/html/body/div[3]/table[2]/tbody/tr'):
             if int(cell.xpath('td[5]//text()').extract_first()) >= 7:
                 row.append(cell.xpath('td[1]//text()').extract_first())
                 row.append(cell.xpath('td[2]//text()').extract_first())
@@ -276,8 +276,8 @@ def crawl():
     #yield runner.crawl(Ellipro)
     #yield runner.crawl(Discotope)
     #yield runner.crawl(Bepipred2)
-    yield runner.crawl(Bepipred)
-    #yield runner.crawl(Emini)
+    #yield runner.crawl(Bepipred)
+    yield runner.crawl(Emini)
     #yield runner.crawl(Kolaskar)
     reactor.stop()
 
