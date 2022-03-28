@@ -45,9 +45,24 @@ bepipred = []
 emini = []
 kolaskar_tongaonkar = []
 bepipred2 = []
+choufasman = []
+karplusschulz = []
+parker = []
 discotope = []
 ellipro = []
-
+mhcii = []
+fasta = '''>West Nile virus envelope glycoprotein
+        FNCLGMSNRDFLEGVSGATWVDLVLEGDSCVTIMSKDKPTIDVKMMNMEAANLAEVRSYCYLATVSDLST
+        KAACPTMGEAHNDKRADPAFVCRQGVVDRGWGNGCGLFGKGSIDTCAKFACSTKAIGRTILKENIKYEVA
+        IFVHGPTTVESHGNYSTQVGATQAGRFSITPAAPSYTLKLGEYGEVTVDCEPRSGIDTNAYYVMTVGTKT
+        FLVHREWFMDLNLPWSSAGSTVWRNRETLMEFEEPHATKQSVIALGSQEGALHQALAGAIPVEFSSNTVK
+        LTSGHLKCRVKMEKLQLKGTTYGVCSKAFKFLGTPADTGHGTVVLELQYTGTDGPCKVPISSVASLNDLT
+        PVGRLVTVNPFVSVATANAKVLIELEPPFGDSYIVVGRGEQQINHHWHKSGSSIGKAFTTTLKGAQRLAA
+        LGDTAWDFGSVGGVFTSVGKAVHQVFGGAFRSLFGGMSWITQGLLGALLLWMGINARDRSIALTFLAVGG
+        VLLFLSVNVHA'''
+alleles_mhcii = ['HLA-DRB1*01:01','HLA-DRB1*03:01', 'HLA-DRB1*04:01']
+length_mhcii = ['12','13']
+alleles_mhci = ['','','']
 
 class Bepipred(Spider):
     name = 'bepipred'
@@ -94,7 +109,7 @@ class Emini(Spider):
             },
             callback=self.get_results)
 
-    #def results_page(self, response):
+    # def results_page(self, response):
     #    url = 'http://tools.iedb.org/bcell/result/'
     #    yield scrapy.Request(url=url, callback=self.get_results, dont_filter=True)
 
@@ -125,15 +140,11 @@ class Kolaskar(Spider):
                 'sequence_text': '',
                 'method': 'Kolaskar-Tongaonkar'
             },
-            callback=self.results_page)
+            callback=self.get_results)
 
-    def results_page(self, response):
-        url = 'http://tools.iedb.org/bcell/result/'
-        yield scrapy.Request(url=url, callback=self.get_results, dont_filter=True)
-
-    def get_results(self, results):
+    def get_results(self, results_page):
         row = []
-        for cell in results.xpath('/html/body/div[3]/table[2]/tbody/tr'):
+        for cell in results_page.xpath('/html/body/div[3]/table[2]/tbody/tr'):
             if int(cell.xpath('td[5]//text()').extract_first()) >= 7:
                 row.append(cell.xpath('td[1]//text()').extract_first())
                 row.append(cell.xpath('td[2]//text()').extract_first())
@@ -154,19 +165,15 @@ class Bepipred2(Spider):
             response,
             url=self.start_urls[0],
             formdata={
-                'swissprot': 'P0C6U8',
+                'swissprot': 'P02185',
                 'sequence_text': '',
                 'method': 'Bepipred2'
             },
-            callback=self.results_page)
+            callback=self.get_results)
 
-    def results_page(self, response):
-        url = 'http://tools.iedb.org/bcell/result/'
-        yield scrapy.Request(url=url, callback=self.get_results, dont_filter=True)
-
-    def get_results(self, results):
+    def get_results(self, results_page):
         row = []
-        for cell in results.xpath('/html/body/div[3]/table[2]/tbody/tr'):
+        for cell in results_page.xpath('/html/body/div[3]/table[2]/tbody/tr'):
             if int(cell.xpath('td[5]//text()').extract_first()) >= 7:
                 row.append(cell.xpath('td[1]//text()').extract_first())
                 row.append(cell.xpath('td[2]//text()').extract_first())
@@ -174,6 +181,96 @@ class Bepipred2(Spider):
                 row.append(cell.xpath('td[4]//text()').extract_first())
                 row.append(cell.xpath('td[5]//text()').extract_first())
                 bepipred2.append(row)
+                row = []
+
+
+class Chou_Fasman(Spider):
+    name = 'Chou-Fasman'
+    start_urls = ['http://tools.iedb.org/bcell']
+    global choufasman
+
+    def parse(self, response):
+        yield FormRequest.from_response(
+            response,
+            url=self.start_urls[0],
+            formdata={
+                'swissprot': 'P0C6U8',
+                'sequence_text': '',
+                'method': 'Chou-Fasman'
+            },
+            callback=self.get_results)
+
+    def get_results(self, results_page):
+        row = []
+        for cell in results_page.xpath('/html/body/div[3]/table[2]/tbody/tr'):
+            if cell.xpath('td[5]//text()').extract_first():
+                row.append(cell.xpath('td[1]//text()').extract_first())
+                row.append(cell.xpath('td[2]//text()').extract_first())
+                row.append(cell.xpath('td[3]//text()').extract_first())
+                row.append(cell.xpath('td[4]//text()').extract_first())
+                row.append(cell.xpath('td[5]//text()').extract_first())
+                row.append(cell.xpath('td[6]//text()').extract_first())
+                choufasman.append(row)
+                row = []
+
+
+class Karplus_Schulz(Spider):
+    name = 'Karplus-Schulz'
+    start_urls = ['http://tools.iedb.org/bcell']
+    global karplusschulz
+
+    def parse(self, response):
+        yield FormRequest.from_response(
+            response,
+            url=self.start_urls[0],
+            formdata={
+                'swissprot': 'P0C6U8',
+                'sequence_text': '',
+                'method': 'Karplus-Schulz'
+            },
+            callback=self.get_results)
+
+    def get_results(self, results_page):
+        row = []
+        for cell in results_page.xpath('/html/body/div[3]/table[2]/tbody/tr'):
+            if cell.xpath('td[5]//text()').extract_first():
+                row.append(cell.xpath('td[1]//text()').extract_first())
+                row.append(cell.xpath('td[2]//text()').extract_first())
+                row.append(cell.xpath('td[3]//text()').extract_first())
+                row.append(cell.xpath('td[4]//text()').extract_first())
+                row.append(cell.xpath('td[5]//text()').extract_first())
+                row.append(cell.xpath('td[6]//text()').extract_first())
+                karplusschulz.append(row)
+                row = []
+
+
+class Parker(Spider):
+    name = 'Parker'
+    start_urls = ['http://tools.iedb.org/bcell']
+    global parker
+
+    def parse(self, response):
+        yield FormRequest.from_response(
+            response,
+            url=self.start_urls[0],
+            formdata={
+                'swissprot': 'P0C6U8',
+                'sequence_text': '',
+                'method': 'Parker'
+            },
+            callback=self.get_results)
+
+    def get_results(self, results_page):
+        row = []
+        for cell in results_page.xpath('/html/body/div[3]/table[2]/tbody/tr'):
+            if cell.xpath('td[5]//text()').extract_first():
+                row.append(cell.xpath('td[1]//text()').extract_first())
+                row.append(cell.xpath('td[2]//text()').extract_first())
+                row.append(cell.xpath('td[3]//text()').extract_first())
+                row.append(cell.xpath('td[4]//text()').extract_first())
+                row.append(cell.xpath('td[5]//text()').extract_first())
+                row.append(cell.xpath('td[6]//text()').extract_first())
+                parker.append(row)
                 row = []
 
 
@@ -230,30 +327,17 @@ class Ellipro(Spider):
             },
             callback=self.second_page)
 
-    #def results_page(self, response):
-    #    sec_page_url = 'http://tools.iedb.org/ellipro/result/chains/'
-    #    yield scrapy.Request(url=sec_page_url, callback=self.second_page, dont_filter=True)
-
     def second_page(self, sec_page):
-        print('works')
-        print(sec_page)
         yield FormRequest.from_response(
             sec_page,
-            #url=sec_page,
             formdata={
-                'chain': ['A','B','C']
-                #'chain': 'B',
-                #'chain': 'C'
+                'chain': ['A', 'B', 'C']
             },
-            callback=self.results_page)
+            callback=self.get_results)
 
-    def results_page(self, response):
-        url = 'http://tools.iedb.org/ellipro/result/predict/'
-        yield scrapy.Request(url=url, callback=self.get_results, dont_filter=True)
-
-    def get_results(self, results):
+    def get_results(self, results_page):
         row = []
-        for cell in results.xpath('/html/body/div[3]/table[2]/tbody/tr'):
+        for cell in results_page.xpath('/html/body/div[3]/table[2]/tbody/tr'):
             row.append(cell.xpath('td[1]//text()').extract_first())
             row.append(cell.xpath('td[2]//text()').extract_first())
             row.append(cell.xpath('td[3]//text()').extract_first())
@@ -264,6 +348,44 @@ class Ellipro(Spider):
             row.append(cell.xpath('td[8]//text()').extract_first())
             ellipro.append(row)
             row = []
+
+
+class MhcII(Spider):
+    name = 'MhcII'
+    start_urls = ['http://tools.iedb.org/mhcii/']
+    global mhcii
+    global fasta
+    global alleles_mhcii
+    global length_mhcii
+
+    def parse(self, response):
+        yield FormRequest.from_response(
+            response,
+            url=self.start_urls[0],
+            formdata={
+                'sequence_text': fasta,
+                'method': '1222',
+                'locus_list': 'DR',
+                'refset': 'on',
+                'allele': alleles_mhcii,
+                'allele_list': '',
+                'allele_list_a': '',
+                'allele_file': '(binary)',
+                'len-select-options': 'mul_rec',
+                'length': length_mhcii,
+                'sort_output': 'adjusted_rank',
+                'output_format': 'ascii'
+            },
+            callback=self.get_results)
+
+    def get_results(self, results_page):
+        text = results_page.xpath('/html/body/pre//text()').extract_first()
+        rows = text.splitlines()
+        mhcii = []
+        for row in rows:
+            split_row = row.split("\t")
+            mhcii.append(split_row)
+            print(split_row)
 
 
 configure_logging()
@@ -277,29 +399,14 @@ def crawl():
     #yield runner.crawl(Discotope)
     #yield runner.crawl(Bepipred2)
     #yield runner.crawl(Bepipred)
-    yield runner.crawl(Emini)
+    #yield runner.crawl(Emini)
     #yield runner.crawl(Kolaskar)
+    #yield runner.crawl(Chou_Fasman)
+    #yield runner.crawl(Karplus_Schulz)
+    #yield runner.crawl(Parker)
+    yield runner.crawl(MhcII)
     reactor.stop()
 
 
 crawl()
 reactor.run()  # the script will block here until the last crawl call is finished
-
-print('bepipred')
-for s in bepipred:
-    print(*s)
-print('emini')
-for s in emini:
-    print(*s)
-print('kolaskar_tongaonkar')
-for s in kolaskar_tongaonkar:
-    print(*s)
-print('bepipred2')
-for s in bepipred2:
-    print(*s)
-print('discotope')
-for s in discotope:
-    print(*s)
-print('ellipro')
-for s in ellipro:
-    print(*s)
