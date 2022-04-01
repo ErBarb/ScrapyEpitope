@@ -51,6 +51,8 @@ parker = []
 discotope = []
 ellipro = []
 mhcii = []
+netctlpan = []
+
 fasta = '''>West Nile virus envelope glycoprotein
         FNCLGMSNRDFLEGVSGATWVDLVLEGDSCVTIMSKDKPTIDVKMMNMEAANLAEVRSYCYLATVSDLST
         KAACPTMGEAHNDKRADPAFVCRQGVVDRGWGNGCGLFGKGSIDTCAKFACSTKAIGRTILKENIKYEVA
@@ -63,6 +65,7 @@ fasta = '''>West Nile virus envelope glycoprotein
 alleles_mhcii = ['HLA-DRB1*01:01','HLA-DRB1*03:01', 'HLA-DRB1*04:01']
 length_mhcii = ['12','13']
 alleles_mhci = ['','','']
+length_mhci = ['','']
 
 class Bepipred(Spider):
     name = 'bepipred'
@@ -108,10 +111,6 @@ class Emini(Spider):
                 'method': 'Emini'
             },
             callback=self.get_results)
-
-    # def results_page(self, response):
-    #    url = 'http://tools.iedb.org/bcell/result/'
-    #    yield scrapy.Request(url=url, callback=self.get_results, dont_filter=True)
 
     def get_results(self, results_page):
         row = []
@@ -388,6 +387,56 @@ class MhcII(Spider):
             print(split_row)
 
 
+class Netctlpan(Spider):
+    name = 'Netctlpan'
+    start_urls = ['http://tools.iedb.org/netchop/']
+    global netctlpan
+    global fasta
+
+    def parse(self, response):
+        yield FormRequest.from_response(
+            response,
+            url=self.start_urls[0],
+            formdata={
+                'pred_tool': 'netchop',
+                'pred_method': 'netctlpan',
+                'sequence_text': fasta,
+                'sequence_file': '(binary)',
+                'method': '0',
+                'netchop_threshold': '0.5',
+                'netctl_cleavage': '0.15',
+                'netctl_tap': '0.05',
+                'supertype': 'A1',
+                'netctl_threshold': '0.75',
+                'species_list': 'human',
+                'freq': 'freq',
+                'allele_list': 'HLA-A01:01',
+                'length_list': '9',
+                'netctlpan_threshold': '-99.9',
+                'netctlpan_cleavage': '0.225',
+                'netctlpan_tap': '0.025',
+                'epitope_threshold': '1.0'
+            },
+            callback=self.results_page)
+
+    def results_page(self, response):
+        url = 'http://tools.iedb.org/netchop/table/'
+        yield scrapy.Request(url=url, callback=self.get_results, dont_filter=True)
+
+    def get_results(self, results):
+        row = []
+        for cell in results.xpath('/html/body/div[3]/table/tbody/tr'):
+            row.append(cell.xpath('td[1]//text()').extract_first())
+            row.append(cell.xpath('td[2]//text()').extract_first())
+            row.append(cell.xpath('td[3]//text()').extract_first())
+            row.append(cell.xpath('td[4]//text()').extract_first())
+            row.append(cell.xpath('td[5]//text()').extract_first())
+            row.append(cell.xpath('td[6]//text()').extract_first())
+            netctlpan.append(row)
+            row = []
+        print(netctlpan)
+
+
 configure_logging()
 settings = get_project_settings()
 runner = CrawlerRunner(settings)
@@ -404,7 +453,8 @@ def crawl():
     #yield runner.crawl(Chou_Fasman)
     #yield runner.crawl(Karplus_Schulz)
     #yield runner.crawl(Parker)
-    yield runner.crawl(MhcII)
+    #yield runner.crawl(MhcII)
+    yield runner.crawl(Netctlpan)
     reactor.stop()
 
 
