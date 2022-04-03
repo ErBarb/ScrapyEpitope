@@ -1,0 +1,41 @@
+<execution>
+  <commandLine>singularity exec -B $PWD:/output /nfs/public/ro/es/appbin/linux-x86_64/singularity/kalign:3.3.1 /kalign/bin/kalign -i kalign-R20220403-220711-0573-12363720-p1m.sequence  --format fasta -o kalign-R20220403-220711-0573-12363720-p1m.output</commandLine>
+  <userParameters class="linked-hash-map">
+    <entry>
+      <string>program</string>
+      <string>kalign</string>
+    </entry>
+    <entry>
+      <string>version</string>
+      <string>3.3.1</string>
+    </entry>
+    <entry>
+      <string>stype</string>
+      <string>protein</string>
+    </entry>
+    <entry>
+      <string>format</string>
+      <string>fasta</string>
+    </entry>
+    <entry>
+      <string>sequence</string>
+      <string>/nfs/public/rw/es/projects/wp-jdispatcher/sources/prod/jobs/kalign/rest/20220403/2206/kalign-R20220403-220711-0573-12363720-p1m.sequence</string>
+    </entry>
+  </userParameters>
+  <outputLocation>file:/nfs/public/rw/es/projects/wp-jdispatcher/sources/prod/jobs/kalign/rest/20220403/2206//kalign-R20220403-220711-0573-12363720-p1m.output</outputLocation>
+  <errorLocation>file:/nfs/public/rw/es/projects/wp-jdispatcher/sources/prod/jobs/kalign/rest/20220403/2206//kalign-R20220403-220711-0573-12363720-p1m.error</errorLocation>
+  <toolId>kalign</toolId>
+  <jobId>kalign-R20220403-220711-0573-12363720-p1m</jobId>
+  <email>erald.bb@gmail.com</email>
+  <emailNotification>false</emailNotification>
+  <clientId>138.246.3.8</clientId>
+  <executionContext>rest</executionContext>
+  <additionalProperties class="uk.ac.ebi.properties.commonsconfiguration.CommonsConfigurationPropertiesContainer">
+    <property key="postprocessor.class">uk.ac.ebi.jdispatcher.execution.domain.service.AdditionalExecutionPostProcessor</property>
+    <property key="postprocessor.properties.input_suffix">output</property>
+    <property key="postprocessor.properties.output_suffix">output.ph</property>
+    <property key="postprocessor.properties.additional_command">mv input inputtmp &amp;&amp; sed &apos;s/Kalign (3.3.1) multiple sequence alignment/CLUSTAL multiple sequence alignment by Kalign (3.3.1)/&apos; inputtmp &gt; input &amp;&amp; /nfs/public/ro/es/appbin/linux-x86_64/clustalw-2.1/bin/clustalw2 -infile=input -tree -outputtree=phylip -pim</property>
+    <property key="command">sh /nfs/public/rw/es/projects/wp-jdispatcher/sources/prod/resources/management/scripts/remoteExecution.sh &quot;prod&quot; /nfs/public/rw/es/projects/wp-jdispatcher/sources/prod/resources/services-hh-wp-prod.properties ${tool.id} ${job.id} ${host.id} /nfs/public/rw/es/projects/wp-jdispatcher/sources/prod/lib/jdispatcher-execution-1.0-SNAPSHOT-jar-with-dependencies.jar</property>
+    <property key="parameter.excludes">sequence, upfile, asequence, aupfile, bsequence, bupfile, program, version</property>
+  </additionalProperties>
+</execution>
