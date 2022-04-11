@@ -39,7 +39,8 @@ def mhci(fasta_seq):
     driver.find_element(By.XPATH, "/html/body/div[3]/form/table/tbody/tr[14]/th/div/input[2]").click()
     time.sleep(15)
     text_body = driver.find_element(By.XPATH, '/html/body/pre').text.splitlines()
-    
+    driver.close()
+
     row_list = []
     for row in text_body:
         split_row = row.split("\t")
@@ -61,8 +62,6 @@ netctlpan = []
 
 alleles_mhcii = ['HLA-DRB1*01:01', 'HLA-DRB1*03:01', 'HLA-DRB1*04:01']
 length_mhcii = ['12', '13']
-alleles_mhci = ['', '', '']
-length_mhci = ['', '']
 
 
 class Bepipred(Spider):

@@ -8,16 +8,16 @@ def alignment(seq_list):
     for i in seq_list:
         seq_string = seq_string + 'sp:' + i + ','
     seq_string = seq_string[:-1]
-    os.system(
-        'python msa_algos/clustalo.py --email erald.bb@gmail.com --sequence ' + seq_string + ' --outfile msa_results/clustal_omega/clustal_spike  --outfmt fa')
-    os.system(
-        'python msa_algos/kalign.py --email erald.bb@gmail.com --stype protein --sequence ' + seq_string + ' --outfile msa_results/kalign/kalign_spike --format fasta')
+    #os.system(
+    #    'python msa_algos/clustalo.py --email erald.bb@gmail.com --sequence ' + seq_string + ' --outfile msa_results/clustal_omega/clustal_spike  --outfmt fa')
+    #os.system(
+    #    'python msa_algos/kalign.py --email erald.bb@gmail.com --stype protein --sequence ' + seq_string + ' --outfile msa_results/kalign/kalign_spike --format fasta')
     os.system(
         'python msa_algos/mafft.py --email erald.bb@gmail.com --stype protein --sequence ' + seq_string + ' --outfile msa_results/mafft/mafft_spike --format fasta')
     os.system(
         'python msa_algos/muscle.py --email erald.bb@gmail.com --sequence ' + seq_string + ' --outfile msa_results/muscle/muscle_spike --format fasta')
-    os.system(
-        'python msa_algos/tcoffee.py --email erald.bb@gmail.com --stype protein --sequence ' + seq_string + ' --outfile msa_results/tcoffee/tcoffee_spike --format fasta_aln')
+    #os.system(
+    #    'python msa_algos/tcoffee.py --email erald.bb@gmail.com --stype protein --sequence ' + seq_string + ' --outfile msa_results/tcoffee/tcoffee_spike --format fasta_aln')
 
 
 alignment(list_of_sequences)

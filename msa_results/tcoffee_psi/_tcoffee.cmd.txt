@@ -1,0 +1,1 @@
+t_coffee -in=prot.txt -mode=psicoffee -blast=LOCAL -protein_db=/db/ncbi/201511/blast/db/nr.fa -output=score_html clustalw_aln fasta_aln score_ascii phylip -maxnseq=150 -maxlen=2500 -case=upper -seqnos=off -outorder=input -run_name=result -multi_core=4 -quiet=stdout
