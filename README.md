@@ -4,9 +4,9 @@ A pipeline that uses Scrapy and Selenium to access multiple online tools with th
 ## How it works
 The pipeline uses multiple tools to fulfill its function:
 
-1. msa.py: In the beginning it requires a set of proteins as input (swissprot ids), whereby it uses Multiple Sequence Alignment tools such as MUSCLE and MAFFT to align these sequences. The returned alignment files from these tools are then run through Gblocks (Selenium) in order to get the set of conserved sequences for each protein within the alignment.
+1. `msa.py`: In the beginning it requires a set of proteins as input (swissprot ids), whereby it uses Multiple Sequence Alignment tools such as MUSCLE and MAFFT to align these sequences. The returned alignment files from these tools are then run through Gblocks (Selenium) in order to get the set of conserved sequences for each protein within the alignment.
 
-2. predict.py: The returned set of sequences from Gblocks is then run through multiple epitope prediction tools, each of which returns a set of predicted epitopes. The tools are:
+2. `predict.py`: The returned set of sequences from Gblocks is then run through multiple epitope prediction tools, each of which returns a set of predicted epitopes. The tools are:
   * B-Cell Epitope Prediction:
     * Bepipred
     * Emini
@@ -23,7 +23,7 @@ The pipeline uses multiple tools to fulfill its function:
     * Ellipro
     * Discotope
 
-3. analyse.py: The sets of epitopes predicted from each of the methods above are then fed into this script, which analyses various parameters for each epitope and stores them in a csv file. The analysis methods are:
+3. `analyse.py`: The sets of epitopes predicted from each of the methods above are then fed into this script, which analyses various parameters for each epitope and stores them in a csv file. The analysis methods are:
   *  Protparam
   *  Toxinpred
   *  Algpred
