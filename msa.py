@@ -5,7 +5,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 import re
 
-list_of_sequences = ['P59594', 'P0DTC2', 'K9N5Q8', 'P36334', 'Q0ZME7', 'P15423', 'Q6Q1S2', 'Q5MQD0', 'Q14EB0']
+#list_of_sequences = ['P59594', 'P0DTC2', 'K9N5Q8', 'P36334', 'Q0ZME7', 'P15423', 'Q6Q1S2', 'Q5MQD0', 'Q14EB0']
 
 
 def alignment(seq_list):
@@ -20,15 +20,11 @@ def alignment(seq_list):
     seq_string = seq_string[:-1]
 
     os.system(
-        'python msa_algos/mafft.py --email erald.bb@gmail.com --stype protein --sequence ' + seq_string + ' --outfile msa_results/mafft/mafft_spike --format fasta')
+        'python msa_algos/mafft.py --email erald.bb@gmail.com --stype protein --sequence ' + seq_string + ' --outfile msa_results/mafft/mafft --format fasta')
     os.system(
-        'python msa_algos/muscle.py --email erald.bb@gmail.com --sequence ' + seq_string + ' --outfile msa_results/muscle/muscle_spike --format fasta')
-
-#alignment(list_of_sequences)
+        'python msa_algos/muscle.py --email erald.bb@gmail.com --sequence ' + seq_string + ' --outfile msa_results/muscle/muscle --format fasta')
 
 
-path_to_muscle = 'C:/Users/barbu/PycharmProjects/pythonProject/Pipeline/msa_results/muscle/muscle_spike.aln-fasta.fasta'
-path_to_mafft = 'C:/Users/barbu/PycharmProjects/pythonProject/Pipeline/msa_results/mafft/mafft_spike.aln-fasta.fasta'
 
 
 def get_conserved_sequences(path_to_file, min_seq_conserved_pos = None, min_seq_flank_pos = None, max_contigous_nonconserved_pos = None, min_length_block = None, allowed_gap_pos = None):
@@ -37,7 +33,7 @@ def get_conserved_sequences(path_to_file, min_seq_conserved_pos = None, min_seq_
     then returns a dictionary with the conserved regions of each protein"""
 
     gblocks_url = 'https://ngphylogeny.fr/tools/tool/276/form'
-    driver = webdriver.Chrome(executable_path="chromedriver")
+    driver = webdriver.Firefox(executable_path = '../ScrapyEpitope/geckodriver')
     driver.maximize_window()
     driver.get(gblocks_url)
 
@@ -106,11 +102,12 @@ def get_conserved_sequences(path_to_file, min_seq_conserved_pos = None, min_seq_
         conserved_sequences_dictionary[protein_id] = list_of_fasta
 
     driver.close()
+    print(*conserved_sequences_dictionary.items(), sep='\n')
     return conserved_sequences_dictionary
 
 
-if __name__ == '__main__':
-    seq_dict = get_conserved_sequences(path_to_mafft, min_seq_conserved_pos='default', min_seq_flank_pos='default', max_contigous_nonconserved_pos = 8, min_length_block= 10, allowed_gap_pos='None')
-    for i in seq_dict:
-        print(i, seq_dict[i])
+#if __name__ == '__main__':
+#    seq_dict = get_conserved_sequences(path_to_mafft, min_seq_conserved_pos='default', min_seq_flank_pos='default', max_contigous_nonconserved_pos = 8, min_length_block= 10, allowed_gap_pos='None')
+#    for i in seq_dict:
+#        print(i, seq_dict[i])
 

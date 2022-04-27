@@ -13,10 +13,414 @@ import time
 import pandas as pd
 from msa import alignment
 from msa import get_conserved_sequences
+import requests
 
 
-example_seq_dict = {'P0DTC2': ['FNCLGMSNRDFLE','GATQAGRFSITP']}
+example_seq_dict = {'P0DTC2': ['FNCLGMSNRDFLEAGHAHKVPRRLLKAHKVPRDADGSGSGSG','GATQAGRFSITP']}
 example_seq = 'SYIVVGRGEQQINHHWHK'
+
+def mhci_curl(conserved_sequences_dict):
+    
+    mhci_results = []
+    for key in conserved_sequences_dict:
+        for conserved_sequence in conserved_sequences_dict[key]:
+            print(conserved_sequence)
+            headers = {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            }
+            
+            data = 'method=recommended&sequence_text=' + conserved_sequence + '&allele=HLA-A*01:01,HLA-A*02:01&length=8,9'
+            #data = 'method=ann&sequence_text=%3Epeptide1%0AGHAHKVPRRLLKAAR%0A%3Epeptide2%0ALKAADASADADGSGSGSGSG&allele=HLA-A*01:01,HLA-A*02:01&length=8,9'
+            
+            response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/mhci/', headers=headers, data=data)
+            response_data_split_by_line = response.content.decode('utf-8').splitlines()
+            
+            response_body = []
+            for line in response_data_split_by_line:
+                split_line = line.split("\t")
+                response_body.append(split_line)
+            
+            mhci_results.append(response_body[0])
+
+            try:
+                df = pd.DataFrame(response_body[1:], columns=response_body[0])
+
+            except:
+                print('Retrying prediction for sequence: ' + conserved_sequence)
+
+                try:
+                    headers = {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    }
+            
+                    data = 'method=recommended&sequence_text=' + conserved_sequence + '&allele=HLA-A*01:01,HLA-A*02:01&length=8,9'
+                    #data = 'method=ann&sequence_text=%3Epeptide1%0AGHAHKVPRRLLKAAR%0A%3Epeptide2%0ALKAADASADADGSGSGSGSG&allele=HLA-A*01:01,HLA-A*02:01&length=8,9'
+            
+                    response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/mhci/', headers=headers, data=data)
+                    response_data_split_by_line = response.content.decode('utf-8').splitlines()
+            
+                    response_body = []
+                    for line in response_data_split_by_line:
+                        split_line = line.split("\t")
+                        response_body.append(split_line)
+            
+                    mhci_results.append(response_body[0])
+
+                    df = pd.DataFrame(response_body[1:], columns=response_body[0])
+                    df["percentile_rank"] = pd.to_numeric(df["percentile_rank"], errors='coerce')
+                    df = df.loc[df['percentile_rank'] <= 10]
+
+                    if df.empty == True:
+                        print('DataFrame is empty! No epitopes passed the threshold.')
+                    else:
+                        print(df)
+                        rows = [[i for i in row[1:]] for row in df.itertuples()]
+                        for i in rows:
+                            i = [key] + [conserved_sequence] + i
+                            mhci_results.append(i)
+                except:
+                    print("Epitope prediction for sequence " + conserved_sequence + " failed")
+
+            else:
+                df = pd.DataFrame(response_body[1:], columns=response_body[0])
+                df["percentile_rank"] = pd.to_numeric(df["percentile_rank"], errors='coerce')
+                df = df.loc[df['percentile_rank'] <= 10]
+
+                if df.empty == True:
+                    print('DataFrame is empty! No epitopes passed the threshold.')
+                else:
+                    print(df)
+                    rows = [[i for i in row[1:]] for row in df.itertuples()]
+                    for i in rows:
+                        i = [key] + [conserved_sequence] + i
+                        mhci_results.append(i)
+    return mhci_results
+
+def mhcii_curl(conserved_sequences_dict):
+    #Length of input sequence needs to be greater than 16 aa
+    mhcii_results = []
+
+    for key in conserved_sequences_dict:
+        for conserved_sequence in conserved_sequences_dict[key]:
+            if len(conserved_sequence) > 16:
+                headers = {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                }
+                
+                data = 'method=nn_align&sequence_text=' + conserved_sequence + '&allele=HLA-DRB1*01:01&length=13,14,16'
+                #data = 'method=ann&sequence_text=%3Epeptide1%0AGHAHKVPRRLLKAAR%0A%3Epeptide2%0ALKAADASADADGSGSGSGSG&allele=HLA-A*01:01,HLA-A*02:01&length=8,9'
+                
+                response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/mhcii/', headers=headers, data=data)
+                response_data_split_by_line = response.content.decode('utf-8').splitlines()
+                
+                response_body = []
+                for line in response_data_split_by_line:
+                    split_line = line.split("\t")
+                    response_body.append(split_line)
+                
+                mhcii_results.append(response_body[0])
+
+                df = pd.DataFrame(response_body[1:], columns=response_body[0])
+                df["adjusted_rank"] = pd.to_numeric(df["adjusted_rank"])
+                df = df.loc[df['adjusted_rank'] <= 100]
+
+                rows = [[i for i in row[1:]] for row in df.itertuples()]
+                for i in rows:
+                    i = [key] + [conserved_sequence] + i
+                    mhcii_results.append(i)
+
+    return mhcii_results
+
+def bepipred2_curl(conserved_sequences_dict):
+    bepipred2_results = []
+
+    for key in conserved_sequences_dict:
+        for conserved_sequence in conserved_sequences_dict[key]:
+            #if len(conserved_sequence) > 16:
+            headers = {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            }
+            
+            data = {
+                'method': 'Bepipred-2.0',
+                'sequence_text': conserved_sequence,
+                'window_size': '7',
+}
+            #data = 'method=ann&sequence_text=%3Epeptide1%0AGHAHKVPRRLLKAAR%0A%3Epeptide2%0ALKAADASADADGSGSGSGSG&allele=HLA-A*01:01,HLA-A*02:01&length=8,9'
+            
+            response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/bcell/', headers=headers, data=data)
+            response_data_split_by_line = response.content.decode('utf-8').splitlines()
+            
+            response_body = []
+            for line in response_data_split_by_line:
+                split_line = line.split("\t")
+                response_body.append(split_line)
+            
+            bepipred2_results.append(response_body[0])
+
+            df = pd.DataFrame(response_body[1:], columns=response_body[0])
+            df["Score"] = pd.to_numeric(df["Score"])
+            df = df.loc[df['Score'] >= 0.5]
+
+            rows = [[i for i in row[1:]] for row in df.itertuples()]
+            for i in rows:
+                i = [key] + [conserved_sequence] + i
+                bepipred2_results.append(i)
+
+    return bepipred2_results
+
+def bepipred_curl(conserved_sequences_dict):
+    bepipred_results = []
+
+    for key in conserved_sequences_dict:
+        for conserved_sequence in conserved_sequences_dict[key]:
+            #if len(conserved_sequence) > 16:
+            headers = {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            }
+            
+            data = {
+                'method': 'Bepipred',
+                'sequence_text': conserved_sequence,
+                'window_size': '7',
+}
+            #data = 'method=ann&sequence_text=%3Epeptide1%0AGHAHKVPRRLLKAAR%0A%3Epeptide2%0ALKAADASADADGSGSGSGSG&allele=HLA-A*01:01,HLA-A*02:01&length=8,9'
+            
+            response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/bcell/', headers=headers, data=data)
+            response_data_split_by_line = response.content.decode('utf-8').splitlines()
+            
+            response_body = []
+            for line in response_data_split_by_line:
+                split_line = line.split("\t")
+                response_body.append(split_line)
+            
+            bepipred_results.append(response_body[0])
+
+            df = pd.DataFrame(response_body[1:], columns=response_body[0])
+            df["Score"] = pd.to_numeric(df["Score"])
+            df = df.loc[df['Score'] >= 0.35]
+
+            rows = [[i for i in row[1:]] for row in df.itertuples()]
+            for i in rows:
+                i = [key] + [conserved_sequence] + i
+                bepipred_results.append(i)
+
+    return bepipred_results
+
+def emini_curl(conserved_sequences_dict):
+    emini_results = []
+
+    for key in conserved_sequences_dict:
+        for conserved_sequence in conserved_sequences_dict[key]:
+            #if len(conserved_sequence) > 16:
+            headers = {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            }
+            
+            data = {
+                'method': 'Emini',
+                'sequence_text': conserved_sequence,
+                'window_size': '6',
+}
+            #data = 'method=ann&sequence_text=%3Epeptide1%0AGHAHKVPRRLLKAAR%0A%3Epeptide2%0ALKAADASADADGSGSGSGSG&allele=HLA-A*01:01,HLA-A*02:01&length=8,9'
+            
+            response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/bcell/', headers=headers, data=data)
+            response_data_split_by_line = response.content.decode('utf-8').splitlines()
+            
+            response_body = []
+            for line in response_data_split_by_line:
+                split_line = line.split("\t")
+                response_body.append(split_line)
+            
+            emini_results.append(response_body[0])
+
+            df = pd.DataFrame(response_body[1:], columns=response_body[0])
+            df["Score"] = pd.to_numeric(df["Score"])
+            df = df.loc[df['Score'] >= 1]
+
+            rows = [[i for i in row[1:]] for row in df.itertuples()]
+            for i in rows:
+                i = [key] + [conserved_sequence] + i
+                emini_results.append(i)
+
+    return emini_results
+
+def choufasman_curl(conserved_sequences_dict):
+    #Figure out how to find threshold, maybe just get average of lowest and highest score
+    choufasman_results = []
+
+    for key in conserved_sequences_dict:
+        for conserved_sequence in conserved_sequences_dict[key]:
+            #if len(conserved_sequence) > 16:
+            headers = {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            }
+            
+            data = {
+                'method': 'Chou-Fasman',
+                'sequence_text': conserved_sequence,
+                'window_size': '7',
+}
+            #data = 'method=ann&sequence_text=%3Epeptide1%0AGHAHKVPRRLLKAAR%0A%3Epeptide2%0ALKAADASADADGSGSGSGSG&allele=HLA-A*01:01,HLA-A*02:01&length=8,9'
+            
+            response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/bcell/', headers=headers, data=data)
+            response_data_split_by_line = response.content.decode('utf-8').splitlines()
+            
+            response_body = []
+            for line in response_data_split_by_line:
+                split_line = line.split("\t")
+                response_body.append(split_line)
+            
+            choufasman_results.append(response_body[0])
+
+            df = pd.DataFrame(response_body[1:], columns=response_body[0])
+            df["Score"] = pd.to_numeric(df["Score"])
+            df = df.loc[df['Score'] >= 1]
+
+            rows = [[i for i in row[1:]] for row in df.itertuples()]
+            for i in rows:
+                i = [key] + [conserved_sequence] + i
+                choufasman_results.append(i)
+
+    return choufasman_results
+
+def karplusschulz_curl(conserved_sequences_dict):
+    #Figure out how to find threshold, maybe just get average of lowest and highest score
+    karplusschulz_results = []
+
+    for key in conserved_sequences_dict:
+        for conserved_sequence in conserved_sequences_dict[key]:
+            #if len(conserved_sequence) > 16:
+            headers = {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            }
+            
+            data = {
+                'method': 'Karplus-Schulz',
+                'sequence_text': conserved_sequence,
+                'window_size': '7',
+}
+            #data = 'method=ann&sequence_text=%3Epeptide1%0AGHAHKVPRRLLKAAR%0A%3Epeptide2%0ALKAADASADADGSGSGSGSG&allele=HLA-A*01:01,HLA-A*02:01&length=8,9'
+            
+            response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/bcell/', headers=headers, data=data)
+            response_data_split_by_line = response.content.decode('utf-8').splitlines()
+            
+            response_body = []
+            for line in response_data_split_by_line:
+                split_line = line.split("\t")
+                response_body.append(split_line)
+            
+            karplusschulz_results.append(response_body[0])
+
+            df = pd.DataFrame(response_body[1:], columns=response_body[0])
+            df["Score"] = pd.to_numeric(df["Score"])
+            df = df.loc[df['Score'] >= 1]
+
+            rows = [[i for i in row[1:]] for row in df.itertuples()]
+            for i in rows:
+                i = [key] + [conserved_sequence] + i
+                karplusschulz_results.append(i)
+
+    return karplusschulz_results
+
+def kolaskartongaonkar_curl(conserved_sequences_dict):
+    #Figure out how to find threshold, maybe just get average of lowest and highest score
+    kolaskartongaonkar_results = []
+
+    for key in conserved_sequences_dict:
+        for conserved_sequence in conserved_sequences_dict[key]:
+            #if len(conserved_sequence) > 16:
+            headers = {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            }
+            
+            data = {
+                'method': 'Kolaskar-Tongaonkar',
+                'sequence_text': conserved_sequence,
+                'window_size': '7',
+}
+            #data = 'method=ann&sequence_text=%3Epeptide1%0AGHAHKVPRRLLKAAR%0A%3Epeptide2%0ALKAADASADADGSGSGSGSG&allele=HLA-A*01:01,HLA-A*02:01&length=8,9'
+            
+            response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/bcell/', headers=headers, data=data)
+            response_data_split_by_line = response.content.decode('utf-8').splitlines()
+            
+            response_body = []
+            for line in response_data_split_by_line:
+                split_line = line.split("\t")
+                response_body.append(split_line)
+            
+            kolaskartongaonkar_results.append(response_body[0])
+
+            df = pd.DataFrame(response_body[1:], columns=response_body[0])
+            df["Score"] = pd.to_numeric(df["Score"])
+            df = df.loc[df['Score'] >= 1]
+
+            rows = [[i for i in row[1:]] for row in df.itertuples()]
+            for i in rows:
+                i = [key] + [conserved_sequence] + i
+                kolaskartongaonkar_results.append(i)
+
+    return kolaskartongaonkar_results
+
+def parker_curl(conserved_sequences_dict):
+    #Figure out how to find threshold, maybe just get average of lowest and highest score
+    parker_results = []
+
+    for key in conserved_sequences_dict:
+        for conserved_sequence in conserved_sequences_dict[key]:
+            #if len(conserved_sequence) > 16:
+            headers = {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            }
+            
+            data = {
+                'method': 'Parker',
+                'sequence_text': conserved_sequence,
+                'window_size': '7',
+}
+            #data = 'method=ann&sequence_text=%3Epeptide1%0AGHAHKVPRRLLKAAR%0A%3Epeptide2%0ALKAADASADADGSGSGSGSG&allele=HLA-A*01:01,HLA-A*02:01&length=8,9'
+            
+            response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/bcell/', headers=headers, data=data)
+            response_data_split_by_line = response.content.decode('utf-8').splitlines()
+            
+            response_body = []
+            for line in response_data_split_by_line:
+                split_line = line.split("\t")
+                response_body.append(split_line)
+            
+            parker_results.append(response_body[0])
+
+            df = pd.DataFrame(response_body[1:], columns=response_body[0])
+            df["Score"] = pd.to_numeric(df["Score"])
+            df = df.loc[df['Score'] >= 1.5]
+
+            rows = [[i for i in row[1:]] for row in df.itertuples()]
+            for i in rows:
+                i = [key] + [conserved_sequence] + i
+                parker_results.append(i)
+
+    return parker_results
+
+def predict_all():
+    list_of_swissprot_ids = ['P59594', 'P0DTC2', 'K9N5Q8', 'P36334', 'Q0ZME7', 'P15423', 'Q6Q1S2', 'Q5MQD0', 'Q14EB0']
+    #alignment(list_of_swissprot_ids)
+    path_to_mafft_alignment = '/home/erald/Desktop/ScrapyEpitope/msa_results/mafft/mafft.aln-fasta.fasta'
+    conserved_sequences = get_conserved_sequences(path_to_mafft_alignment, min_seq_conserved_pos='default', min_seq_flank_pos='default', max_contigous_nonconserved_pos = 8, min_length_block= 10, allowed_gap_pos='None')
+    mhci_epitopes = mhci_curl(conserved_sequences)
+    #mhcii_epitopes = mhcii_curl(conserved_sequences)
+    #bepipred2_epitopes = bepipred2_curl(conserved_sequences)
+    #bepipred_epitopes = bepipred_curl(conserved_sequences)
+    #emini_epitopes = emini_curl(conserved_sequences)
+    #choufasman_epitopes = choufasman_curl(conserved_sequences)
+    #karplusschulz_epitopes = karplusschulz_curl(conserved_sequences)
+    #kolaskartongaonkar_epitopes = kolaskartongaonkar_curl(conserved_sequences)
+    #parker_epitopes = parker_curl(conserved_sequences)
+    return mhci_epitopes 
+    #mhcii_epitopes, bepipred2_epitopes, bepipred_epitopes, emini_epitopes, choufasman_epitopes, karplusschulz_epitopes, kolaskartongaonkar_epitopes, parker_epitopes
+
+
+predicted_epitopes = predict_all()
+#print(*predicted_epitopes, sep='\n')
 
 
 def mhci(conserved_sequences_dict, mhci_alleles=None, mhci_lengths=None):
@@ -31,7 +435,7 @@ def mhci(conserved_sequences_dict, mhci_alleles=None, mhci_lengths=None):
 
     for key in conserved_sequences_dict:
         for conserved_sequence in conserved_sequences_dict[key]:
-            driver = webdriver.Chrome(executable_path="chromedriver")
+            driver = webdriver.Firefox(executable_path = '../ScrapyEpitope/geckodriver')
             driver.maximize_window()
             driver.get(mhci_url)
 
@@ -70,29 +474,6 @@ def mhci(conserved_sequences_dict, mhci_alleles=None, mhci_lengths=None):
 
     return mhci_results
 
-# list_of_swissprot_ids = ['P59594', 'P0DTC2', 'K9N5Q8', 'P36334', 'Q0ZME7', 'P15423', 'Q6Q1S2', 'Q5MQD0', 'Q14EB0']
-# alignment(list_of_swissprot_ids)
-#path_to_mafft = 'C:/Users/barbu/PycharmProjects/pythonProject/Pipeline/msa_results/mafft/mafft_spike.aln-fasta.fasta'
-#conserved_sequences = get_conserved_sequences(path_to_mafft, min_seq_conserved_pos='default', min_seq_flank_pos='default', max_contigous_nonconserved_pos = 8, min_length_block= 10, allowed_gap_pos='None')
-mhci_epitopes = mhci(example_seq_dict)
-#print(*mhci_epitopes, sep='\n')
-
-
-bepipred = []
-emini = []
-kolaskar_tongaonkar = []
-bepipred2 = []
-choufasman = []
-karplusschulz = []
-parker = []
-discotope = []
-ellipro = []
-mhcii = []
-netctlpan = []
-
-alleles_mhcii = ['HLA-DRB1*01:01', 'HLA-DRB1*03:01', 'HLA-DRB1*04:01']
-length_mhcii = ['12', '13']
-
 
 class Bepipred(Spider):
     name = 'bepipred'
@@ -121,8 +502,6 @@ class Bepipred(Spider):
                 row.append(cell.xpath('td[5]//text()').extract_first())
                 bepipred.append(row)
                 row = []
-
-
 class Emini(Spider):
     name = 'Emini'
     start_urls = ['http://tools.iedb.org/bcell']
@@ -150,8 +529,6 @@ class Emini(Spider):
                 row.append(cell.xpath('td[5]//text()').extract_first())
                 emini.append(row)
                 row = []
-
-
 class Kolaskar(Spider):
     name = 'Kolaskar-Tongaonkar'
     start_urls = ['http://tools.iedb.org/bcell']
@@ -179,8 +556,6 @@ class Kolaskar(Spider):
                 row.append(cell.xpath('td[5]//text()').extract_first())
                 kolaskar_tongaonkar.append(row)
                 row = []
-
-
 class Bepipred2(Spider):
     name = 'bepipred2'
     start_urls = ['http://tools.iedb.org/bcell']
@@ -208,8 +583,6 @@ class Bepipred2(Spider):
                 row.append(cell.xpath('td[5]//text()').extract_first())
                 bepipred2.append(row)
                 row = []
-
-
 class Chou_Fasman(Spider):
     name = 'Chou-Fasman'
     start_urls = ['http://tools.iedb.org/bcell']
@@ -238,8 +611,6 @@ class Chou_Fasman(Spider):
                 row.append(cell.xpath('td[6]//text()').extract_first())
                 choufasman.append(row)
                 row = []
-
-
 class Karplus_Schulz(Spider):
     name = 'Karplus-Schulz'
     start_urls = ['http://tools.iedb.org/bcell']
@@ -268,8 +639,6 @@ class Karplus_Schulz(Spider):
                 row.append(cell.xpath('td[6]//text()').extract_first())
                 karplusschulz.append(row)
                 row = []
-
-
 class Parker(Spider):
     name = 'Parker'
     start_urls = ['http://tools.iedb.org/bcell']
@@ -298,8 +667,6 @@ class Parker(Spider):
                 row.append(cell.xpath('td[6]//text()').extract_first())
                 parker.append(row)
                 row = []
-
-
 class Discotope(Spider):
     name = 'Discotope'
     start_urls = ['http://tools.iedb.org/discotope/']
@@ -331,8 +698,6 @@ class Discotope(Spider):
             row.append(cell.xpath('td[6]//text()').extract_first())
             discotope.append(row)
             row = []
-
-
 class Ellipro(Spider):
     name = 'Ellipro'
     start_urls = ['http://tools.iedb.org/ellipro/']
@@ -374,8 +739,6 @@ class Ellipro(Spider):
             row.append(cell.xpath('td[8]//text()').extract_first())
             ellipro.append(row)
             row = []
-
-
 class MhcII(Spider):
     name = 'MhcII'
     start_urls = ['http://tools.iedb.org/mhcii/']
@@ -412,8 +775,6 @@ class MhcII(Spider):
             split_row = row.split("\t")
             mhcii.append(split_row)
             print(split_row)
-
-
 class Netctlpan(Spider):
     name = 'Netctlpan'
     start_urls = ['http://tools.iedb.org/netchop/']
@@ -464,9 +825,9 @@ class Netctlpan(Spider):
         print(netctlpan)
 
 
-configure_logging()
-settings = get_project_settings()
-runner = CrawlerRunner(settings)
+#configure_logging()
+#settings = get_project_settings()
+#runner = CrawlerRunner(settings)
 
 
 @defer.inlineCallbacks
@@ -485,7 +846,7 @@ def crawl():
     reactor.stop()
 
 
-crawl()
-reactor.run()  # the script will block here until the last crawl call is finished
+#crawl()
+#reactor.run()  # the script will block here until the last crawl call is finished
 
 
