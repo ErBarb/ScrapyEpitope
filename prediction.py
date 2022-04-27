@@ -1,5 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as ec
 import scrapy
 from scrapy import Spider
 from scrapy.http import FormRequest
@@ -8,44 +10,72 @@ from scrapy.utils.log import configure_logging
 from scrapy.crawler import CrawlerRunner
 from twisted.internet import reactor, defer
 import time
-
-fasta = '''>West Nile virus envelope glycoprotein
-        FNCLGMSNRDFLEGVSGATWVDLVLEGDSCVTIMSKDKPTIDVKMMNMEAANLAEVRSYCYLATVSDLST
-        KAACPTMGEAHNDKRADPAFVCRQGVVDRGWGNGCGLFGKGSIDTCAKFACSTKAIGRTILKENIKYEVA
-        IFVHGPTTVESHGNYSTQVGATQAGRFSITPAAPSYTLKLGEYGEVTVDCEPRSGIDTNAYYVMTVGTKT
-        FLVHREWFMDLNLPWSSAGSTVWRNRETLMEFEEPHATKQSVIALGSQEGALHQALAGAIPVEFSSNTVK
-        LTSGHLKCRVKMEKLQLKGTTYGVCSKAFKFLGTPADTGHGTVVLELQYTGTDGPCKVPISSVASLNDLT
-        PVGRLVTVNPFVSVATANAKVLIELEPPFGDSYIVVGRGEQQINHHWHKSGSSIGKAFTTTLKGAQRLAA
-        LGDTAWDFGSVGGVFTSVGKAVHQVFGGAFRSLFGGMSWITQGLLGALLLWMGINARDRSIALTFLAVGG
-        VLLFLSVNVHA'''
-
-swissprot_id = 'P0DTC2'
+import pandas as pd
+from msa import alignment
+from msa import get_conserved_sequences
 
 
-def mhci(fasta_seq):
+example_seq_dict = {'P0DTC2': ['FNCLGMSNRDFLE','GATQAGRFSITP']}
+example_seq = 'SYIVVGRGEQQINHHWHK'
+
+
+def mhci(conserved_sequences_dict, mhci_alleles=None, mhci_lengths=None):
+
+    """This function uses Selenium to access the MHCI prediction tool from IEDB and returns a list of lists of the
+    predicted epitopes and their attributes. Its arguments are the dictionary with the conserved sequences and their
+    protein IDs, and lists of alleles and lengths of epitopes for each allele(coming soon)"""
+
     mhci_url = 'http://tools.iedb.org/mhci/'
-    driver = webdriver.Chrome(executable_path="chromedriver")
-    driver.maximize_window()
-    driver.get(mhci_url)
+    columns = ['protein_id', 'conserved_sequence', 'method_used', 'allele', 'seq_num', 'start', 'end', 'length', 'peptide', 'score', 'percentile_rank']
+    mhci_results = [columns]
 
-    driver.find_element(By.NAME, "sequence_text").send_keys(fasta_seq)
-    driver.find_element(By.ID, "id_refset").click()
-    time.sleep(5)
-    # driver.find_element(By.XPATH, "//select[@name='allele_list']/option[text()='HLA-A*01:01']").click()
-    # time.sleep(1)
-    # driver.find_element(By.XPATH, "//select[@name='length_list']/option[text()='10']").click()
-    # time.sleep(1)
-    driver.find_element(By.XPATH, "//select[@name='output_format']/option[text()='Text file']").click()
-    driver.find_element(By.XPATH, "/html/body/div[3]/form/table/tbody/tr[14]/th/div/input[2]").click()
-    time.sleep(15)
-    text_body = driver.find_element(By.XPATH, '/html/body/pre').text.splitlines()
-    driver.close()
+    for key in conserved_sequences_dict:
+        for conserved_sequence in conserved_sequences_dict[key]:
+            driver = webdriver.Chrome(executable_path="chromedriver")
+            driver.maximize_window()
+            driver.get(mhci_url)
 
-    row_list = []
-    for row in text_body:
-        split_row = row.split("\t")
-        row_list.append(split_row)
-    return row_list
+            driver.find_element(By.NAME, "sequence_text").send_keys(conserved_sequence)
+            driver.find_element(By.ID, "id_refset").click()
+            time.sleep(3)
+            # driver.find_element(By.XPATH, "//select[@name='allele_list']/option[text()='HLA-A*01:01']").click()
+            # time.sleep(1)
+            # driver.find_element(By.XPATH, "//select[@name='length_list']/option[text()='10']").click()
+            # time.sleep(1)
+
+            driver.find_element(By.XPATH, "//select[@name='output_format']/option[text()='Text file']").click()
+            driver.find_element(By.XPATH, "/html/body/div[3]/form/table/tbody/tr[14]/th/div/input[2]").click()
+
+            wait = WebDriverWait(driver, 180)
+            wait.until(ec.visibility_of_element_located((By.XPATH, "/html/body/pre")))
+
+            text_body = driver.find_element(By.XPATH, '/html/body/pre').text.splitlines()
+            driver.close()
+
+            method_used = text_body[2].split(' ')[2]
+
+            text_body_split_rows = []
+            for row in text_body[3:-3]:
+                split_row = row.split(" ")
+                text_body_split_rows.append(split_row)
+
+            df = pd.DataFrame(text_body_split_rows[1:], columns=text_body_split_rows[0])
+            df["percentile_rank"] = pd.to_numeric(df["percentile_rank"])
+            df = df.loc[df['percentile_rank'] <= 1]
+
+            rows = [[i for i in row[1:]] for row in df.itertuples()]
+            for i in rows:
+                i = [key] + [conserved_sequence] + [method_used] + i
+                mhci_results.append(i)
+
+    return mhci_results
+
+# list_of_swissprot_ids = ['P59594', 'P0DTC2', 'K9N5Q8', 'P36334', 'Q0ZME7', 'P15423', 'Q6Q1S2', 'Q5MQD0', 'Q14EB0']
+# alignment(list_of_swissprot_ids)
+#path_to_mafft = 'C:/Users/barbu/PycharmProjects/pythonProject/Pipeline/msa_results/mafft/mafft_spike.aln-fasta.fasta'
+#conserved_sequences = get_conserved_sequences(path_to_mafft, min_seq_conserved_pos='default', min_seq_flank_pos='default', max_contigous_nonconserved_pos = 8, min_length_block= 10, allowed_gap_pos='None')
+mhci_epitopes = mhci(example_seq_dict)
+#print(*mhci_epitopes, sep='\n')
 
 
 bepipred = []
@@ -433,8 +463,6 @@ class Netctlpan(Spider):
             row = []
         print(netctlpan)
 
-
-mhci_epitopes = mhci(fasta)
 
 configure_logging()
 settings = get_project_settings()

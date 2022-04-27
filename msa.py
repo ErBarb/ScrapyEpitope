@@ -9,21 +9,20 @@ list_of_sequences = ['P59594', 'P0DTC2', 'K9N5Q8', 'P36334', 'Q0ZME7', 'P15423',
 
 
 def alignment(seq_list):
+
+    """This function uses REST API services from https://www.ebi.ac.uk/ to output alignment files using the multiple
+    sequence alignment methods "MAFFT" and "MUSCLE". The argument is a list of swissprot protein IDs. The files are
+    saved in their respective folders in msa_results"""
+
     seq_string = ''
     for i in seq_list:
         seq_string = seq_string + 'sp:' + i + ','
     seq_string = seq_string[:-1]
-    #os.system(
-    #    'python msa_algos/clustalo.py --email erald.bb@gmail.com --sequence ' + seq_string + ' --outfile msa_results/clustal_omega/clustal_spike  --outfmt fa')
-    #os.system(
-    #    'python msa_algos/kalign.py --email erald.bb@gmail.com --stype protein --sequence ' + seq_string + ' --outfile msa_results/kalign/kalign_spike --format fasta')
+
     os.system(
         'python msa_algos/mafft.py --email erald.bb@gmail.com --stype protein --sequence ' + seq_string + ' --outfile msa_results/mafft/mafft_spike --format fasta')
     os.system(
         'python msa_algos/muscle.py --email erald.bb@gmail.com --sequence ' + seq_string + ' --outfile msa_results/muscle/muscle_spike --format fasta')
-    #os.system(
-    #    'python msa_algos/tcoffee.py --email erald.bb@gmail.com --stype protein --sequence ' + seq_string + ' --outfile msa_results/tcoffee/tcoffee_spike --format fasta_aln')
-
 
 #alignment(list_of_sequences)
 
@@ -31,10 +30,11 @@ def alignment(seq_list):
 path_to_muscle = 'C:/Users/barbu/PycharmProjects/pythonProject/Pipeline/msa_results/muscle/muscle_spike.aln-fasta.fasta'
 path_to_mafft = 'C:/Users/barbu/PycharmProjects/pythonProject/Pipeline/msa_results/mafft/mafft_spike.aln-fasta.fasta'
 
+
 def get_conserved_sequences(path_to_file, min_seq_conserved_pos = None, min_seq_flank_pos = None, max_contigous_nonconserved_pos = None, min_length_block = None, allowed_gap_pos = None):
 
     """This function uploads the alignment file and sends the parameters to the Gblocks NGPhylogeny website,
-    then returns a dictionary with the conserved regions of each protein """
+    then returns a dictionary with the conserved regions of each protein"""
 
     gblocks_url = 'https://ngphylogeny.fr/tools/tool/276/form'
     driver = webdriver.Chrome(executable_path="chromedriver")
@@ -109,8 +109,8 @@ def get_conserved_sequences(path_to_file, min_seq_conserved_pos = None, min_seq_
     return conserved_sequences_dictionary
 
 
-#get_conserved_sequences(path_to_muscle)
-seq_dict = get_conserved_sequences(path_to_mafft, min_seq_conserved_pos='default', min_seq_flank_pos='default', max_contigous_nonconserved_pos = 8, min_length_block= 10, allowed_gap_pos='None')
-for i in seq_dict:
-    print(i, seq_dict[i])
+if __name__ == '__main__':
+    seq_dict = get_conserved_sequences(path_to_mafft, min_seq_conserved_pos='default', min_seq_flank_pos='default', max_contigous_nonconserved_pos = 8, min_length_block= 10, allowed_gap_pos='None')
+    for i in seq_dict:
+        print(i, seq_dict[i])
 
