@@ -393,3 +393,121 @@ console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message f
 
 ###!!! [Parent][PImageBridgeParent] Error: RunMessage(msgname=PImageBridge::Msg_WillClose) Channel closing: too late to send/recv, messages will be lost
 
+1651145423799	geckodriver	INFO	Listening on 127.0.0.1:47901
+1651145424300	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "41189" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilewtVSKF"
+1651145426003	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilewtVSKF/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:41189/devtools/browser/78f2843b-662f-47d9-996e-60db45d6ea27
+1651145429532	Marionette	INFO	Listening on port 44743
+Read port: 44743
+1651145429626	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://ngphylogeny.fr"
+1651145469335	Marionette	INFO	Stopped listening on port 44743
+1651145567301	geckodriver	INFO	Listening on 127.0.0.1:41197
+1651145567308	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "50573" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofile4Bppo8"
+1651145568852	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofile4Bppo8/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:50573/devtools/browser/e502c5c8-98cd-451e-843c-671dac31101a
+1651145571989	Marionette	INFO	Listening on port 45039
+Read port: 45039
+1651145572110	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://ngphylogeny.fr"
+console.error: Region.jsm: "Error fetching region" (new Error("TIMEOUT", "resource://gre/modules/Region.jsm", 772))
+console.error: Region.jsm: "Failed to fetch region" (new Error("TIMEOUT", "resource://gre/modules/Region.jsm", 419))
+1651145611384	Marionette	INFO	Stopped listening on port 45039
+1651147581878	geckodriver	INFO	Listening on 127.0.0.1:59943
+1651147581884	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "46543" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilefRSEHU"
+1651147583550	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilefRSEHU/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:46543/devtools/browser/e342658c-8316-4682-ac4d-1d5f8feb9ffb
+1651147587954	Marionette	INFO	Listening on port 44183
+Read port: 44183
+1651147588087	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://ngphylogeny.fr"
+1651147627663	Marionette	INFO	Stopped listening on port 44183
+
+###!!! [Parent][PImageBridgeParent] Error: RunMessage(msgname=PImageBridge::Msg_WillClose) Channel closing: too late to send/recv, messages will be lost
+
+1651148040017	geckodriver	INFO	Listening on 127.0.0.1:48515
+1651148040024	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "60203" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileLbwtCP"
+1651148041453	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileLbwtCP/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:60203/devtools/browser/7959a143-48f2-4e48-abe3-35d8710dba00
+1651148046213	Marionette	INFO	Listening on port 35317
+Read port: 35317
+1651148046251	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+Exiting due to channel error.
+Exiting due to channel error.
+1651158014797	geckodriver	INFO	Listening on 127.0.0.1:33171
+1651158015304	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "50273" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilezYqSmK"
+1651158016903	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilezYqSmK/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:50273/devtools/browser/a492e11d-4f34-4588-b444-6d41131bbac6
+1651158020442	Marionette	INFO	Listening on port 39031
+Read port: 39031
+1651158020489	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+1651158023264	Marionette	INFO	Stopped listening on port 39031
+console.warn: TopSitesFeed: Failed to fetch data from Contile server: NetworkError when attempting to fetch resource.
+JavaScript error: chrome://remote/content/marionette/cert.js, line 55: NS_ERROR_NOT_AVAILABLE: Component returned failure code: 0x80040111 (NS_ERROR_NOT_AVAILABLE) [nsICertOverrideService.setDisableAllSecurityChecksAndLetAttackersInterceptMyData]
+
+###!!! [Parent][PImageBridgeParent] Error: RunMessage(msgname=PImageBridge::Msg_WillClose) Channel closing: too late to send/recv, messages will be lost
+
+1651158098004	geckodriver	INFO	Listening on 127.0.0.1:40251
+1651158098010	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "47435" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileCLriSQ"
+1651158099667	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileCLriSQ/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:47435/devtools/browser/06dea612-fd6a-423b-a343-85f13af9a24e
+1651158103487	Marionette	INFO	Listening on port 34279
+Read port: 34279
+1651158103633	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://ngphylogeny.fr"
+1651158143106	Marionette	INFO	Stopped listening on port 34279
+1651158166858	geckodriver	INFO	Listening on 127.0.0.1:53261
+1651158166866	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "59979" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileMDITFX"
+1651158168428	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileMDITFX/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:59979/devtools/browser/2a2a4180-2fd9-4d60-90c9-c36b3cad8eca
+1651158172107	Marionette	INFO	Listening on port 41643
+Read port: 41643
+1651158172196	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://ngphylogeny.fr"
+1651158210330	Marionette	INFO	Stopped listening on port 41643
+
+###!!! [Parent][PImageBridgeParent] Error: RunMessage(msgname=PImageBridge::Msg_WillClose) Channel closing: too late to send/recv, messages will be lost
+
+1651158580898	geckodriver	INFO	Listening on 127.0.0.1:52497
+1651158580904	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "49027" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileFfFOOR"
+1651158582414	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileFfFOOR/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:49027/devtools/browser/5fb8454b-7121-4174-aaf3-b2dc46cd55c0
+1651158585910	Marionette	INFO	Listening on port 35459
+Read port: 35459
+1651158586011	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://ngphylogeny.fr"
+1651158624159	Marionette	INFO	Stopped listening on port 35459
+1651158840058	geckodriver	INFO	Listening on 127.0.0.1:50595
+1651158840067	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "38279" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilew0xHE1"
+1651158841613	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilew0xHE1/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:38279/devtools/browser/46f175c5-6cd8-4db7-9b9b-644c1d62893b
+1651158845539	Marionette	INFO	Listening on port 46375
+Read port: 46375
+1651158845683	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://ngphylogeny.fr"
+1651158874027	Marionette	INFO	Stopped listening on port 46375

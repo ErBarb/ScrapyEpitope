@@ -16,56 +16,81 @@ from msa import get_conserved_sequences
 import requests
 
 
-example_seq_dict = {'P0DTC2': ['FNCLGMSNRDFLEAGHAHKVPRRLLKAHKVPRDADGSGSGSG','GATQAGRFSITP']}
+example_seq_dict = {'P0DTC2': ['VLSEGEWQLVLHVWAKVEADVAGHGQDILIRLFKSHPETLEKFDRFKHLKTEAEMKASEDLKKHGVTVLTALGAILKKKGHHEAELKPLAQSHATKHKIPIKYLEFISEAIIHVLHSRHPGNFGADAGGAMNKALELFRKDIAAKYKELGYQG', 'FNCLGMSNRDFLEAGHAHKVPRRLLKAHKVPRDADGSGSGSG']}
 example_seq = 'SYIVVGRGEQQINHHWHK'
+mhci_alleles = ['HLA-A*01:01', 'HLA-A*02:01', 'HLA-A*03:01']
+mhci_lengths = [8, 9, 10]
+mhcii_alleles = ['HLA-DRB1*01:01', 'HLA-DRB1*03:01']
+mhcii_lengths = [13, 14, 16]
 
-def mhci_curl(conserved_sequences_dict):
+
+def mhci_curl(conserved_sequences_dict, list_of_alleles, list_of_lengths):
     
+    alleles = ",".join(list_of_alleles)
+    converted_list = [str(element) for element in list_of_lengths]
+    lengths = ",".join(converted_list)
+
     mhci_results = []
+    columns = ["protein_id"] + ["conserved_sequence"] + ["allele"] + ["seq_num"] + ["start"] + ["end"] + ["length"] + ["peptide"] + ["core"] + ["icore"] + ["score"] + ["percentile_rank"]
+    mhci_results.append(columns)
+
     for key in conserved_sequences_dict:
         for conserved_sequence in conserved_sequences_dict[key]:
-            print(conserved_sequence)
-            headers = {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            }
-            
-            data = 'method=recommended&sequence_text=' + conserved_sequence + '&allele=HLA-A*01:01,HLA-A*02:01&length=8,9'
-            #data = 'method=ann&sequence_text=%3Epeptide1%0AGHAHKVPRRLLKAAR%0A%3Epeptide2%0ALKAADASADADGSGSGSGSG&allele=HLA-A*01:01,HLA-A*02:01&length=8,9'
-            
-            response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/mhci/', headers=headers, data=data)
-            response_data_split_by_line = response.content.decode('utf-8').splitlines()
-            
-            response_body = []
-            for line in response_data_split_by_line:
-                split_line = line.split("\t")
-                response_body.append(split_line)
-            
-            mhci_results.append(response_body[0])
-
-            try:
-                df = pd.DataFrame(response_body[1:], columns=response_body[0])
-
-            except:
-                print('Retrying prediction for sequence: ' + conserved_sequence)
+            if len(conserved_sequence) >= max(list_of_lengths):
+                
+                headers = {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                }
+                
+                data = 'method=recommended&sequence_text=' + conserved_sequence + '&allele=' + alleles + '&length=' + lengths
+                
+                response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/mhci/', headers=headers, data=data)
+                response_data_split_by_line = response.content.decode('utf-8').splitlines()
+                
+                response_body = []
+                for line in response_data_split_by_line:
+                    split_line = line.split("\t")
+                    response_body.append(split_line)
 
                 try:
-                    headers = {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    }
-            
-                    data = 'method=recommended&sequence_text=' + conserved_sequence + '&allele=HLA-A*01:01,HLA-A*02:01&length=8,9'
-                    #data = 'method=ann&sequence_text=%3Epeptide1%0AGHAHKVPRRLLKAAR%0A%3Epeptide2%0ALKAADASADADGSGSGSGSG&allele=HLA-A*01:01,HLA-A*02:01&length=8,9'
-            
-                    response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/mhci/', headers=headers, data=data)
-                    response_data_split_by_line = response.content.decode('utf-8').splitlines()
-            
-                    response_body = []
-                    for line in response_data_split_by_line:
-                        split_line = line.split("\t")
-                        response_body.append(split_line)
-            
-                    mhci_results.append(response_body[0])
+                    df = pd.DataFrame(response_body[1:], columns=response_body[0])
 
+                except:
+                    print('Retrying prediction for sequence: ' + conserved_sequence)
+
+                    try:
+                        headers = {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        }
+                
+                        data = 'method=recommended&sequence_text=' + conserved_sequence + '&allele=HLA-A*01:01,HLA-A*02:01&length=8,9'
+                        #data = 'method=ann&sequence_text=%3Epeptide1%0AGHAHKVPRRLLKAAR%0A%3Epeptide2%0ALKAADASADADGSGSGSGSG&allele=HLA-A*01:01,HLA-A*02:01&length=8,9'
+                
+                        response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/mhci/', headers=headers, data=data)
+                        response_data_split_by_line = response.content.decode('utf-8').splitlines()
+                
+                        response_body = []
+                        for line in response_data_split_by_line:
+                            split_line = line.split("\t")
+                            response_body.append(split_line)
+                
+                        mhci_results.append(response_body[0])
+
+                        df = pd.DataFrame(response_body[1:], columns=response_body[0])
+                        df["percentile_rank"] = pd.to_numeric(df["percentile_rank"], errors='coerce')
+                        df = df.loc[df['percentile_rank'] <= 10]
+
+                        if df.empty == True:
+                            print('DataFrame is empty! No epitopes passed the threshold.')
+                        else:
+                            rows = [[i for i in row[1:]] for row in df.itertuples()]
+                            for i in rows:
+                                i = [key] + [conserved_sequence] + i
+                                mhci_results.append(i)
+                    except:
+                        print("Epitope prediction for sequence " + conserved_sequence + " failed")
+
+                else:
                     df = pd.DataFrame(response_body[1:], columns=response_body[0])
                     df["percentile_rank"] = pd.to_numeric(df["percentile_rank"], errors='coerce')
                     df = df.loc[df['percentile_rank'] <= 10]
@@ -73,42 +98,31 @@ def mhci_curl(conserved_sequences_dict):
                     if df.empty == True:
                         print('DataFrame is empty! No epitopes passed the threshold.')
                     else:
-                        print(df)
                         rows = [[i for i in row[1:]] for row in df.itertuples()]
                         for i in rows:
                             i = [key] + [conserved_sequence] + i
                             mhci_results.append(i)
-                except:
-                    print("Epitope prediction for sequence " + conserved_sequence + " failed")
-
-            else:
-                df = pd.DataFrame(response_body[1:], columns=response_body[0])
-                df["percentile_rank"] = pd.to_numeric(df["percentile_rank"], errors='coerce')
-                df = df.loc[df['percentile_rank'] <= 10]
-
-                if df.empty == True:
-                    print('DataFrame is empty! No epitopes passed the threshold.')
-                else:
-                    print(df)
-                    rows = [[i for i in row[1:]] for row in df.itertuples()]
-                    for i in rows:
-                        i = [key] + [conserved_sequence] + i
-                        mhci_results.append(i)
     return mhci_results
 
-def mhcii_curl(conserved_sequences_dict):
-    #Length of input sequence needs to be greater than 16 aa
+def mhcii_curl(conserved_sequences_dict, list_of_alleles, list_of_lengths):
+
+    alleles = ",".join(list_of_alleles)
+    converted_list = [str(element) for element in list_of_lengths]
+    lengths = ",".join(converted_list)
+
     mhcii_results = []
+    columns = ["protein_id"] + ["conserved_sequence"] + ["allele"] + ["seq_num"] + ["start"] + ["end"] + ["length"] + ["core_peptide"] + ["peptide"] + ["ic50"] + ["rank"] + ["adjusted_rank"]
+    mhcii_results.append(columns)
 
     for key in conserved_sequences_dict:
         for conserved_sequence in conserved_sequences_dict[key]:
-            if len(conserved_sequence) > 16:
+            if len(conserved_sequence) >= max(list_of_lengths):
+                print(conserved_sequence)
                 headers = {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 }
                 
-                data = 'method=nn_align&sequence_text=' + conserved_sequence + '&allele=HLA-DRB1*01:01&length=13,14,16'
-                #data = 'method=ann&sequence_text=%3Epeptide1%0AGHAHKVPRRLLKAAR%0A%3Epeptide2%0ALKAADASADADGSGSGSGSG&allele=HLA-A*01:01,HLA-A*02:01&length=8,9'
+                data = 'method=nn_align&sequence_text=' + conserved_sequence + '&allele=' + alleles + '&length=' + lengths
                 
                 response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/mhcii/', headers=headers, data=data)
                 response_data_split_by_line = response.content.decode('utf-8').splitlines()
@@ -118,35 +132,39 @@ def mhcii_curl(conserved_sequences_dict):
                     split_line = line.split("\t")
                     response_body.append(split_line)
                 
-                mhcii_results.append(response_body[0])
-
                 df = pd.DataFrame(response_body[1:], columns=response_body[0])
+                print(df)
                 df["adjusted_rank"] = pd.to_numeric(df["adjusted_rank"])
-                df = df.loc[df['adjusted_rank'] <= 100]
+                df = df.loc[df['adjusted_rank'] <= 10]
 
-                rows = [[i for i in row[1:]] for row in df.itertuples()]
-                for i in rows:
-                    i = [key] + [conserved_sequence] + i
-                    mhcii_results.append(i)
+                if df.empty == True:
+                        print('DataFrame is empty! No epitopes passed the threshold.')
+                else:
+                    rows = [[i for i in row[1:]] for row in df.itertuples()]
+                    for i in rows:
+                        i = [key] + [conserved_sequence] + i
+                        mhcii_results.append(i)
 
     return mhcii_results
 
 def bepipred2_curl(conserved_sequences_dict):
+    
     bepipred2_results = []
+    columns = ["protein_id"] + ["conserved_sequence"] + ["peptide"] + ["start_position"] + ["end_position"]
+    bepipred2_results.append(columns)
 
     for key in conserved_sequences_dict:
         for conserved_sequence in conserved_sequences_dict[key]:
-            #if len(conserved_sequence) > 16:
+            
             headers = {
                 'Content-Type': 'application/x-www-form-urlencoded',
-            }
+                }
             
             data = {
                 'method': 'Bepipred-2.0',
                 'sequence_text': conserved_sequence,
                 'window_size': '7',
-}
-            #data = 'method=ann&sequence_text=%3Epeptide1%0AGHAHKVPRRLLKAAR%0A%3Epeptide2%0ALKAADASADADGSGSGSGSG&allele=HLA-A*01:01,HLA-A*02:01&length=8,9'
+                }
             
             response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/bcell/', headers=headers, data=data)
             response_data_split_by_line = response.content.decode('utf-8').splitlines()
@@ -156,17 +174,40 @@ def bepipred2_curl(conserved_sequences_dict):
                 split_line = line.split("\t")
                 response_body.append(split_line)
             
-            bepipred2_results.append(response_body[0])
-
             df = pd.DataFrame(response_body[1:], columns=response_body[0])
+
             df["Score"] = pd.to_numeric(df["Score"])
             df = df.loc[df['Score'] >= 0.5]
+            positions = df.iloc[:, 0].to_list()
+            residues = df.iloc[:, 1].to_list()
 
-            rows = [[i for i in row[1:]] for row in df.itertuples()]
-            for i in rows:
-                i = [key] + [conserved_sequence] + i
-                bepipred2_results.append(i)
-
+            predicted = []
+            epitope = ''
+            
+            for index, value in enumerate(positions):
+                if (index != len(positions) - 1 and int(value) + 1 == int(positions[index + 1])):
+                    epitope = epitope + residues[index]
+                elif (index != len(positions) - 1 and int(value) + 1 != int(positions[index + 1])):
+                    epitope = epitope + residues[index]
+                    if len(epitope) >= 7:
+                        predicted.append(epitope)
+                        predicted.append(int(value) - len(epitope) + 1)
+                        predicted.append(int(value))
+                        predicted = [key] + [conserved_sequence] + predicted
+                        bepipred2_results.append(predicted)
+                    epitope = ''
+                    predicted = []
+                elif index == len(positions) - 1:
+                    epitope = epitope + residues[index]
+                    if len(epitope) >= 7:
+                        predicted.append(epitope)
+                        predicted.append(int(value) - len(epitope) + 1)
+                        predicted.append(int(value))
+                        predicted = [key] + [conserved_sequence] + predicted
+                        bepipred2_results.append(predicted)
+                    epitope = ''
+                    predicted = []
+    
     return bepipred2_results
 
 def bepipred_curl(conserved_sequences_dict):
@@ -406,21 +447,22 @@ def predict_all():
     #alignment(list_of_swissprot_ids)
     path_to_mafft_alignment = '/home/erald/Desktop/ScrapyEpitope/msa_results/mafft/mafft.aln-fasta.fasta'
     conserved_sequences = get_conserved_sequences(path_to_mafft_alignment, min_seq_conserved_pos='default', min_seq_flank_pos='default', max_contigous_nonconserved_pos = 8, min_length_block= 10, allowed_gap_pos='None')
-    mhci_epitopes = mhci_curl(conserved_sequences)
-    #mhcii_epitopes = mhcii_curl(conserved_sequences)
-    #bepipred2_epitopes = bepipred2_curl(conserved_sequences)
+    #mhci_epitopes = mhci_curl(conserved_sequences, mhci_alleles, mhci_lengths)
+    #mhcii_epitopes = mhcii_curl(conserved_sequences, mhcii_alleles, mhcii_lengths)
+    bepipred2_epitopes = bepipred2_curl(conserved_sequences)
     #bepipred_epitopes = bepipred_curl(conserved_sequences)
     #emini_epitopes = emini_curl(conserved_sequences)
     #choufasman_epitopes = choufasman_curl(conserved_sequences)
     #karplusschulz_epitopes = karplusschulz_curl(conserved_sequences)
     #kolaskartongaonkar_epitopes = kolaskartongaonkar_curl(conserved_sequences)
     #parker_epitopes = parker_curl(conserved_sequences)
-    return mhci_epitopes 
+    return bepipred2_epitopes 
+    #return bepipred2_epitopes 
     #mhcii_epitopes, bepipred2_epitopes, bepipred_epitopes, emini_epitopes, choufasman_epitopes, karplusschulz_epitopes, kolaskartongaonkar_epitopes, parker_epitopes
 
 
 predicted_epitopes = predict_all()
-#print(*predicted_epitopes, sep='\n')
+print(*predicted_epitopes, sep='\n')
 
 
 def mhci(conserved_sequences_dict, mhci_alleles=None, mhci_lengths=None):
