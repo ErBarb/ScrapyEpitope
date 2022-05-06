@@ -5,10 +5,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 import re
 
-#list_of_sequences = ['P59594', 'P0DTC2', 'K9N5Q8', 'P36334', 'Q0ZME7', 'P15423', 'Q6Q1S2', 'Q5MQD0', 'Q14EB0']
 
-
-def alignment(seq_list):
+def alignment(seq_list, matrix=None, gapopen=None, gapext=None, order=None, nbtree=None, treeout=None, maxiterate=None, ffts=None):
 
     """This function uses REST API services from https://www.ebi.ac.uk/ to output alignment files using the multiple
     sequence alignment methods "MAFFT" and "MUSCLE". The argument is a list of swissprot protein IDs. The files are
@@ -20,10 +18,9 @@ def alignment(seq_list):
     seq_string = seq_string[:-1]
 
     os.system(
-        'python msa_algos/mafft.py --email erald.bb@gmail.com --stype protein --sequence ' + seq_string + ' --outfile msa_results/mafft/mafft --format fasta')
+        'python msa_algos/mafft.py --email erald.bb@gmail.com --stype protein --sequence ' + seq_string + ' --outfile msa_results/mafft/mafft --format fasta --matrix ' + matrix + ' --gapopen ' + str(gapopen) + ' --gapext ' + str(gapext) + ' --order ' + order + ' --nbtree ' + str(nbtree) + ' --treeout ' + treeout + ' --maxiterate ' + str(maxiterate) + ' --ffts ' + ffts)
     os.system(
         'python msa_algos/muscle.py --email erald.bb@gmail.com --sequence ' + seq_string + ' --outfile msa_results/muscle/muscle --format fasta')
-
 
 
 

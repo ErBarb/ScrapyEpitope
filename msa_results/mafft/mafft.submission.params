@@ -1,5 +1,5 @@
 <execution>
-  <commandLine>singularity exec -B $PWD:/output /nfs/public/ro/es_codon/appbin/linux-x86_64/singularity/mafft:7.487 /mafft/bin/mafft --thread 8 --anysymbol --bl 62 --op 1.53 --reorder --retree 2 --treeout --maxiterate 2 --amino mafft-R20220427-221153-0839-92504655-p1m.sequence</commandLine>
+  <commandLine>singularity exec -B $PWD:/output /nfs/public/ro/es_codon/appbin/linux-x86_64/singularity/mafft:7.487 /mafft/bin/mafft --thread 8 --anysymbol --bl 62 --op 1.53 --ep 0.123 --reorder --retree 2 --treeout --maxiterate 2 --amino mafft-R20220429-132947-0369-52769262-p1m.sequence</commandLine>
   <userParameters class="linked-hash-map">
     <entry>
       <string>program</string>
@@ -16,6 +16,10 @@
     <entry>
       <string>gapopen</string>
       <float>1.53</float>
+    </entry>
+    <entry>
+      <string>gapext</string>
+      <float>0.123</float>
     </entry>
     <entry>
       <string>order</string>
@@ -43,13 +47,13 @@
     </entry>
     <entry>
       <string>sequence</string>
-      <string>/nfs/public/rw/es/projects/wp-jdispatcher/sources/prod/jobs/mafft/rest/20220427/2210/mafft-R20220427-221153-0839-92504655-p1m.sequence</string>
+      <string>/nfs/public/rw/es/projects/wp-jdispatcher/sources/prod/jobs/mafft/rest/20220429/1328/mafft-R20220429-132947-0369-52769262-p1m.sequence</string>
     </entry>
   </userParameters>
-  <outputLocation>file:/nfs/public/rw/es/projects/wp-jdispatcher/sources/prod/jobs/mafft/rest/20220427/2210//mafft-R20220427-221153-0839-92504655-p1m.output</outputLocation>
-  <errorLocation>file:/nfs/public/rw/es/projects/wp-jdispatcher/sources/prod/jobs/mafft/rest/20220427/2210//mafft-R20220427-221153-0839-92504655-p1m.error</errorLocation>
+  <outputLocation>file:/nfs/public/rw/es/projects/wp-jdispatcher/sources/prod/jobs/mafft/rest/20220429/1328//mafft-R20220429-132947-0369-52769262-p1m.output</outputLocation>
+  <errorLocation>file:/nfs/public/rw/es/projects/wp-jdispatcher/sources/prod/jobs/mafft/rest/20220429/1328//mafft-R20220429-132947-0369-52769262-p1m.error</errorLocation>
   <toolId>mafft</toolId>
-  <jobId>mafft-R20220427-221153-0839-92504655-p1m</jobId>
+  <jobId>mafft-R20220429-132947-0369-52769262-p1m</jobId>
   <email>erald.bb@gmail.com</email>
   <emailNotification>false</emailNotification>
   <clientId>138.246.3.8</clientId>

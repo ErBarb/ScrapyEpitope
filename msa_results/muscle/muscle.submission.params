@@ -1,5 +1,5 @@
 <execution>
-  <commandLine>singularity exec -B $PWD:/output /nfs/public/ro/es_codon/appbin/linux-x86_64/singularity/muscle:3.8.425 /muscle/bin/muscle -in muscle-R20220427-221203-0759-80175834-p1m.sequence -verbose -log muscle-R20220427-221203-0759-80175834-p1m.output -quiet -fasta -out muscle-R20220427-221203-0759-80175834-p1m.fasta</commandLine>
+  <commandLine>singularity exec -B $PWD:/output /nfs/public/ro/es_codon/appbin/linux-x86_64/singularity/muscle:3.8.425 /muscle/bin/muscle -in muscle-R20220429-132955-0918-24931846-p1m.sequence -verbose -log muscle-R20220429-132955-0918-24931846-p1m.output -quiet -fasta -out muscle-R20220429-132955-0918-24931846-p1m.fasta</commandLine>
   <userParameters class="linked-hash-map">
     <entry>
       <string>program</string>
@@ -15,13 +15,13 @@
     </entry>
     <entry>
       <string>sequence</string>
-      <string>/nfs/public/rw/es/projects/wp-jdispatcher/sources/prod/jobs/muscle/rest/20220427/2212/muscle-R20220427-221203-0759-80175834-p1m.sequence</string>
+      <string>/nfs/public/rw/es/projects/wp-jdispatcher/sources/prod/jobs/muscle/rest/20220429/1328/muscle-R20220429-132955-0918-24931846-p1m.sequence</string>
     </entry>
   </userParameters>
-  <outputLocation>file:/nfs/public/rw/es/projects/wp-jdispatcher/sources/prod/jobs/muscle/rest/20220427/2212//muscle-R20220427-221203-0759-80175834-p1m.output</outputLocation>
-  <errorLocation>file:/nfs/public/rw/es/projects/wp-jdispatcher/sources/prod/jobs/muscle/rest/20220427/2212//muscle-R20220427-221203-0759-80175834-p1m.error</errorLocation>
+  <outputLocation>file:/nfs/public/rw/es/projects/wp-jdispatcher/sources/prod/jobs/muscle/rest/20220429/1328//muscle-R20220429-132955-0918-24931846-p1m.output</outputLocation>
+  <errorLocation>file:/nfs/public/rw/es/projects/wp-jdispatcher/sources/prod/jobs/muscle/rest/20220429/1328//muscle-R20220429-132955-0918-24931846-p1m.error</errorLocation>
   <toolId>muscle</toolId>
-  <jobId>muscle-R20220427-221203-0759-80175834-p1m</jobId>
+  <jobId>muscle-R20220429-132955-0918-24931846-p1m</jobId>
   <email>erald.bb@gmail.com</email>
   <emailNotification>false</emailNotification>
   <clientId>138.246.3.8</clientId>
