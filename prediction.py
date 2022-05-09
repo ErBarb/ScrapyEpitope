@@ -16,10 +16,8 @@ from msa import get_conserved_sequences
 import requests
 
 
-example_seq_dict = {'P0DTC2': ['VLSEGEWQLVLHVWAKVEADVAGHGQDILIRLFKSHPETLEKFDRFKHLKTEAEMKASEDLKKHGVTVLTALGAILKKKGHHEAELKPLAQSHATKHKIPIKYLEFISEAIIHVLHSRHPGNFGADAGGAMNKALELFRKDIAAKYKELGYQG', 
-'FNCLGMSNRDFLEAGHAHKVPRRLLKAHKVPRDADGSGSGSG','QRFVYDAYQNLVGYYS','SRSARSAIEDLLFDKVTIADPGYMQGYDDC','WSYTGSSFYAPEPITSLNTKY'],
-'P36334': ['IQIPSEFTIGNMVEFIQTSSPKVTIDCAAFVCGDYAACKSQLVEYGSFCDNINAILTEVNELLDTTQLQVANSLMNGVTLSTKLKDGV', 
-'CVNYDLYGILGQGI','QRFVYDAYQNLVGYYS','WMYTGSGYYYPEPITENNVVV','FKEELDQWFKNQTSVAPDL']}
+example_seq_dict = {'P0DTC2': ['SRSARSAIEDLLFDKVTIADPGYMQGYDDC','WSYTGSSFYAPEPITSLNTKY'],
+'P36334': ['WMYTGSGYYYPEPITENNVVV','FKEELDQWFKNQTSVAPDL']}
 example_seq = 'SYIVVGRGEQQINHHWHK'
 list_of_swissprot_ids = ['P59594', 'P0DTC2', 'K9N5Q8', 'P36334', 'Q0ZME7', 'P15423', 'Q6Q1S2', 'Q5MQD0', 'Q14EB0']
 path_to_mafft_alignment = '/home/erald/Desktop/ScrapyEpitope/msa_results/mafft/mafft.aln-fasta.fasta'
@@ -63,7 +61,6 @@ def mhci_curl(conserved_sequences_dict, list_of_alleles, list_of_lengths):
                     df = pd.DataFrame(response_body[1:], columns=response_body[0])
 
                 except:
-                    print('Retrying prediction for sequence: ' + conserved_sequence)
 
                     try:
                         headers = {
@@ -87,14 +84,14 @@ def mhci_curl(conserved_sequences_dict, list_of_alleles, list_of_lengths):
                         df = df.loc[df['percentile_rank'] <= 10]
 
                         if df.empty == True:
-                            print('DataFrame is empty! No epitopes passed the threshold.')
+                            pass
                         else:
                             rows = [[i for i in row[1:]] for row in df.itertuples()]
                             for i in rows:
                                 i = [key] + [conserved_sequence] + i
                                 mhci_results.append(i)
                     except:
-                        print("Epitope prediction for sequence " + conserved_sequence + " failed")
+                        pass
 
                 else:
                     df = pd.DataFrame(response_body[1:], columns=response_body[0])
@@ -102,7 +99,7 @@ def mhci_curl(conserved_sequences_dict, list_of_alleles, list_of_lengths):
                     df = df.loc[df['percentile_rank'] <= 10]
 
                     if df.empty == True:
-                        print('DataFrame is empty! No epitopes passed the threshold.')
+                        pass
                     else:
                         rows = [[i for i in row[1:]] for row in df.itertuples()]
                         for i in rows:
@@ -143,7 +140,7 @@ def mhci_proc_curl(conserved_sequences_dict, list_of_alleles, list_of_lengths):
                 df = df.loc[df['total_score'] > 0]
 
                 if df.empty == True:
-                        print('DataFrame is empty! No epitopes passed the threshold.')
+                    pass
                 else:
                     rows = [[i for i in row[1:]] for row in df.itertuples()]
                     for i in rows:
@@ -185,7 +182,7 @@ def mhcii_curl(conserved_sequences_dict, list_of_alleles, list_of_lengths):
                 df = df.loc[df['adjusted_rank'] <= 10]
 
                 if df.empty == True:
-                        print('DataFrame is empty! No epitopes passed the threshold.')
+                    pass
                 else:
                     rows = [[i for i in row[1:]] for row in df.itertuples()]
                     for i in rows:
@@ -266,7 +263,7 @@ def bepipred_curl(conserved_sequences_dict):
     for key in conserved_sequences_dict:
         for conserved_sequence in conserved_sequences_dict[key]:
             
-            time.sleep(0.5)
+            time.sleep(1)
             headers = {
                 'Content-Type': 'application/x-www-form-urlencoded',
                 }
@@ -330,7 +327,7 @@ def emini_curl(conserved_sequences_dict):
     for key in conserved_sequences_dict:
         for conserved_sequence in conserved_sequences_dict[key]:
             
-            time.sleep(0.5)
+            time.sleep(1)
             headers = {
                 'Content-Type': 'application/x-www-form-urlencoded',
                 }
@@ -394,7 +391,7 @@ def choufasman_curl(conserved_sequences_dict):
     for key in conserved_sequences_dict:
         for conserved_sequence in conserved_sequences_dict[key]:
             
-            time.sleep(0.5)
+            time.sleep(1)
             headers = {
                 'Content-Type': 'application/x-www-form-urlencoded',
                 }
@@ -459,7 +456,7 @@ def karplusschulz_curl(conserved_sequences_dict):
     for key in conserved_sequences_dict:
         for conserved_sequence in conserved_sequences_dict[key]:
             
-            time.sleep(0.5)
+            time.sleep(1)
             headers = {
                    'User-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.80 Safari/537.36',
                    'Content-Type': 'application/x-www-form-urlencoded'
@@ -525,7 +522,7 @@ def kolaskartongaonkar_curl(conserved_sequences_dict):
     for key in conserved_sequences_dict:
         for conserved_sequence in conserved_sequences_dict[key]:
             
-            time.sleep(0.5)
+            time.sleep(1)
             headers = {
                 'Content-Type': 'application/x-www-form-urlencoded',
                 }
@@ -590,7 +587,7 @@ def parker_curl(conserved_sequences_dict):
     for key in conserved_sequences_dict:
         for conserved_sequence in conserved_sequences_dict[key]:
             
-            time.sleep(0.5)
+            time.sleep(1)
             headers = {
                 'Content-Type': 'application/x-www-form-urlencoded',
                 }
@@ -684,7 +681,7 @@ def ellipro(list_of_pdb_ids):
         df = df.loc[df['Score'] >= 0.7]
 
         if df.empty == True:
-            print('DataFrame is empty! No epitopes passed the threshold.')
+            pass
         else:
             rows = [[i for i in row[1:]] for row in df.itertuples()]
             for i in rows:
@@ -714,370 +711,85 @@ def ellipro(list_of_pdb_ids):
 
 def predict_all(list_of_swissprot_ids, path_to_alignment, alleles_for_mhci, lengths_for_mhci, alleles_for_mhcii, lengths_for_mhcii, list_of_pdb_ids):
     
-    #alignment(list_of_swissprot_ids, matrix='bl62', gapopen=1.53, gapext=0.123, order='aligned', nbtree=2, treeout='true', maxiterate=2, ffts='none')
+    alignment(list_of_swissprot_ids, matrix='bl62', gapopen=1.53, gapext=0.123, order='aligned', nbtree=2, treeout='true', maxiterate=2, ffts='none')
+    conserved_sequences_mafft = get_conserved_sequences(path_to_alignment, min_seq_conserved_pos='default', min_seq_flank_pos='default', max_contigous_nonconserved_pos = 8, min_length_block= 10, allowed_gap_pos='None')
     
-    #conserved_sequences_mafft = get_conserved_sequences(path_to_alignment, min_seq_conserved_pos='default', min_seq_flank_pos='default', max_contigous_nonconserved_pos = 8, min_length_block= 10, allowed_gap_pos='None')
-    #mhci_epitopes = mhci_curl(example_seq_dict, alleles_for_mhci, lengths_for_mhci)
-    #mhci_proc_epitopes = mhci_proc_curl(example_seq_dict, alleles_for_mhci, lengths_for_mhci)
-    #mhcii_epitopes = mhcii_curl(example_seq_dict, alleles_for_mhcii, lengths_for_mhcii)
+    mhci_epitopes = mhci_curl(example_seq_dict, alleles_for_mhci, lengths_for_mhci)
+    mhci_proc_epitopes = mhci_proc_curl(example_seq_dict, alleles_for_mhci, lengths_for_mhci)
+    mhcii_epitopes = mhcii_curl(example_seq_dict, alleles_for_mhcii, lengths_for_mhcii)
     
-    #bepipred2_epitopes = bepipred2_curl(example_seq_dict)
-    #bepipred_epitopes = bepipred_curl(example_seq_dict)
-    #emini_epitopes = emini_curl(example_seq_dict)
-    #choufasman_epitopes = choufasman_curl(example_seq_dict)
-    #karplusschulz_epitopes = karplusschulz_curl(example_seq_dict)
-    #kolaskartongaonkar_epitopes = kolaskartongaonkar_curl(example_seq_dict)
-    #parker_epitopes = parker_curl(example_seq_dict)
+    bepipred2_epitopes = bepipred2_curl(example_seq_dict)
+    bepipred_epitopes = bepipred_curl(example_seq_dict)
+    emini_epitopes = emini_curl(example_seq_dict)
+    choufasman_epitopes = choufasman_curl(example_seq_dict)
+    karplusschulz_epitopes = karplusschulz_curl(example_seq_dict)
+    kolaskartongaonkar_epitopes = kolaskartongaonkar_curl(example_seq_dict)
+    parker_epitopes = parker_curl(example_seq_dict)
 
     ellipro_epitopes = ellipro(list_of_pdb_ids)
-    return ellipro_epitopes
-    #return ellipro_epitopes
-    #return mhci_epitopes, mhci_proc_epitopes, mhcii_epitopes, bepipred2_epitopes, bepipred_epitopes, emini_epitopes, choufasman_epitopes, karplusschulz_epitopes, kolaskartongaonkar_epitopes, parker_epitopes
+    return mhci_epitopes, mhci_proc_epitopes, mhcii_epitopes, bepipred2_epitopes, bepipred_epitopes, emini_epitopes, choufasman_epitopes, karplusschulz_epitopes, kolaskartongaonkar_epitopes, parker_epitopes, ellipro_epitopes
 
 
-predicted_epitopes = predict_all(list_of_swissprot_ids, path_to_mafft_alignment, mhci_alleles, mhci_lengths, mhcii_alleles, mhcii_lengths, list_of_pdb_ids)
-for alist in predicted_epitopes:
-    print(*alist, sep='\n')
+#predicted_epitopes = predict_all(list_of_swissprot_ids, path_to_mafft_alignment, mhci_alleles, mhci_lengths, mhcii_alleles, mhcii_lengths, list_of_pdb_ids)
+#for alist in predicted_epitopes:
+#    print(*alist, sep='\n')
 
 
-def mhci(conserved_sequences_dict, mhci_alleles=None, mhci_lengths=None):
+# class Netctlpan(Spider):
+#     name = 'Netctlpan'
+#     start_urls = ['http://tools.iedb.org/netchop/']
+#     global netctlpan
+#     global fasta
 
-    """This function uses Selenium to access the MHCI prediction tool from IEDB and returns a list of lists of the
-    predicted epitopes and their attributes. Its arguments are the dictionary with the conserved sequences and their
-    protein IDs, and lists of alleles and lengths of epitopes for each allele(coming soon)"""
+#     def parse(self, response):
+#         yield FormRequest.from_response(
+#             response,
+#             url=self.start_urls[0],
+#             formdata={
+#                 'pred_tool': 'netchop',
+#                 'pred_method': 'netctlpan',
+#                 'sequence_text': fasta,
+#                 'sequence_file': '(binary)',
+#                 'method': '0',
+#                 'netchop_threshold': '0.5',
+#                 'netctl_cleavage': '0.15',
+#                 'netctl_tap': '0.05',
+#                 'supertype': 'A1',
+#                 'netctl_threshold': '0.75',
+#                 'species_list': 'human',
+#                 'freq': 'freq',
+#                 'allele_list': 'HLA-A01:01',
+#                 'length_list': '9',
+#                 'netctlpan_threshold': '-99.9',
+#                 'netctlpan_cleavage': '0.225',
+#                 'netctlpan_tap': '0.025',
+#                 'epitope_threshold': '1.0'
+#             },
+#             callback=self.results_page)
 
-    mhci_url = 'http://tools.iedb.org/mhci/'
-    columns = ['protein_id', 'conserved_sequence', 'method_used', 'allele', 'seq_num', 'start', 'end', 'length', 'peptide', 'score', 'percentile_rank']
-    mhci_results = [columns]
+#     def results_page(self, response):
+#         url = 'http://tools.iedb.org/netchop/table/'
+#         yield scrapy.Request(url=url, callback=self.get_results, dont_filter=True)
 
-    for key in conserved_sequences_dict:
-        for conserved_sequence in conserved_sequences_dict[key]:
-            driver = webdriver.Firefox(executable_path = '../ScrapyEpitope/geckodriver')
-            driver.maximize_window()
-            driver.get(mhci_url)
-
-            driver.find_element(By.NAME, "sequence_text").send_keys(conserved_sequence)
-            driver.find_element(By.ID, "id_refset").click()
-            time.sleep(3)
-            # driver.find_element(By.XPATH, "//select[@name='allele_list']/option[text()='HLA-A*01:01']").click()
-            # time.sleep(1)
-            # driver.find_element(By.XPATH, "//select[@name='length_list']/option[text()='10']").click()
-            # time.sleep(1)
-
-            driver.find_element(By.XPATH, "//select[@name='output_format']/option[text()='Text file']").click()
-            driver.find_element(By.XPATH, "/html/body/div[3]/form/table/tbody/tr[14]/th/div/input[2]").click()
-
-            wait = WebDriverWait(driver, 180)
-            wait.until(ec.visibility_of_element_located((By.XPATH, "/html/body/pre")))
-
-            text_body = driver.find_element(By.XPATH, '/html/body/pre').text.splitlines()
-            driver.close()
-
-            method_used = text_body[2].split(' ')[2]
-
-            text_body_split_rows = []
-            for row in text_body[3:-3]:
-                split_row = row.split(" ")
-                text_body_split_rows.append(split_row)
-
-            df = pd.DataFrame(text_body_split_rows[1:], columns=text_body_split_rows[0])
-            df["percentile_rank"] = pd.to_numeric(df["percentile_rank"])
-            df = df.loc[df['percentile_rank'] <= 1]
-
-            rows = [[i for i in row[1:]] for row in df.itertuples()]
-            for i in rows:
-                i = [key] + [conserved_sequence] + [method_used] + i
-                mhci_results.append(i)
-
-    return mhci_results
-
-
-class Bepipred(Spider):
-    name = 'bepipred'
-    start_urls = ['http://tools.iedb.org/bcell']
-    global bepipred
-
-    def parse(self, response):
-        yield FormRequest.from_response(
-            response,
-            url=self.start_urls[0],
-            formdata={
-                'swissprot': 'P0C6U8',
-                'sequence_text': '',
-                'method': 'Bepipred'
-            },
-            callback=self.get_results)
-
-    def get_results(self, results_page):
-        row = []
-        for cell in results_page.xpath('/html/body/div[3]/table[2]/tbody/tr'):
-            if int(cell.xpath('td[5]//text()').extract_first()) >= 7:
-                row.append(cell.xpath('td[1]//text()').extract_first())
-                row.append(cell.xpath('td[2]//text()').extract_first())
-                row.append(cell.xpath('td[3]//text()').extract_first())
-                row.append(cell.xpath('td[4]//text()').extract_first())
-                row.append(cell.xpath('td[5]//text()').extract_first())
-                bepipred.append(row)
-                row = []
-class Emini(Spider):
-    name = 'Emini'
-    start_urls = ['http://tools.iedb.org/bcell']
-    global emini
-
-    def parse(self, response):
-        yield FormRequest.from_response(
-            response,
-            url=self.start_urls[0],
-            formdata={
-                'swissprot': 'P0C6U8',
-                'sequence_text': '',
-                'method': 'Emini'
-            },
-            callback=self.get_results)
-
-    def get_results(self, results_page):
-        row = []
-        for cell in results_page.xpath('/html/body/div[3]/table[2]/tbody/tr'):
-            if int(cell.xpath('td[5]//text()').extract_first()) >= 7:
-                row.append(cell.xpath('td[1]//text()').extract_first())
-                row.append(cell.xpath('td[2]//text()').extract_first())
-                row.append(cell.xpath('td[3]//text()').extract_first())
-                row.append(cell.xpath('td[4]//text()').extract_first())
-                row.append(cell.xpath('td[5]//text()').extract_first())
-                emini.append(row)
-                row = []
-class Kolaskar(Spider):
-    name = 'Kolaskar-Tongaonkar'
-    start_urls = ['http://tools.iedb.org/bcell']
-    global kolaskar_tongaonkar
-
-    def parse(self, response):
-        yield FormRequest.from_response(
-            response,
-            url=self.start_urls[0],
-            formdata={
-                'swissprot': 'P0C6U8',
-                'sequence_text': '',
-                'method': 'Kolaskar-Tongaonkar'
-            },
-            callback=self.get_results)
-
-    def get_results(self, results_page):
-        row = []
-        for cell in results_page.xpath('/html/body/div[3]/table[2]/tbody/tr'):
-            if int(cell.xpath('td[5]//text()').extract_first()) >= 7:
-                row.append(cell.xpath('td[1]//text()').extract_first())
-                row.append(cell.xpath('td[2]//text()').extract_first())
-                row.append(cell.xpath('td[3]//text()').extract_first())
-                row.append(cell.xpath('td[4]//text()').extract_first())
-                row.append(cell.xpath('td[5]//text()').extract_first())
-                kolaskar_tongaonkar.append(row)
-                row = []
-class Bepipred2(Spider):
-    name = 'bepipred2'
-    start_urls = ['http://tools.iedb.org/bcell']
-    global bepipred2
-
-    def parse(self, response):
-        yield FormRequest.from_response(
-            response,
-            url=self.start_urls[0],
-            formdata={
-                'swissprot': 'P02185',
-                'sequence_text': '',
-                'method': 'Bepipred2'
-            },
-            callback=self.get_results)
-
-    def get_results(self, results_page):
-        row = []
-        for cell in results_page.xpath('/html/body/div[3]/table[2]/tbody/tr'):
-            if int(cell.xpath('td[5]//text()').extract_first()) >= 7:
-                row.append(cell.xpath('td[1]//text()').extract_first())
-                row.append(cell.xpath('td[2]//text()').extract_first())
-                row.append(cell.xpath('td[3]//text()').extract_first())
-                row.append(cell.xpath('td[4]//text()').extract_first())
-                row.append(cell.xpath('td[5]//text()').extract_first())
-                bepipred2.append(row)
-                row = []
-class Chou_Fasman(Spider):
-    name = 'Chou-Fasman'
-    start_urls = ['http://tools.iedb.org/bcell']
-    global choufasman
-
-    def parse(self, response):
-        yield FormRequest.from_response(
-            response,
-            url=self.start_urls[0],
-            formdata={
-                'swissprot': 'P0C6U8',
-                'sequence_text': '',
-                'method': 'Chou-Fasman'
-            },
-            callback=self.get_results)
-
-    def get_results(self, results_page):
-        row = []
-        for cell in results_page.xpath('/html/body/div[3]/table[2]/tbody/tr'):
-            if cell.xpath('td[5]//text()').extract_first():
-                row.append(cell.xpath('td[1]//text()').extract_first())
-                row.append(cell.xpath('td[2]//text()').extract_first())
-                row.append(cell.xpath('td[3]//text()').extract_first())
-                row.append(cell.xpath('td[4]//text()').extract_first())
-                row.append(cell.xpath('td[5]//text()').extract_first())
-                row.append(cell.xpath('td[6]//text()').extract_first())
-                choufasman.append(row)
-                row = []
-class Karplus_Schulz(Spider):
-    name = 'Karplus-Schulz'
-    start_urls = ['http://tools.iedb.org/bcell']
-    global karplusschulz
-
-    def parse(self, response):
-        yield FormRequest.from_response(
-            response,
-            url=self.start_urls[0],
-            formdata={
-                'swissprot': 'P0C6U8',
-                'sequence_text': '',
-                'method': 'Karplus-Schulz'
-            },
-            callback=self.get_results)
-
-    def get_results(self, results_page):
-        row = []
-        for cell in results_page.xpath('/html/body/div[3]/table[2]/tbody/tr'):
-            if cell.xpath('td[5]//text()').extract_first():
-                row.append(cell.xpath('td[1]//text()').extract_first())
-                row.append(cell.xpath('td[2]//text()').extract_first())
-                row.append(cell.xpath('td[3]//text()').extract_first())
-                row.append(cell.xpath('td[4]//text()').extract_first())
-                row.append(cell.xpath('td[5]//text()').extract_first())
-                row.append(cell.xpath('td[6]//text()').extract_first())
-                karplusschulz.append(row)
-                row = []
-class Parker(Spider):
-    name = 'Parker'
-    start_urls = ['http://tools.iedb.org/bcell']
-    global parker
-
-    def parse(self, response):
-        yield FormRequest.from_response(
-            response,
-            url=self.start_urls[0],
-            formdata={
-                'swissprot': 'P0C6U8',
-                'sequence_text': '',
-                'method': 'Parker'
-            },
-            callback=self.get_results)
-
-    def get_results(self, results_page):
-        row = []
-        for cell in results_page.xpath('/html/body/div[3]/table[2]/tbody/tr'):
-            if cell.xpath('td[5]//text()').extract_first():
-                row.append(cell.xpath('td[1]//text()').extract_first())
-                row.append(cell.xpath('td[2]//text()').extract_first())
-                row.append(cell.xpath('td[3]//text()').extract_first())
-                row.append(cell.xpath('td[4]//text()').extract_first())
-                row.append(cell.xpath('td[5]//text()').extract_first())
-                row.append(cell.xpath('td[6]//text()').extract_first())
-                parker.append(row)
-                row = []
-
-class MhcII(Spider):
-    name = 'MhcII'
-    start_urls = ['http://tools.iedb.org/mhcii/']
-    global mhcii
-    global fasta
-    global alleles_mhcii
-    global length_mhcii
-
-    def parse(self, response):
-        yield FormRequest.from_response(
-            response,
-            url=self.start_urls[0],
-            formdata={
-                'sequence_text': fasta,
-                'method': '1222',
-                'locus_list': 'DR',
-                'refset': 'on',
-                'allele': alleles_mhcii,
-                'allele_list': '',
-                'allele_list_a': '',
-                'allele_file': '(binary)',
-                'len-select-options': 'mul_rec',
-                'length': length_mhcii,
-                'sort_output': 'adjusted_rank',
-                'output_format': 'ascii'
-            },
-            callback=self.get_results)
-
-    def get_results(self, results_page):
-        text = results_page.xpath('/html/body/pre//text()').extract_first()
-        rows = text.splitlines()
-        mhcii = []
-        for row in rows:
-            split_row = row.split("\t")
-            mhcii.append(split_row)
-            print(split_row)
-class Netctlpan(Spider):
-    name = 'Netctlpan'
-    start_urls = ['http://tools.iedb.org/netchop/']
-    global netctlpan
-    global fasta
-
-    def parse(self, response):
-        yield FormRequest.from_response(
-            response,
-            url=self.start_urls[0],
-            formdata={
-                'pred_tool': 'netchop',
-                'pred_method': 'netctlpan',
-                'sequence_text': fasta,
-                'sequence_file': '(binary)',
-                'method': '0',
-                'netchop_threshold': '0.5',
-                'netctl_cleavage': '0.15',
-                'netctl_tap': '0.05',
-                'supertype': 'A1',
-                'netctl_threshold': '0.75',
-                'species_list': 'human',
-                'freq': 'freq',
-                'allele_list': 'HLA-A01:01',
-                'length_list': '9',
-                'netctlpan_threshold': '-99.9',
-                'netctlpan_cleavage': '0.225',
-                'netctlpan_tap': '0.025',
-                'epitope_threshold': '1.0'
-            },
-            callback=self.results_page)
-
-    def results_page(self, response):
-        url = 'http://tools.iedb.org/netchop/table/'
-        yield scrapy.Request(url=url, callback=self.get_results, dont_filter=True)
-
-    def get_results(self, results):
-        row = []
-        for cell in results.xpath('/html/body/div[3]/table/tbody/tr'):
-            row.append(cell.xpath('td[1]//text()').extract_first())
-            row.append(cell.xpath('td[2]//text()').extract_first())
-            row.append(cell.xpath('td[3]//text()').extract_first())
-            row.append(cell.xpath('td[4]//text()').extract_first())
-            row.append(cell.xpath('td[5]//text()').extract_first())
-            row.append(cell.xpath('td[6]//text()').extract_first())
-            netctlpan.append(row)
-            row = []
-        print(netctlpan)
-
+#     def get_results(self, results):
+#         row = []
+#         for cell in results.xpath('/html/body/div[3]/table/tbody/tr'):
+#             row.append(cell.xpath('td[1]//text()').extract_first())
+#             row.append(cell.xpath('td[2]//text()').extract_first())
+#             row.append(cell.xpath('td[3]//text()').extract_first())
+#             row.append(cell.xpath('td[4]//text()').extract_first())
+#             row.append(cell.xpath('td[5]//text()').extract_first())
+#             row.append(cell.xpath('td[6]//text()').extract_first())
+#             netctlpan.append(row)
+#             row = []
+#         print(netctlpan)
 
 #configure_logging()
 #settings = get_project_settings()
 #runner = CrawlerRunner(settings)
 
-
-@defer.inlineCallbacks
-def crawl():
+# @defer.inlineCallbacks
+# def crawl():
     # yield runner.crawl(Ellipro)
     # yield runner.crawl(Discotope)
     # yield runner.crawl(Bepipred2)
@@ -1089,10 +801,9 @@ def crawl():
     # yield runner.crawl(Parker)
     # yield runner.crawl(MhcII)
     # yield runner.crawl(Netctlpan)
-    reactor.stop()
+    # reactor.stop()
 
-
-#crawl()
-#reactor.run()  # the script will block here until the last crawl call is finished
+# crawl()
+# reactor.run()  # the script will block here until the last crawl call is finished
 
 

@@ -2065,3 +2065,87 @@ JavaScript error: http://tools.iedb.org/static/js/sequence_validation.js, line 8
 
 ###!!! [Parent][PImageBridgeParent] Error: RunMessage(msgname=PImageBridge::Msg_WillClose) Channel closing: too late to send/recv, messages will be lost
 
+1651849347461	geckodriver	INFO	Listening on 127.0.0.1:41885
+1651849347959	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "35653" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofile3dNVWa"
+1651849349864	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofile3dNVWa/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:35653/devtools/browser/6e626c2a-07e3-415d-bedd-e218bd5ead2e
+1651849354601	Marionette	INFO	Listening on port 36097
+Read port: 36097
+1651849354689	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: http://tools.iedb.org/static/js/sequence_validation.js, line 89: TypeError: document.querySelector(...) is null
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "http://tools.iedb.org"
+JavaScript error: http://tools.iedb.org/static/js/sequence_validation.js, line 89: TypeError: document.querySelector(...) is null
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "http://tools.iedb.org"
+JavaScript error: http://tools.iedb.org/static/js/sequence_validation.js, line 89: TypeError: document.querySelector(...) is null
+1651849364569	Marionette	INFO	Stopped listening on port 36097
+1651849365746	geckodriver	INFO	Listening on 127.0.0.1:52773
+1651849366266	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "39183" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileNZ4uNF"
+1651849368041	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileNZ4uNF/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:39183/devtools/browser/d642ef31-673b-44f5-895b-e722a19e89f0
+1651849372885	Marionette	INFO	Listening on port 42185
+Read port: 42185
+1651849372960	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: http://tools.iedb.org/static/js/sequence_validation.js, line 89: TypeError: document.querySelector(...) is null
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "http://tools.iedb.org"
+JavaScript error: http://tools.iedb.org/static/js/sequence_validation.js, line 89: TypeError: document.querySelector(...) is null
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "http://tools.iedb.org"
+JavaScript error: http://tools.iedb.org/static/js/sequence_validation.js, line 89: TypeError: document.querySelector(...) is null
+1651849384147	Marionette	INFO	Stopped listening on port 42185
+1651849385328	geckodriver	INFO	Listening on 127.0.0.1:54731
+1651849385335	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "34523" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilemTkUmo"
+1651849387005	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilemTkUmo/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:34523/devtools/browser/930aec60-6614-4821-8802-e54c16527ccf
+1651849392132	Marionette	INFO	Listening on port 42109
+Read port: 42109
+1651849392264	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: http://tools.iedb.org/static/js/sequence_validation.js, line 89: TypeError: document.querySelector(...) is null
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "http://tools.iedb.org"
+JavaScript error: http://tools.iedb.org/static/js/sequence_validation.js, line 89: TypeError: document.querySelector(...) is null
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "http://tools.iedb.org"
+JavaScript error: http://tools.iedb.org/static/js/sequence_validation.js, line 89: TypeError: document.querySelector(...) is null
+1651849404349	Marionette	INFO	Stopped listening on port 42109
+1651870366546	geckodriver	INFO	Listening on 127.0.0.1:34837
+1651870367044	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "36575" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileIRfVNJ"
+1651870368427	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileIRfVNJ/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:36575/devtools/browser/cd0949df-42e5-43be-97e4-7c37ca6744e4
+1651870371538	Marionette	INFO	Listening on port 43339
+Read port: 43339
+1651870371613	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: http://tools.iedb.org/static/js/sequence_validation.js, line 89: TypeError: document.querySelector(...) is null
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "http://tools.iedb.org"
+JavaScript error: http://tools.iedb.org/static/js/sequence_validation.js, line 89: TypeError: document.querySelector(...) is null
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "http://tools.iedb.org"
+JavaScript error: http://tools.iedb.org/static/js/sequence_validation.js, line 89: TypeError: document.querySelector(...) is null
+1651870379521	Marionette	INFO	Stopped listening on port 43339
+1651870380195	geckodriver	INFO	Listening on 127.0.0.1:38499
+1651870380700	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "57737" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileWQZLDS"
+1651870381797	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileWQZLDS/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:57737/devtools/browser/66f8e56a-ffa8-4197-9ab1-54243a59eaf1
+1651870384467	Marionette	INFO	Listening on port 40295
+Read port: 40295
+1651870384553	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: http://tools.iedb.org/static/js/sequence_validation.js, line 89: TypeError: document.querySelector(...) is null
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "http://tools.iedb.org"
+JavaScript error: http://tools.iedb.org/static/js/sequence_validation.js, line 89: TypeError: document.querySelector(...) is null
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "http://tools.iedb.org"
+JavaScript error: http://tools.iedb.org/static/js/sequence_validation.js, line 89: TypeError: document.querySelector(...) is null
+1651870392575	Marionette	INFO	Stopped listening on port 40295
+1651870393263	geckodriver	INFO	Listening on 127.0.0.1:41707
+1651870393268	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "35663" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilew2wC8O"
+1651870394275	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilew2wC8O/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:35663/devtools/browser/1e6cd5e4-9703-4211-9d13-75ef5082feb0
+1651870396982	Marionette	INFO	Listening on port 41109
+Read port: 41109
+1651870397073	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: http://tools.iedb.org/static/js/sequence_validation.js, line 89: TypeError: document.querySelector(...) is null
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "http://tools.iedb.org"
+JavaScript error: http://tools.iedb.org/static/js/sequence_validation.js, line 89: TypeError: document.querySelector(...) is null
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "http://tools.iedb.org"
+JavaScript error: http://tools.iedb.org/static/js/sequence_validation.js, line 89: TypeError: document.querySelector(...) is null
+1651870405666	Marionette	INFO	Stopped listening on port 41109
