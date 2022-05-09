@@ -29,8 +29,10 @@ mhcii_lengths = [13, 14, 16]
 list_of_pdb_ids = ['6vxx', '6crz', '5x5f']
 
 
-def mhci_curl(conserved_sequences_dict, list_of_alleles, list_of_lengths):
+def mhci(conserved_sequences_dict, list_of_alleles, list_of_lengths):
     
+    """This function uses the REST API from IEDB to access to MHC I Binding tool and predict the MHC Class I epitopes of the given conserved sequences. It also needs a list of alleles and their respective lengths to run. It employs different methods to predict MHC Class I epitopes, including a consensus approach which combines ANN, SMM, Comblib, NetMHCpan and Consensus. The results are returned as a list of lists"""
+
     alleles = ",".join(list_of_alleles)
     converted_list = [str(element) for element in list_of_lengths]
     lengths = ",".join(converted_list)
@@ -107,7 +109,10 @@ def mhci_curl(conserved_sequences_dict, list_of_alleles, list_of_lengths):
                             mhci_results.append(i)
     return mhci_results
 
-def mhci_proc_curl(conserved_sequences_dict, list_of_alleles, list_of_lengths):
+def mhci_proc(conserved_sequences_dict, list_of_alleles, list_of_lengths):
+
+    """This function uses the REST API from IEDB to access to MHC I Processing tool and predict the MHC Class I epitopes of the given conserved sequences. It also needs a list of alleles and their respective lengths to run. It combines predictors of proteasomal processing, TAP transport, and MHC binding to produce an overall score for each peptide's intrinsic potential of being a T cell epitope. The results are returned as a list of lists"""
+
 
     alleles = ",".join(list_of_alleles)
     converted_list = [str(element) for element in list_of_lengths]
@@ -149,7 +154,10 @@ def mhci_proc_curl(conserved_sequences_dict, list_of_alleles, list_of_lengths):
 
     return mhci_proc_results
 
-def mhcii_curl(conserved_sequences_dict, list_of_alleles, list_of_lengths):
+def mhcii(conserved_sequences_dict, list_of_alleles, list_of_lengths):
+
+    """This function uses the REST API from IEDB to access to MHC II Binding tool and predict the MHC Class II epitopes of the given conserved sequences. It also needs a list of alleles and their respective lengths to run. It employs different methods to predict MHC Class II epitopes, including a consensus approach which combines NN-align, SMM-align and Combinatorial library methods. The results are returned as a list of lists"""
+
 
     alleles = ",".join(list_of_alleles)
     converted_list = [str(element) for element in list_of_lengths]
@@ -191,8 +199,10 @@ def mhcii_curl(conserved_sequences_dict, list_of_alleles, list_of_lengths):
 
     return mhcii_results
 
-def bepipred2_curl(conserved_sequences_dict):
-    
+def bepipred2(conserved_sequences_dict):
+
+    """This function uses the REST API from IEDB to access to Linear Antigen Prediction method Bepipred 2.0 and predict the linear epitopes of the given conserved sequences using a Random Forest algorithm trained on epitopes and non-epitope amino acids determined from crystal structures. The results are returned as a list of lists"""
+
     bepipred2_results = []
     columns = ["protein_id"] + ["conserved_sequence"] + ["predicted_epitope"] + ["start_position"] + ["end_position"]
     bepipred2_results.append(columns)
@@ -254,8 +264,10 @@ def bepipred2_curl(conserved_sequences_dict):
     
     return bepipred2_results
 
-def bepipred_curl(conserved_sequences_dict):
+def bepipred(conserved_sequences_dict):
     
+    """This function uses the REST API from IEDB to access to Linear Antigen Prediction method Bepipred and predict the linear epitopes of the given conserved sequences using a combination of a hidden Markov model and a propensity scale method. The results are returned as a list of lists"""
+
     bepipred_results = []
     columns = ["protein_id"] + ["conserved_sequence"] + ["predicted_epitope"] + ["start_position"] + ["end_position"]
     bepipred_results.append(columns)
@@ -318,8 +330,10 @@ def bepipred_curl(conserved_sequences_dict):
 
     return bepipred_results
 
-def emini_curl(conserved_sequences_dict):
+def emini(conserved_sequences_dict):
     
+    """This function uses the REST API from IEDB to access the Linear Antigen Prediction method Emini and predict the linear epitopes of the given conserved sequences. The calculation is based on surface accessibility scale on a product. The results are returned as a list of lists"""
+
     emini_results = []
     columns = ["protein_id"] + ["conserved_sequence"] + ["predicted_epitope"] + ["start_position"] + ["end_position"]
     emini_results.append(columns)
@@ -382,7 +396,9 @@ def emini_curl(conserved_sequences_dict):
 
     return emini_results
 
-def choufasman_curl(conserved_sequences_dict):
+def choufasman(conserved_sequences_dict):
+
+    """This function uses the REST API from IEDB to access the Linear Antigen Prediction method Chou-Fasman and predict the linear epitopes of the given conserved sequences. It uses the Chou and Fasman scale which is commonly used to predict beta turns. The results are returned as a list of lists"""
 
     choufasman_results = []
     columns = ["protein_id"] + ["conserved_sequence"] + ["predicted_epitope"] + ["start_position"] + ["end_position"]
@@ -447,7 +463,9 @@ def choufasman_curl(conserved_sequences_dict):
 
     return choufasman_results
 
-def karplusschulz_curl(conserved_sequences_dict):
+def karplusschulz(conserved_sequences_dict):
+
+    """This function uses the REST API from IEDB to access the Linear Antigen Prediction method Karplus-Schulz and predict the linear epitopes of the given conserved sequences. In this method, flexibility scale based on mobility of protein segments on the basis of the known temperature B factors of the a-carbons of 31 proteins of known structure was constructed. The results are returned as a list of lists"""
 
     karplusschulz_results = []
     columns = ["protein_id"] + ["conserved_sequence"] + ["predicted_epitope"] + ["start_position"] + ["end_position"]
@@ -513,7 +531,9 @@ def karplusschulz_curl(conserved_sequences_dict):
 
     return karplusschulz_results
 
-def kolaskartongaonkar_curl(conserved_sequences_dict):
+def kolaskartongaonkar(conserved_sequences_dict):
+
+    """This function uses the REST API from IEDB to access the Linear Antigen Prediction method Kolaskar-Tongaonkar and predict the linear epitopes of the given conserved sequences. It is a semi-empirical method which makes use of physicochemical properties of amino acid residues and their frequencies of occurrence in experimentally known segmental epitopes was developed to predict antigenic determinants on proteins. The results are returned as a list of lists"""
 
     kolaskartongaonkar_results = []
     columns = ["protein_id"] + ["conserved_sequence"] + ["predicted_epitope"] + ["start_position"] + ["end_position"]
@@ -578,7 +598,9 @@ def kolaskartongaonkar_curl(conserved_sequences_dict):
 
     return kolaskartongaonkar_results
 
-def parker_curl(conserved_sequences_dict):
+def parker(conserved_sequences_dict):
+
+    """This function uses the REST API from IEDB to access the Linear Antigen Prediction method Parker and predict the linear epitopes of the given conserved sequences. In this method, hydrophilic scale based on peptide retention times during high-performance liquid chromatography (HPLC) on a reversed-phase column was constructed. A window of seven residues was used for analyzing epitope region. The results are returned as a list of lists"""
 
     parker_results = []
     columns = ["protein_id"] + ["conserved_sequence"] + ["predicted_epitope"] + ["start_position"] + ["end_position"]
@@ -644,6 +666,9 @@ def parker_curl(conserved_sequences_dict):
     return parker_results
 
 def ellipro(list_of_pdb_ids):
+    
+    """This function uses Selenium to access the Ellipro tool from IEDB. It requires a list of PDB IDs and returns two lists of lists, one with predicted linear sequences, the other with predicted discontinous sequences. It implements a previously developed method that represents the protein structure as an ellipsoid and calculates protrusion indexes for protein residues outside of the ellipsoid."""
+    
     ellipro_url = 'http://tools.iedb.org/ellipro/'
     linear_columns = ['pdb_id','chain','start','end','peptide','nr_of_residues','score']
     discontinous_columns = ['pdb_id','chain','start','end','peptide','nr_of_residues','score']
@@ -711,22 +736,25 @@ def ellipro(list_of_pdb_ids):
 
 def predict_all(list_of_swissprot_ids, path_to_alignment, alleles_for_mhci, lengths_for_mhci, alleles_for_mhcii, lengths_for_mhcii, list_of_pdb_ids):
     
+    """This function runs all the prediction methods above and return a tuple with the lists of lists"""
+
     alignment(list_of_swissprot_ids, matrix='bl62', gapopen=1.53, gapext=0.123, order='aligned', nbtree=2, treeout='true', maxiterate=2, ffts='none')
     conserved_sequences_mafft = get_conserved_sequences(path_to_alignment, min_seq_conserved_pos='default', min_seq_flank_pos='default', max_contigous_nonconserved_pos = 8, min_length_block= 10, allowed_gap_pos='None')
     
-    mhci_epitopes = mhci_curl(example_seq_dict, alleles_for_mhci, lengths_for_mhci)
-    mhci_proc_epitopes = mhci_proc_curl(example_seq_dict, alleles_for_mhci, lengths_for_mhci)
-    mhcii_epitopes = mhcii_curl(example_seq_dict, alleles_for_mhcii, lengths_for_mhcii)
+    mhci_epitopes = mhci(example_seq_dict, alleles_for_mhci, lengths_for_mhci)
+    mhci_proc_epitopes = mhci_proc(example_seq_dict, alleles_for_mhci, lengths_for_mhci)
+    mhcii_epitopes = mhcii(example_seq_dict, alleles_for_mhcii, lengths_for_mhcii)
     
-    bepipred2_epitopes = bepipred2_curl(example_seq_dict)
-    bepipred_epitopes = bepipred_curl(example_seq_dict)
-    emini_epitopes = emini_curl(example_seq_dict)
-    choufasman_epitopes = choufasman_curl(example_seq_dict)
-    karplusschulz_epitopes = karplusschulz_curl(example_seq_dict)
-    kolaskartongaonkar_epitopes = kolaskartongaonkar_curl(example_seq_dict)
-    parker_epitopes = parker_curl(example_seq_dict)
+    bepipred2_epitopes = bepipred2(example_seq_dict)
+    bepipred_epitopes = bepipred(example_seq_dict)
+    emini_epitopes = emini(example_seq_dict)
+    choufasman_epitopes = choufasman(example_seq_dict)
+    karplusschulz_epitopes = karplusschulz(example_seq_dict)
+    kolaskartongaonkar_epitopes = kolaskartongaonkar(example_seq_dict)
+    parker_epitopes = parker(example_seq_dict)
 
     ellipro_epitopes = ellipro(list_of_pdb_ids)
+    
     return mhci_epitopes, mhci_proc_epitopes, mhcii_epitopes, bepipred2_epitopes, bepipred_epitopes, emini_epitopes, choufasman_epitopes, karplusschulz_epitopes, kolaskartongaonkar_epitopes, parker_epitopes, ellipro_epitopes
 
 
