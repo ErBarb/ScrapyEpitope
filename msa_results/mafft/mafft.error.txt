@@ -1,5 +1,5 @@
 inputfile = orig
-4 x 1353 - 1255 p
+9 x 1356 - 1173 p
 nthread = 8
 nthreadpair = 8
 nthreadtb = 8
@@ -11,31 +11,31 @@ Gap Penalty = -1.53, +0.00, -0.12
 
 
 Making a distance matrix ..
-    1 / 4 (thread    0)
+    1 / 9 (thread    0)
 done.
 
 Constructing a UPGMA tree (treeout, efffree=0) ... 
-    0 / 4
+    0 / 9
 done.
 
 Progressive alignment 1/2... 
-STEP     1 / 3 (thread    0) fSTEP     2 / 3 (thread    1) f
-Reallocating..done. *alloclen = 3753
-STEP     3 / 3 (thread    2) f
+STEP     1 / 8 (thread    0) fSTEP     3 / 8 (thread    2) fSTEP     4 / 8 (thread    3) fSTEP     2 / 8 (thread    1) fSTEP     5 / 8 (thread    4) f
+Reallocating..done. *alloclen = 3717
+STEP     6 / 8 (thread    5) fSTEP     7 / 8 (thread    6) fSTEP     8 / 8 (thread    7) f
 done.
 
 Making a distance matrix from msa.. 
-    0 / 4 (thread    0)
+    0 / 9 (thread    0)
 done.
 
 Constructing a UPGMA tree (treeout, efffree=1) ... 
-    0 / 4
+    0 / 9
 done.
 
 Progressive alignment 2/2... 
-STEP     1 / 3 (thread    0) fSTEP     2 / 3 (thread    1) f
-Reallocating..done. *alloclen = 3753
-STEP     3 / 3 (thread    2) f
+STEP     1 / 8 (thread    0) fSTEP     5 / 8 (thread    5) fSTEP     3 / 8 (thread    3) fSTEP     2 / 8 (thread    1) fSTEP     4 / 8 (thread    4) fSTEP     6 / 8 (thread    6) f
+Reallocating..done. *alloclen = 3806
+STEP     7 / 8 (thread    2) fSTEP     8 / 8 (thread    7) f
 done.
 
 disttbfast (aa) Version 7.487
@@ -43,7 +43,7 @@ alg=A, model=BLOSUM62, 1.53, +0.12, -0.00, noshift, amax=0.0
 8 thread(s)
 
 rescale = 1
-    0 / 4 (thread    0)dndpre (aa) Version 7.487
+    0 / 9 (thread    0)dndpre (aa) Version 7.487
 alg=X, model=BLOSUM62, 1.53, +0.12, -0.00, noshift, amax=0.0
 8 thread(s)
 
@@ -58,110 +58,59 @@ sueff_global = 0.100000
 nadd = 2
 rescale = 1
 
-    0 / 4
-Segment   1/ 34    1- 360
-001-0000-1 (thread    2) identical     001-0000-1 (thread    2) worse      001-0001-0 (thread    3) identical     001-0001-0 (thread    1) identical     001-0001-0 (thread    1) worse      001-0001-0 (thread    3) worse      001-0003-1 (thread    5) identical     001-0004-1 (thread    4) identical     001-0004-1 (thread    4) better     002-0000-0 (thread    4) identical     002-0000-0 (thread    4) worse      002-0001-1 (thread    5) identical     002-0001-1 (thread    5) worse      002-0002-1 (thread    3) identical     002-0003-1 (thread    1) identical     002-0003-1 (thread    1) better     002-0004-0 (thread    7) identical     002-0004-0 (thread    7) worse      
+    0 / 9
+Segment   1/ 17    1- 841
+001-0000-1 (thread    2) identical     001-0001-0 (thread    1) identical     001-0002-1 (thread    6) identical     001-0002-1 (thread    6) worse      001-0003-0 (thread    5) identical     001-0003-0 (thread    5) worse      001-0004-0 (thread    3) identical     001-0004-0 (thread    3) worse      001-0005-1 (thread    4) identical     001-0006-0 (thread    7) identical     001-0006-0 (thread    7) better     001-0007-0 (thread    2) identical     001-0007-0 (thread    2) worse      001-0008-1 (thread    8) identical     001-0008-1 (thread    8) worse      001-0009-1 (thread    1) identical     001-0009-1 (thread    1) worse      001-0010-1 (thread    7) identical     001-0011-1 (thread    4) identical     001-0011-1 (thread    4) better     001-0012-1 (thread    5) identical     001-0012-1 (thread    5) better     001-0013-0 (thread    6) identical     001-0013-0 (thread    6) better     001-0014-0 (thread    3) identical     001-0014-0 (thread    3) better     002-0000-0 (thread    5) identical     002-0001-1 (thread    3) identical     002-0002-1 (thread    1) identical     002-0002-1 (thread    1) worse      002-0003-0 (thread    6) identical     002-0003-0 (thread    6) worse      002-0004-0 (thread    4) identical     002-0004-0 (thread    4) worse      002-0005-1 (thread    7) identical     002-0006-0 (thread    2) identical     002-0006-0 (thread    2) worse      002-0007-1 (thread    8) identical     002-0007-1 (thread    8) worse      002-0008-0 (thread    5) identical     002-0008-0 (thread    5) worse      002-0009-0 (thread    1) identical     002-0009-1 (thread    3) identical     002-0009-0 (thread    1) worse      002-0009-1 (thread    3) worse      002-0011-0 (thread    4) identical     002-0012-1 (thread    7) identical     002-0012-1 (thread    7) worse      002-0013-1 (thread    6) identical     002-0013-1 (thread    6) better     002-0014-1 (thread    2) identical     002-0014-1 (thread    2) worse      
 Reached 2
-Segment   2/ 34  365- 373
-001-0000-0 (thread    1) identical     001-0001-1 (thread    2) identical     001-0002-1 (thread    5) identical     001-0003-1 (thread    7) identical     001-0004-0 (thread    4) identical     
-Converged.
-Segment   3/ 34  373- 383
-001-0000-1 (thread    2) identical     001-0001-1 (thread    3) identical     001-0002-0 (thread    4) identical     001-0003-1 (thread    7) identical     001-0004-0 (thread    1) identical     
-Converged.
-Segment   4/ 34  383- 388
-001-0000-1 (thread    6) identical     001-0000-0 (thread    4) identical     001-0002-0 (thread    1) identical     001-0003-1 (thread    3) identical     001-0004-1 (thread    2) identical     
-Converged.
-Segment   5/ 34  388- 398
-001-0000-1 (thread    7) identical     001-0001-0 (thread    3) identical     001-0002-0 (thread    1) identical     001-0003-1 (thread    2) identical     001-0004-1 (thread    6) identical     
-Converged.
-Segment   6/ 34  398- 409
-001-0000-1 (thread    8) identical     001-0001-0 (thread    1) identical     001-0002-1 (thread    6) identical     001-0003-1 (thread    3) identical     001-0004-0 (thread    2) identical     
-Converged.
-Segment   7/ 34  409- 443
-001-0000-1 (thread    5) identical     001-0001-0 (thread    2) identical     001-0002-1 (thread    3) identical     001-0002-0 (thread    1) identical     001-0004-1 (thread    8) identical     001-0004-1 (thread    8) worse      
-Converged.
-Segment   8/ 34  443- 449
-001-0000-0 (thread    4) identical     001-0001-1 (thread    8) identical     001-0002-0 (thread    1) identical     001-0003-1 (thread    3) identical     001-0004-1 (thread    5) identical     
-Converged.
-Segment   9/ 34  449- 452
-001-0000-1 (thread    2) identical     001-0001-1 (thread    4) identical     001-0002-1 (thread    5) identical     001-0003-0 (thread    3) identical     001-0004-0 (thread    1) identical     
-Converged.
-Segment  10/ 34  452- 477
-001-0000-1 (thread    6) identical     001-0001-1 (thread    4) identical     001-0002-1 (thread    3) identical     001-0003-0 (thread    1) identical     001-0004-0 (thread    2) identical     
-Converged.
-Segment  11/ 34  477- 480
-001-0000-1 (thread    8) identical     001-0001-0 (thread    6) identical     001-0002-1 (thread    1) identical     001-0003-1 (thread    5) identical     001-0004-0 (thread    7) identical     
-Converged.
-Segment  12/ 34  480- 734
-001-0000-1 (thread    8) identical     001-0000-1 (thread    8) better     001-0001-1 (thread    4) identical     001-0002-1 (thread    5) identical     001-0002-1 (thread    5) better     001-0003-0 (thread    3) identical     001-0004-0 (thread    7) identical     001-0004-0 (thread    7) better     002-0000-1 (thread    5) identical     002-0001-0 (thread    7) identical     002-0002-0 (thread    4) identical     002-0003-1 (thread    6) identical     002-0003-1 (thread    6) worse      002-0004-1 (thread    2) identical     002-0004-1 (thread    2) better     
-Reached 2
-Segment  13/ 34  723- 916
-001-0000-0 (thread    5) identical     001-0000-0 (thread    5) better     001-0001-0 (thread    1) identical     001-0001-1 (thread    2) identical     001-0001-0 (thread    1) worse      001-0003-1 (thread    3) identical     001-0003-1 (thread    3) better     001-0004-1 (thread    4) identical     001-0004-1 (thread    4) better     002-0000-0 (thread    1) identical     002-0000-0 (thread    1) worse      002-0001-1 (thread    4) identical     002-0002-1 (thread    5) identical     002-0002-1 (thread    5) better     002-0003-0 (thread    3) identical     002-0004-1 (thread    6) identical     
-Reached 2
-Segment  14/ 34  913- 915
-001-0000-1 (thread    5) identical     001-0001-0 (thread    7) identical     001-0002-1 (thread    8) identical     001-0003-1 (thread    1) identical     001-0004-0 (thread    2) identical     
-Converged.
-Segment  15/ 34  915- 920
-001-0000-1 (thread    2) identical     001-0000-1 (thread    5) identical     001-0002-0 (thread    7) identical     001-0003-0 (thread    1) identical     001-0004-1 (thread    4) identical     
-Converged.
-Segment  16/ 34  920- 941
-001-0000-1 (thread    5) identical     001-0001-1 (thread    4) identical     001-0002-0 (thread    3) identical     001-0003-1 (thread    2) identical     001-0004-0 (thread    1) identical     
-Converged.
-Segment  17/ 34  941-1028
-001-0000-1 (thread    2) identical     001-0001-1 (thread    5) identical     001-0002-0 (thread    3) identical     001-0002-0 (thread    3) worse      001-0003-1 (thread    4) identical     001-0004-0 (thread    1) identical     
-Converged.
-Segment  18/ 34 1028-1058
-001-0000-0 (thread    3) identical     001-0001-1 (thread    5) identical     001-0001-1 (thread    4) identical     001-0003-1 (thread    2) identical     001-0004-0 (thread    1) identical     
-Converged.
-Segment  19/ 34 1058-1099
-001-0000-0 (thread    3) identical     001-0000-1 (thread    2) identical     001-0002-0 (thread    4) identical     001-0003-1 (thread    6) identical     001-0004-1 (thread    1) identical     
-Converged.
-Segment  20/ 34 1099-1120
-001-0000-0 (thread    3) identical     001-0000-1 (thread    2) identical     001-0002-0 (thread    1) identical     001-0003-1 (thread    4) identical     001-0004-1 (thread    5) identical     
-Converged.
-Segment  21/ 34 1120-1180
-001-0000-1 (thread    4) identical     001-0001-0 (thread    3) identical     001-0002-1 (thread    5) identical     001-0003-1 (thread    2) identical     001-0004-0 (thread    1) identical     
-Converged.
-Segment  22/ 34 1180-1217
-001-0000-0 (thread    3) identical     001-0000-1 (thread    4) identical     001-0002-1 (thread    5) identical     001-0003-1 (thread    2) identical     001-0004-0 (thread    1) identical     
-Converged.
-Segment  23/ 34 1217-1251
-001-0000-1 (thread    5) identical     001-0001-0 (thread    3) identical     001-0001-1 (thread    4) identical     001-0003-0 (thread    1) identical     001-0004-1 (thread    2) identical     
-Converged.
-Segment  24/ 34 1251-1276
-001-0000-1 (thread    4) identical     001-0001-1 (thread    2) identical     001-0002-0 (thread    3) identical     001-0003-1 (thread    5) identical     001-0004-0 (thread    1) identical     
-Converged.
-Segment  25/ 34 1276-1322
-001-0000-0 (thread    2) identical     001-0001-1 (thread    3) identical     001-0002-1 (thread    4) identical     001-0002-1 (thread    5) identical     001-0004-0 (thread    1) identical     
-Converged.
-Segment  26/ 34 1322-1326
-001-0000-1 (thread    5) identical     001-0001-0 (thread    1) identical     001-0002-1 (thread    2) identical     001-0003-0 (thread    3) identical     001-0004-1 (thread    4) identical     
-Converged.
-Segment  27/ 34 1326-1329
-001-0000-1 (thread    4) identical     001-0001-1 (thread    5) identical     001-0002-0 (thread    1) identical     001-0003-1 (thread    2) identical     001-0004-0 (thread    3) identical     
-Converged.
-Segment  28/ 34 1329-1373
-001-0000-1 (thread    5) identical     001-0000-1 (thread    4) identical     001-0001-1 (thread    4) better     001-0002-0 (thread    1) identical     001-0003-1 (thread    2) identical     001-0004-0 (thread    3) identical     002-0000-1 (thread    5) identical     002-0001-0 (thread    2) identical     002-0002-1 (thread    8) identical     002-0003-0 (thread    6) identical     002-0004-1 (thread    7) identical     
+Segment   2/ 17  840-1033
+001-0000-0 (thread    8) identical     001-0001-0 (thread    8) identical     001-0002-1 (thread    8) identical     001-0003-0 (thread    8) identical     001-0003-0 (thread    8) worse      001-0004-1 (thread    8) identical     001-0004-1 (thread    8) worse      001-0005-0 (thread    8) identical     001-0005-0 (thread    8) worse      001-0006-1 (thread    8) identical     001-0006-1 (thread    8) better     001-0007-1 (thread    8) identical     001-0008-0 (thread    3) identical     001-0009-1 (thread    5) identical     001-0010-0 (thread    6) identical     001-0010-0 (thread    6) worse      001-0011-1 (thread    7) identical     001-0011-1 (thread    7) better     001-0012-0 (thread    2) identical     001-0013-1 (thread    4) identical     001-0014-1 (thread    1) identical     002-0000-0 (thread    2) identical     002-0001-1 (thread    1) identical     002-0001-0 (thread    7) identical     002-0003-1 (thread    4) identical     002-0004-1 (thread    6) identical     002-0005-0 (thread    8) identical     002-0006-1 (thread    1) identical     002-0007-0 (thread    2) identical     002-0008-0 (thread    7) identical     002-0008-0 (thread    7) worse      002-0009-1 (thread    4) identical     002-0009-1 (thread    4) worse      002-0010-0 (thread    6) identical     002-0010-0 (thread    5) identical     002-0010-0 (thread    6) worse      002-0010-0 (thread    5) worse      002-0012-1 (thread    3) identical     002-0013-1 (thread    8) identical     002-0013-1 (thread    8) worse      002-0014-1 (thread    1) identical     
 Converged.
 
 Reached 2
-Segment  29/ 34 1379-1403
-001-0000-0 (thread    3) identical     001-0001-1 (thread    2) identical     001-0002-1 (thread    4) identical     001-0002-1 (thread    5) identical     001-0004-0 (thread    1) identical     
+Segment   3/ 17 1033-1040
+001-0000-0 (thread    1) identical     001-0000-0 (thread    2) identical     001-0000-1 (thread    3) identical     001-0003-0 (thread    1) identical     001-0003-1 (thread    2) identical     001-0005-0 (thread    3) identical     001-0006-1 (thread    1) identical     001-0006-0 (thread    2) identical     001-0008-1 (thread    3) identical     001-0008-1 (thread    1) identical     001-0010-1 (thread    7) identical     001-0010-0 (thread    4) identical     001-0011-1 (thread    6) identical     001-0011-0 (thread    5) identical     001-0014-1 (thread    8) identical     
 Converged.
-Segment  30/ 34 1403-1427
-001-0000-1 (thread    2) identical     001-0001-0 (thread    1) identical     001-0002-1 (thread    4) identical     001-0002-0 (thread    3) identical     001-0004-1 (thread    5) identical     
+Segment   4/ 17 1040-1057
+001-0000-0 (thread    8) identical     001-0001-1 (thread    2) identical     001-0002-1 (thread    2) identical     001-0003-0 (thread    8) identical     001-0004-0 (thread    1) identical     001-0004-0 (thread    2) identical     001-0004-0 (thread    4) identical     001-0007-1 (thread    5) identical     001-0007-0 (thread    2) identical     001-0007-1 (thread    8) identical     001-0010-1 (thread    1) identical     001-0010-1 (thread    4) identical     001-0012-0 (thread    6) identical     001-0012-1 (thread    7) identical     001-0014-1 (thread    3) identical     
 Converged.
-Segment  31/ 34 1427-1454
-001-0000-1 (thread    4) identical     001-0001-1 (thread    6) identical     001-0002-0 (thread    1) identical     001-0003-1 (thread    2) identical     001-0004-0 (thread    3) identical     
+Segment   5/ 17 1057-1145
+001-0000-1 (thread    4) identical     001-0001-0 (thread    5) identical     001-0002-1 (thread    1) identical     001-0002-0 (thread    6) identical     001-0004-0 (thread    2) identical     001-0005-0 (thread    3) identical     001-0004-1 (thread    8) identical     001-0007-1 (thread    5) identical     001-0007-0 (thread    4) identical     001-0009-0 (thread    1) identical     001-0009-0 (thread    1) better     001-0010-1 (thread    3) identical     001-0010-1 (thread    3) better     001-0011-1 (thread    6) identical     001-0011-0 (thread    2) identical     001-0011-1 (thread    8) identical     001-0012-1 (thread    6) better     001-0014-1 (thread    7) identical     001-0014-1 (thread    7) better     002-0000-1 (thread    7) identical     002-0001-0 (thread    8) identical     002-0001-0 (thread    6) identical     002-0002-1 (thread    3) identical     002-0004-0 (thread    1) identical     002-0004-1 (thread    4) identical     002-0001-0 (thread    2) identical     002-0007-1 (thread    7) identical     002-0008-0 (thread    6) identical     002-0009-0 (thread    8) identical     002-0010-1 (thread    3) identical     002-0011-1 (thread    1) identical     002-0012-1 (thread    2) identical     002-0012-1 (thread    2) better     002-0013-1 (thread    7) identical     002-0014-0 (thread    4) identical     
+Reached 2
+Segment   6/ 17 1145-1179
+001-0000-0 (thread    8) identical     001-0000-1 (thread    1) identical     001-0000-1 (thread    7) identical     001-0003-0 (thread    2) identical     001-0004-1 (thread    4) identical     001-0005-1 (thread    8) identical     001-0005-0 (thread    3) identical     001-0005-0 (thread    1) identical     001-0007-0 (thread    7) identical     001-0009-1 (thread    2) identical     001-0010-1 (thread    8) identical     001-0011-0 (thread    4) identical     001-0011-0 (thread    5) identical     001-0013-1 (thread    3) identical     001-0014-1 (thread    6) identical     
 Converged.
-Segment  32/ 34 1454-1467
-001-0000-1 (thread    5) identical     001-0001-1 (thread    2) identical     001-0001-0 (thread    1) identical     001-0003-1 (thread    4) identical     001-0003-0 (thread    3) identical     
+Segment   7/ 17 1179-1241
+001-0000-1 (thread    7) identical     001-0001-0 (thread    1) identical     001-0001-1 (thread    8) identical     001-0002-0 (thread    2) identical     001-0001-0 (thread    6) identical     001-0001-1 (thread    3) identical     001-0006-0 (thread    7) identical     001-0006-1 (thread    8) identical     001-0008-0 (thread    1) identical     001-0009-1 (thread    2) identical     001-0010-0 (thread    6) identical     001-0011-1 (thread    7) identical     001-0011-1 (thread    3) identical     001-0013-1 (thread    4) identical     001-0014-0 (thread    5) identical     
 Converged.
-Segment  33/ 34 1467-1479
-001-0000-1 (thread    5) identical     001-0001-0 (thread    1) identical     001-0002-0 (thread    3) identical     001-0002-1 (thread    2) identical     001-0004-1 (thread    6) identical     
+Segment   8/ 17 1241-1318
+001-0000-0 (thread    1) identical     001-0001-0 (thread    5) identical     001-0002-1 (thread    2) identical     001-0003-1 (thread    4) identical     001-0003-1 (thread    3) identical     001-0005-1 (thread    5) identical     001-0005-0 (thread    1) identical     001-0007-0 (thread    2) identical     001-0008-0 (thread    6) identical     001-0009-1 (thread    4) identical     001-0009-1 (thread    5) identical     001-0011-1 (thread    1) identical     001-0012-0 (thread    3) identical     001-0013-0 (thread    7) identical     001-0014-1 (thread    8) identical     
 Converged.
-Segment  34/ 34 1479-1496
-001-0000-1 (thread    4) identical     001-0001-1 (thread    2) identical     001-0002-0 (thread    3) identical     001-0002-0 (thread    3) better     001-0003-1 (thread    5) identical     001-0004-0 (thread    1) identical     002-0000-0 (thread    1) identical     002-0001-1 (thread    3) identical     002-0001-1 (thread    4) identical     002-0001-1 (thread    5) identical     002-0002-1 (thread    4) better     002-0004-0 (thread    8) identical     
+Segment   9/ 17 1318-1384
+001-0000-0 (thread    1) identical     001-0000-0 (thread    5) identical     001-0000-1 (thread    2) identical     001-0003-0 (thread    3) identical     001-0004-1 (thread    6) identical     001-0005-0 (thread    7) identical     001-0006-1 (thread    4) identical     001-0006-1 (thread    5) identical     001-0006-0 (thread    1) identical     001-0009-0 (thread    2) identical     001-0010-0 (thread    6) identical     001-0011-1 (thread    5) identical     001-0012-1 (thread    7) identical     001-0013-1 (thread    3) identical     001-0014-1 (thread    8) identical     
+Converged.
+Segment  10/ 17 1384-1410
+001-0000-1 (thread    2) identical     001-0001-0 (thread    5) identical     001-0002-0 (thread    2) identical     001-0003-0 (thread    1) identical     001-0004-1 (thread    4) identical     001-0004-1 (thread    5) identical     001-0004-0 (thread    3) identical     001-0007-0 (thread    2) identical     001-0008-1 (thread    6) identical     001-0009-1 (thread    1) identical     001-0010-0 (thread    5) identical     001-0011-1 (thread    4) identical     001-0012-1 (thread    3) identical     001-0013-0 (thread    8) identical     001-0014-1 (thread    7) identical     
+Converged.
+Segment  11/ 17 1410-1583
+001-0000-1 (thread    6) identical     001-0001-0 (thread    5) identical     001-0002-1 (thread    4) identical     001-0003-0 (thread    3) identical     001-0004-0 (thread    1) identical     001-0004-1 (thread    2) identical     001-0006-0 (thread    8) identical     001-0006-0 (thread    8) better     001-0007-0 (thread    6) identical     001-0008-0 (thread    4) identical     001-0008-0 (thread    4) worse      001-0009-1 (thread    5) identical     001-0010-1 (thread    8) identical     001-0011-1 (thread    2) identical     001-0011-1 (thread    2) better     001-0012-1 (thread    3) identical     001-0013-1 (thread    7) identical     001-0014-0 (thread    1) identical     001-0014-0 (thread    1) worse      002-0000-0 (thread    3) identical     002-0001-1 (thread    5) identical     002-0002-1 (thread    4) identical     002-0002-0 (thread    2) identical     002-0004-0 (thread    6) identical     002-0005-1 (thread    1) identical     002-0006-0 (thread    7) identical     002-0007-1 (thread    8) identical     002-0008-1 (thread    5) identical     002-0009-1 (thread    2) identical     002-0009-0 (thread    4) identical     002-0009-0 (thread    4) worse      002-0011-0 (thread    6) identical     002-0011-0 (thread    6) worse      002-0012-0 (thread    3) identical     002-0013-1 (thread    1) identical     002-0014-1 (thread    7) identical     002-0014-1 (thread    7) better     
+Reached 2
+Segment  12/ 17 1583-1600
+001-0000-0 (thread    2) identical     001-0000-0 (thread    3) identical     001-0000-1 (thread    1) identical     001-0003-1 (thread    5) identical     001-0004-0 (thread    2) identical     001-0005-1 (thread    3) identical     001-0006-0 (thread    2) identical     001-0006-0 (thread    1) identical     001-0008-1 (thread    5) identical     001-0008-1 (thread    3) identical     001-0010-1 (thread    2) identical     001-0011-1 (thread    8) identical     001-0011-0 (thread    4) identical     001-0013-0 (thread    7) identical     001-0014-1 (thread    6) identical     
+Converged.
+Segment  13/ 17 1600-1606
+001-0000-1 (thread    2) identical     001-0000-0 (thread    5) identical     001-0000-0 (thread    4) identical     001-0000-0 (thread    1) identical     001-0000-1 (thread    3) identical     001-0000-0 (thread    8) identical     001-0006-1 (thread    7) identical     001-0007-1 (thread    4) identical     001-0008-1 (thread    8) identical     001-0008-0 (thread    2) identical     001-0008-0 (thread    1) identical     001-0008-1 (thread    5) identical     001-0011-1 (thread    6) identical     001-0008-1 (thread    7) identical     001-0008-0 (thread    3) identical     
+Converged.
+Segment  14/ 17 1606-1612
+001-0000-0 (thread    1) identical     001-0001-0 (thread    3) identical     001-0002-0 (thread    1) identical     001-0003-1 (thread    4) identical     001-0003-0 (thread    1) identical     001-0003-1 (thread    7) identical     001-0006-1 (thread    3) identical     001-0007-1 (thread    2) identical     001-0007-1 (thread    1) identical     001-0009-1 (thread    3) identical     001-0010-0 (thread    4) identical     001-0011-1 (thread    7) identical     001-0012-0 (thread    5) identical     001-0013-0 (thread    6) identical     001-0014-1 (thread    8) identical     
+Converged.
+Segment  15/ 17 1612-1617
+001-0000-0 (thread    8) identical     001-0001-1 (thread    7) identical     001-0002-0 (thread    6) identical     001-0002-1 (thread    5) identical     001-0004-0 (thread    8) identical     001-0005-1 (thread    7) identical     001-0005-0 (thread    6) identical     001-0005-0 (thread    8) identical     001-0005-1 (thread    5) identical     001-0005-0 (thread    1) identical     001-0006-1 (thread    2) identical     001-0007-0 (thread    4) identical     001-0007-1 (thread    8) identical     001-0013-1 (thread    1) identical     001-0014-1 (thread    3) identical     
+Converged.
+Segment  16/ 17 1617-1622
+001-0000-0 (thread    4) identical     001-0001-1 (thread    5) identical     001-0002-0 (thread    4) identical     001-0002-1 (thread    6) identical     001-0003-0 (thread    1) identical     001-0004-0 (thread    4) identical     001-0004-0 (thread    3) identical     001-0004-1 (thread    5) identical     001-0007-1 (thread    2) identical     001-0007-1 (thread    4) identical     001-0007-0 (thread    7) identical     001-0010-1 (thread    6) identical     001-0010-1 (thread    8) identical     001-0013-1 (thread    3) identical     001-0013-0 (thread    1) identical     
+Converged.
+Segment  17/ 17 1622-1651
+001-0000-1 (thread    5) identical     001-0001-0 (thread    5) identical     001-0002-1 (thread    5) identical     001-0003-0 (thread    5) identical     001-0003-0 (thread    5) better     001-0004-1 (thread    5) identical     001-0004-1 (thread    5) worse      001-0005-0 (thread    4) identical     001-0006-0 (thread    5) identical     001-0006-0 (thread    5) worse      001-0007-0 (thread    6) identical     001-0008-1 (thread    4) identical     001-0008-1 (thread    2) identical     001-0008-1 (thread    5) identical     001-0008-1 (thread    4) worse      001-0011-1 (thread    8) identical     001-0011-0 (thread    7) identical     001-0013-1 (thread    3) identical     001-0013-0 (thread    1) identical     002-0000-0 (thread    3) identical     002-0001-0 (thread    8) identical     002-0002-1 (thread    6) identical     002-0003-0 (thread    2) identical     002-0004-0 (thread    5) identical     002-0005-1 (thread    4) identical     002-0006-1 (thread    1) identical     002-0006-0 (thread    3) identical     002-0007-0 (thread    3) better     002-0008-1 (thread    8) identical     002-0008-1 (thread    8) worse      002-0008-0 (thread    5) identical     002-0008-1 (thread    2) identical     002-0008-0 (thread    5) worse      002-0008-0 (thread    6) identical     002-0008-1 (thread    2) worse      002-0012-1 (thread    7) identical     002-0013-1 (thread    4) identical     002-0013-1 (thread    4) worse      002-0014-1 (thread    1) identical     
 Reached 2
 done
 dvtditr (aa) Version 7.487

@@ -2,46 +2,41 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
-import scrapy
-from scrapy import Spider
-from scrapy.http import FormRequest
-from scrapy.utils.project import get_project_settings
-from scrapy.utils.log import configure_logging
-from scrapy.crawler import CrawlerRunner
-from twisted.internet import reactor, defer
+from selenium.webdriver.firefox.options import Options
 import time
+import os
 import pandas as pd
 from msa import alignment
 from msa import get_conserved_sequences
 import requests
+import csv
+# import scrapy
+# from scrapy import Spider
+# from scrapy.http import FormRequest
+# from scrapy.utils.project import get_project_settings
+# from scrapy.utils.log import configure_logging
+# from scrapy.crawler import CrawlerRunner
+# from twisted.internet import reactor, defer
 
-
-example_seq_dict = {'P0DTC2': ['SRSARSAIEDLLFDKVTIADPGYMQGYDDC','WSYTGSSFYAPEPITSLNTKY'],
-'P36334': ['WMYTGSGYYYPEPITENNVVV','FKEELDQWFKNQTSVAPDL']}
-example_seq = 'SYIVVGRGEQQINHHWHK'
-list_of_swissprot_ids = ['P59594', 'P0DTC2', 'K9N5Q8', 'P36334', 'Q0ZME7', 'P15423', 'Q6Q1S2', 'Q5MQD0', 'Q14EB0']
-path_to_mafft_alignment = '/home/erald/Desktop/ScrapyEpitope/msa_results/mafft/mafft.aln-fasta.fasta'
-path_to_muscle_alignment = '/home/erald/Desktop/ScrapyEpitope/msa_results/muscle/muscle.aln-fasta.fasta'
-mhci_alleles = ['HLA-A*01:01', 'HLA-A*02:01', 'HLA-A*03:01']
-mhci_lengths = [8, 9, 10]
-mhcii_alleles = ['HLA-DRB1*01:01', 'HLA-DRB1*03:01']
-mhcii_lengths = [13, 14, 16]
-list_of_pdb_ids = ['6vxx', '6crz', '5x5f']
 
 
 def mhci(conserved_sequences_dict, list_of_alleles, list_of_lengths):
     
-    """This function uses the REST API from IEDB to access to MHC I Binding tool and predict the MHC Class I epitopes of the given conserved sequences. It also needs a list of alleles and their respective lengths to run. It employs different methods to predict MHC Class I epitopes, including a consensus approach which combines ANN, SMM, Comblib, NetMHCpan and Consensus. The results are returned as a list of lists"""
+    """This function uses the REST API from IEDB to access to MHC I Binding tool and predict the MHC Class I epitopes of the given conserved sequences. 
+    It also needs a list of alleles and their respective lengths to run. It employs different methods to predict MHC Class I epitopes, including a 
+    consensus approach which combines ANN, SMM, Comblib, NetMHCpan and Consensus. The results are returned as a list of lists"""
 
     alleles = ",".join(list_of_alleles)
     converted_list = [str(element) for element in list_of_lengths]
     lengths = ",".join(converted_list)
 
     mhci_results = []
-    columns = ["protein_id"] + ["conserved_sequence"] + ["allele"] + ["seq_num"] + ["start"] + ["end"] + ["length"] + ["peptide"] + ["core"] + ["icore"] + ["score"] + ["percentile_rank"]
+    columns = ["protein_id"] + ["conserved_sequence"] + ["allele"] + ["seq_num"] + ["start"] + ["end"] + ["length"] + \
+        ["peptide"] + ["core"] + ["icore"] + ["score"] + ["percentile_rank"]
     mhci_results.append(columns)
 
     for key in conserved_sequences_dict:
+        print("Predicting linear epitopes of protein " + key + " with MHCI")
         for conserved_sequence in conserved_sequences_dict[key]:
             if len(conserved_sequence) >= max(list_of_lengths):
                 
@@ -107,11 +102,17 @@ def mhci(conserved_sequences_dict, list_of_alleles, list_of_lengths):
                         for i in rows:
                             i = [key] + [conserved_sequence] + i
                             mhci_results.append(i)
+    with open('epitope_prediction_results/mhci_epitopes.json', 'w', newline="") as f: 
+        writer = csv.writer(f)
+        writer.writerows(mhci_results)
+    print("MHCI prediction done\n")
     return mhci_results
 
 def mhci_proc(conserved_sequences_dict, list_of_alleles, list_of_lengths):
 
-    """This function uses the REST API from IEDB to access to MHC I Processing tool and predict the MHC Class I epitopes of the given conserved sequences. It also needs a list of alleles and their respective lengths to run. It combines predictors of proteasomal processing, TAP transport, and MHC binding to produce an overall score for each peptide's intrinsic potential of being a T cell epitope. The results are returned as a list of lists"""
+    """This function uses the REST API from IEDB to access to MHC I Processing tool and predict the MHC Class I epitopes of the given conserved sequences. 
+    It also needs a list of alleles and their respective lengths to run. It combines predictors of proteasomal processing, TAP transport, and MHC binding 
+    to produce an overall score for each peptide's intrinsic potential of being a T cell epitope. The results are returned as a list of lists"""
 
 
     alleles = ",".join(list_of_alleles)
@@ -119,10 +120,12 @@ def mhci_proc(conserved_sequences_dict, list_of_alleles, list_of_lengths):
     lengths = ",".join(converted_list)
 
     mhci_proc_results = []
-    columns = ["protein_id"] + ["conserved_sequence"] + ["allele"] + ["start"] + ["end"] + ['peptide_length'] + ["peptide"] + ["proteasome_score"] + ["tap_score"] + ["mhci_score"] + ["processing_score"] + ["total_score"] + ["mhci_ic50"]
+    columns = ["protein_id"] + ["conserved_sequence"] + ["allele"] + ['#'] + ["start"] + ["end"] + ['peptide_length'] + \
+        ["peptide"] + ["proteasome_score"] + ["tap_score"] + ["mhci_score"] + ["processing_score"] + ["total_score"] + ["mhci_ic50"]
     mhci_proc_results.append(columns)
 
     for key in conserved_sequences_dict:
+        print("Predicting linear epitopes of protein " + key + " with MHCI Processing")
         for conserved_sequence in conserved_sequences_dict[key]:
             if len(conserved_sequence) >= max(list_of_lengths):
 
@@ -140,6 +143,7 @@ def mhci_proc(conserved_sequences_dict, list_of_alleles, list_of_lengths):
                     split_line = line.split("\t")
                     response_body.append(split_line)
                 
+                
                 df = pd.DataFrame(response_body[1:], columns=response_body[0])
                 df["total_score"] = pd.to_numeric(df["total_score"])
                 df = df.loc[df['total_score'] > 0]
@@ -151,12 +155,17 @@ def mhci_proc(conserved_sequences_dict, list_of_alleles, list_of_lengths):
                     for i in rows:
                         i = [key] + [conserved_sequence] + i
                         mhci_proc_results.append(i)
-
+    with open('epitope_prediction_results/mhci_proc_epitopes.json', 'w', newline="") as f:
+        writer = csv.writer(f)
+        writer.writerows(mhci_proc_results)                
+    print("MHCI Processing prediction done\n")
     return mhci_proc_results
 
 def mhcii(conserved_sequences_dict, list_of_alleles, list_of_lengths):
 
-    """This function uses the REST API from IEDB to access to MHC II Binding tool and predict the MHC Class II epitopes of the given conserved sequences. It also needs a list of alleles and their respective lengths to run. It employs different methods to predict MHC Class II epitopes, including a consensus approach which combines NN-align, SMM-align and Combinatorial library methods. The results are returned as a list of lists"""
+    """This function uses the REST API from IEDB to access to MHC II Binding tool and predict the MHC Class II epitopes of the given conserved sequences. 
+    It also needs a list of alleles and their respective lengths to run. It employs different methods to predict MHC Class II epitopes, including a consensus 
+    approach which combines NN-align, SMM-align and Combinatorial library methods. The results are returned as a list of lists"""
 
 
     alleles = ",".join(list_of_alleles)
@@ -164,10 +173,18 @@ def mhcii(conserved_sequences_dict, list_of_alleles, list_of_lengths):
     lengths = ",".join(converted_list)
 
     mhcii_results = []
-    columns = ["protein_id"] + ["conserved_sequence"] + ["allele"] + ["seq_num"] + ["start"] + ["end"] + ["length"] + ["core_peptide"] + ["peptide"] + ["ic50"] + ["rank"] + ["adjusted_rank"]
+    columns = ["protein_id"] + ["conserved_sequence"] + ["allele"] + ["seq_num"] + ["start"] + ["end"] + ["length"] + \
+        ["method"] + ["peptide"] + ["percentile_rank"] + ["adjusted_rank"] + \
+        ["comblib_core"] + ['comblib_score'] + ['comblib_rank'] + ["comblib_adjusted_rank"] + \
+        ["smm_align_core"] + ["smm_align_ic50"] + ["smm_align_rank"] + ["smm_align_adjusted_rank"] + \
+        ['nn_align_core'] + ['nn_align_ic50'] + ["nn_align_rank"] + ["nn_align_adjusted_rank"] + \
+        ["netmhciipan_core"] + ["netmhciipan_ic50"] + ["netmhciipan_rank"] + ['netmhciipan_adjusted_rank'] + \
+        ['sturniolo_core'] + ["sturniolo_score"] + ["sturniolo_rank"] + ["sturniolo_adjusted_rank"]
+    
     mhcii_results.append(columns)
 
     for key in conserved_sequences_dict:
+        print("Predicting linear epitopes of protein " + key + " with MHCII")
         for conserved_sequence in conserved_sequences_dict[key]:
             if len(conserved_sequence) >= max(list_of_lengths):
 
@@ -179,7 +196,7 @@ def mhcii(conserved_sequences_dict, list_of_alleles, list_of_lengths):
                 
                 response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/mhcii/', headers=headers, data=data)
                 response_data_split_by_line = response.content.decode('utf-8').splitlines()
-                
+
                 response_body = []
                 for line in response_data_split_by_line:
                     split_line = line.split("\t")
@@ -196,18 +213,24 @@ def mhcii(conserved_sequences_dict, list_of_alleles, list_of_lengths):
                     for i in rows:
                         i = [key] + [conserved_sequence] + i
                         mhcii_results.append(i)
-
+    with open('epitope_prediction_results/mhcii_epitopes.json', 'w', newline="") as f:
+        writer = csv.writer(f)
+        writer.writerows(mhcii_results)   
+    print("MHCII prediction done\n")
     return mhcii_results
 
 def bepipred2(conserved_sequences_dict):
 
-    """This function uses the REST API from IEDB to access to Linear Antigen Prediction method Bepipred 2.0 and predict the linear epitopes of the given conserved sequences using a Random Forest algorithm trained on epitopes and non-epitope amino acids determined from crystal structures. The results are returned as a list of lists"""
+    """This function uses the REST API from IEDB to access to Linear Antigen Prediction method Bepipred 2.0 and predict the linear epitopes of the given conserved 
+    sequences using a Random Forest algorithm trained on epitopes and non-epitope amino acids determined from crystal structures. The results are returned as a 
+    list of lists"""
 
     bepipred2_results = []
     columns = ["protein_id"] + ["conserved_sequence"] + ["predicted_epitope"] + ["start_position"] + ["end_position"]
     bepipred2_results.append(columns)
 
     for key in conserved_sequences_dict:
+        print("Predicting linear epitopes of protein " + key + " with Bepipred 2.0")
         for conserved_sequence in conserved_sequences_dict[key]:
             
             headers = {
@@ -261,18 +284,23 @@ def bepipred2(conserved_sequences_dict):
                         bepipred2_results.append(predicted)
                     epitope = ''
                     predicted = []
-    
+    with open('epitope_prediction_results/bepipred2.0_epitopes.json', 'w', newline="") as f:
+        writer = csv.writer(f)
+        writer.writerows(bepipred2_results)   
+    print("Bepipred 2.0 prediction done\n")
     return bepipred2_results
 
 def bepipred(conserved_sequences_dict):
     
-    """This function uses the REST API from IEDB to access to Linear Antigen Prediction method Bepipred and predict the linear epitopes of the given conserved sequences using a combination of a hidden Markov model and a propensity scale method. The results are returned as a list of lists"""
+    """This function uses the REST API from IEDB to access to Linear Antigen Prediction method Bepipred and predict the linear epitopes of the given conserved 
+    sequences using a combination of a hidden Markov model and a propensity scale method. The results are returned as a list of lists"""
 
     bepipred_results = []
     columns = ["protein_id"] + ["conserved_sequence"] + ["predicted_epitope"] + ["start_position"] + ["end_position"]
     bepipred_results.append(columns)
 
     for key in conserved_sequences_dict:
+        print("Predicting linear epitopes of protein " + key + " with Bepipred 1.0")
         for conserved_sequence in conserved_sequences_dict[key]:
             
             time.sleep(1)
@@ -327,18 +355,23 @@ def bepipred(conserved_sequences_dict):
                         bepipred_results.append(predicted)
                     epitope = ''
                     predicted = []
-
+    with open('epitope_prediction_results/bepipred1.0_epitopes.json', 'w', newline="") as f:
+        writer = csv.writer(f)
+        writer.writerows(bepipred_results) 
+    print("Bepipred 1.0 prediction done\n")
     return bepipred_results
 
 def emini(conserved_sequences_dict):
     
-    """This function uses the REST API from IEDB to access the Linear Antigen Prediction method Emini and predict the linear epitopes of the given conserved sequences. The calculation is based on surface accessibility scale on a product. The results are returned as a list of lists"""
+    """This function uses the REST API from IEDB to access the Linear Antigen Prediction method Emini and predict the linear epitopes of the given conserved 
+    sequences. The calculation is based on surface accessibility scale on a product. The results are returned as a list of lists"""
 
     emini_results = []
     columns = ["protein_id"] + ["conserved_sequence"] + ["predicted_epitope"] + ["start_position"] + ["end_position"]
     emini_results.append(columns)
 
     for key in conserved_sequences_dict:
+        print("Predicting linear epitopes of protein " + key + " with Emini")
         for conserved_sequence in conserved_sequences_dict[key]:
             
             time.sleep(1)
@@ -393,18 +426,23 @@ def emini(conserved_sequences_dict):
                         emini_results.append(predicted)
                     epitope = ''
                     predicted = []
-
+    with open('epitope_prediction_results/emini_epitopes.json', 'w', newline="") as f:
+        writer = csv.writer(f)
+        writer.writerows(emini_results) 
+    print("Emini prediction done\n")
     return emini_results
 
 def choufasman(conserved_sequences_dict):
 
-    """This function uses the REST API from IEDB to access the Linear Antigen Prediction method Chou-Fasman and predict the linear epitopes of the given conserved sequences. It uses the Chou and Fasman scale which is commonly used to predict beta turns. The results are returned as a list of lists"""
+    """This function uses the REST API from IEDB to access the Linear Antigen Prediction method Chou-Fasman and predict the linear epitopes of the given 
+    conserved sequences. It uses the Chou and Fasman scale which is commonly used to predict beta turns. The results are returned as a list of lists"""
 
     choufasman_results = []
     columns = ["protein_id"] + ["conserved_sequence"] + ["predicted_epitope"] + ["start_position"] + ["end_position"]
     choufasman_results.append(columns)
 
     for key in conserved_sequences_dict:
+        print("Predicting linear epitopes of protein " + key + " with Chou-Fasman")
         for conserved_sequence in conserved_sequences_dict[key]:
             
             time.sleep(1)
@@ -460,18 +498,24 @@ def choufasman(conserved_sequences_dict):
                         choufasman_results.append(predicted)
                     epitope = ''
                     predicted = []
-
+    with open('epitope_prediction_results/choufasman_epitopes.json', 'w', newline="") as f:
+        writer = csv.writer(f)
+        writer.writerows(choufasman_results) 
+    print("Chou-Fasman prediction done\n")
     return choufasman_results
 
 def karplusschulz(conserved_sequences_dict):
 
-    """This function uses the REST API from IEDB to access the Linear Antigen Prediction method Karplus-Schulz and predict the linear epitopes of the given conserved sequences. In this method, flexibility scale based on mobility of protein segments on the basis of the known temperature B factors of the a-carbons of 31 proteins of known structure was constructed. The results are returned as a list of lists"""
+    """This function uses the REST API from IEDB to access the Linear Antigen Prediction method Karplus-Schulz and predict the linear epitopes of the given 
+    conserved sequences. In this method, flexibility scale based on mobility of protein segments on the basis of the known temperature B factors of the 
+    a-carbons of 31 proteins of known structure was constructed. The results are returned as a list of lists"""
 
     karplusschulz_results = []
     columns = ["protein_id"] + ["conserved_sequence"] + ["predicted_epitope"] + ["start_position"] + ["end_position"]
     karplusschulz_results.append(columns)
 
     for key in conserved_sequences_dict:
+        print("Predicting linear epitopes of protein " + key + " with Karplus-Schulz")
         for conserved_sequence in conserved_sequences_dict[key]:
             
             time.sleep(1)
@@ -528,18 +572,24 @@ def karplusschulz(conserved_sequences_dict):
                         karplusschulz_results.append(predicted)
                     epitope = ''
                     predicted = []
-
+    with open('epitope_prediction_results/karplusschulz_epitopes.json', 'w', newline="") as f:
+        writer = csv.writer(f)
+        writer.writerows(karplusschulz_results) 
+    print("Karplus-Schulz prediction done\n")
     return karplusschulz_results
 
 def kolaskartongaonkar(conserved_sequences_dict):
 
-    """This function uses the REST API from IEDB to access the Linear Antigen Prediction method Kolaskar-Tongaonkar and predict the linear epitopes of the given conserved sequences. It is a semi-empirical method which makes use of physicochemical properties of amino acid residues and their frequencies of occurrence in experimentally known segmental epitopes was developed to predict antigenic determinants on proteins. The results are returned as a list of lists"""
+    """This function uses the REST API from IEDB to access the Linear Antigen Prediction method Kolaskar-Tongaonkar and predict the linear epitopes of the 
+    given conserved sequences. It is a semi-empirical method which makes use of physicochemical properties of amino acid residues and their frequencies of 
+    occurrence in experimentally known segmental epitopes was developed to predict antigenic determinants on proteins. The results are returned as a list of lists"""
 
     kolaskartongaonkar_results = []
     columns = ["protein_id"] + ["conserved_sequence"] + ["predicted_epitope"] + ["start_position"] + ["end_position"]
     kolaskartongaonkar_results.append(columns)
 
     for key in conserved_sequences_dict:
+        print("Predicting linear epitopes of protein " + key + " with Kolaskar-Tongaonkar")
         for conserved_sequence in conserved_sequences_dict[key]:
             
             time.sleep(1)
@@ -595,18 +645,24 @@ def kolaskartongaonkar(conserved_sequences_dict):
                         kolaskartongaonkar_results.append(predicted)
                     epitope = ''
                     predicted = []
-
+    with open('epitope_prediction_results/kolaskartongaonkar_epitopes.json', 'w', newline="") as f:
+        writer = csv.writer(f)
+        writer.writerows(kolaskartongaonkar_results) 
+    print("Kolaskar-Tongaonkar prediction done\n")
     return kolaskartongaonkar_results
 
 def parker(conserved_sequences_dict):
 
-    """This function uses the REST API from IEDB to access the Linear Antigen Prediction method Parker and predict the linear epitopes of the given conserved sequences. In this method, hydrophilic scale based on peptide retention times during high-performance liquid chromatography (HPLC) on a reversed-phase column was constructed. A window of seven residues was used for analyzing epitope region. The results are returned as a list of lists"""
+    """This function uses the REST API from IEDB to access the Linear Antigen Prediction method Parker and predict the linear epitopes of the given 
+    conserved sequences. In this method, hydrophilic scale based on peptide retention times during high-performance liquid chromatography (HPLC) on a 
+    reversed-phase column was constructed. A window of seven residues was used for analyzing epitope region. The results are returned as a list of lists"""
 
     parker_results = []
     columns = ["protein_id"] + ["conserved_sequence"] + ["predicted_epitope"] + ["start_position"] + ["end_position"]
     parker_results.append(columns)
 
     for key in conserved_sequences_dict:
+        print("Predicting linear epitopes of protein " + key + " with Parker")
         for conserved_sequence in conserved_sequences_dict[key]:
             
             time.sleep(1)
@@ -662,23 +718,30 @@ def parker(conserved_sequences_dict):
                         parker_results.append(predicted)
                     epitope = ''
                     predicted = []
-
+    with open('epitope_prediction_results/parker_epitopes.json', 'w', newline="") as f:
+        writer = csv.writer(f)
+        writer.writerows(parker_results) 
+    print("Parker prediction done\n")
     return parker_results
 
 def ellipro(list_of_pdb_ids):
     
-    """This function uses Selenium to access the Ellipro tool from IEDB. It requires a list of PDB IDs and returns two lists of lists, one with predicted linear sequences, the other with predicted discontinous sequences. It implements a previously developed method that represents the protein structure as an ellipsoid and calculates protrusion indexes for protein residues outside of the ellipsoid."""
+    """This function uses Selenium to access the Ellipro tool from IEDB. It requires a list of PDB IDs and returns two lists of lists, one with predicted linear 
+    sequences, the other with predicted discontinous sequences. It implements a previously developed method that represents the protein structure as an 
+    ellipsoid and calculates protrusion indexes for protein residues outside of the ellipsoid."""
     
+    options = Options()
+    options.headless = True
+
     ellipro_url = 'http://tools.iedb.org/ellipro/'
     linear_columns = ['pdb_id','chain','start','end','peptide','nr_of_residues','score']
-    discontinous_columns = ['pdb_id','chain','start','end','peptide','nr_of_residues','score']
+    discontinous_columns = ['pdb_id','chain','peptide','start','end','nr_of_residues','score']
     linear_epitopes = [linear_columns]
     discontinous_epitopes = [discontinous_columns]
 
     for protein_id in list_of_pdb_ids:
-        driver = webdriver.Firefox(executable_path = '../ScrapyEpitope/geckodriver')
-        driver.maximize_window()
-
+        print("Predicting linear and discontinous epitopes of protein " + protein_id + " with Ellipro")
+        driver = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
         driver.get(ellipro_url)
         driver.find_element(By.NAME, "pdb_id").send_keys(protein_id)
         driver.find_element(By.NAME, "submit").click()
@@ -713,54 +776,168 @@ def ellipro(list_of_pdb_ids):
                 i = [protein_id] + i[1:]
                 linear_epitopes.append(i)
 
+        rows = []
         for i in range(len(table_of_discontinous_epitopes)):
-            row= []
+            row = []
             for e in range(len(columns_of_discontinous_epitopes[:-1])):
                 cell = driver.find_element(By.XPATH, '/html/body/div[3]/table[3]/tbody/tr[' + str(i+1) + ']/td[' + str(e+1) + ']').text
                 row.append(cell)
-            if float(row[3]) >= 0.7:
-                unproc_discontinous_epitope = row[1].split(', ')
-                processed_discontinous_epitope = ''
-                start_pos = unproc_discontinous_epitope[0][3:]
-                end_pos = unproc_discontinous_epitope[-1][3:]
-                for position in unproc_discontinous_epitope:
-                    aa = position[2]
-                    processed_discontinous_epitope = processed_discontinous_epitope + aa
-                row[1] = processed_discontinous_epitope
-                row = [protein_id] + [chain]  + [start_pos] + [end_pos] + row[1:]
-                discontinous_epitopes.append(row)
+            rows.append(row)
         driver.close()
 
+        for arow in rows:
+            if float(arow[3]) >= 0.7:
+                unproc_aa_list = arow[1].split(', ')
+                aa_list = []
+                for position in unproc_aa_list:
+                    aa = position[2:]
+                    aa_list.append(aa)
+                epitope = ','.join(aa_list)
+                start_pos = unproc_aa_list[0][3:]
+                end_pos = unproc_aa_list[-1][3:]
+                nr_of_residues = len(aa_list)
+                score = float(arow[3])
+                row_to_append = [protein_id] + [chain] + [epitope] + [start_pos] + [end_pos] + [nr_of_residues] + [score]
+                discontinous_epitopes.append(row_to_append)
+    with open('epitope_prediction_results/ellipro_linear_epitopes.json', 'w', newline="") as f:
+        writer = csv.writer(f)
+        writer.writerows(linear_epitopes) 
+    with open('epitope_prediction_results/ellipro_discontinous_epitopes.json', 'w', newline="") as f:
+        writer = csv.writer(f)
+        writer.writerows(discontinous_epitopes) 
+    print("Ellipro prediction done\n")    
     return linear_epitopes, discontinous_epitopes
 
+def discotope(list_of_pdb_ids):
+    
+    """This function uses Selenium to access the Discotope 2.0 tool from IEDB. It requires a list of PDB IDs and returns 
+    ..."""
+    
+    options = Options()
+    options.headless = True
 
-def predict_all(list_of_swissprot_ids, path_to_alignment, alleles_for_mhci, lengths_for_mhci, alleles_for_mhcii, lengths_for_mhcii, list_of_pdb_ids):
-    
-    """This function runs all the prediction methods above and return a tuple with the lists of lists"""
+    discotope_url = 'http://tools.iedb.org/discotope/'
+    discotope_columns = ['pdb_id','chain','peptide','start','end','nr_of_residues']
+    discotope_epitopes = [discotope_columns]
 
-    alignment(list_of_swissprot_ids, matrix='bl62', gapopen=1.53, gapext=0.123, order='aligned', nbtree=2, treeout='true', maxiterate=2, ffts='none')
-    conserved_sequences_mafft = get_conserved_sequences(path_to_alignment, min_seq_conserved_pos='default', min_seq_flank_pos='default', max_contigous_nonconserved_pos = 8, min_length_block= 10, allowed_gap_pos='None')
+    for protein_id in list_of_pdb_ids:
+        print("Predicting discontinous epitopes of protein " + protein_id + " with Discotope")
+        driver = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
+        driver.get(discotope_url)
+        driver.find_element(By.ID, "id_pdb").send_keys(protein_id)
+        chain = 'A'
+        driver.find_element(By.ID, "id_chain").send_keys(chain)
+        driver.find_element(By.XPATH, "/html/body/div[3]/form/table/tbody/tr[3]/td[2]/select/option[2]").click()
+        driver.find_element(By.NAME, "submit").click()
+
+        wait = WebDriverWait(driver, 600)
+        wait.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div[3]/form")))
+        driver.find_element(By.XPATH, "/html/body/div[3]/form/a[1]/button").click()
+        wait.until(ec.visibility_of_element_located((By.ID, "result_table")))
+        discotope_table = driver.find_element(By.XPATH, '/html/body/div[3]/table/tbody').text.splitlines()
+        discotope_table_columns = driver.find_element(By.XPATH, '/html/body/div[3]/table/thead').text.splitlines()
+        driver.close()
+
+        discotope_epitopes_split_rows = []
+        for row in discotope_table:
+            split_row = row.split(" ")
+            discotope_epitopes_split_rows.append(split_row)
+        
+        df = pd.DataFrame(discotope_epitopes_split_rows, columns=discotope_table_columns)
+        df["Discotope Score"] = pd.to_numeric(df["Discotope Score"])
+        df = df.loc[df['Discotope Score'] >= -3.7]
+
+        if df.empty == True:
+            pass
+        else:
+            residue_id = df.iloc[:, 1].to_list()
+            residue_name = df.iloc[:, 2].to_list()
+
+        discontinous_epitope = []
+        for i in range(len(residue_name)):
+            if residue_name[i] == 'ARG':
+                ARG = 'R'
+                pos = ARG + str(residue_id[i])
+                discontinous_epitope.append(pos)
+            elif residue_name[i] == 'ASN':
+                ASN = 'N'
+                pos = ASN + str(residue_id[i])
+                discontinous_epitope.append(pos)
+            elif residue_name[i] == 'ASP':
+                ASP = 'D'
+                pos = ASP + str(residue_id[i])
+                discontinous_epitope.append(pos)
+            elif residue_name[i] == 'GLN':
+                GLN = 'Q'
+                pos = GLN + str(residue_id[i])
+                discontinous_epitope.append(pos)
+            elif residue_name[i] == 'GLU':
+                GLU = 'E'
+                pos = GLU + str(residue_id[i])
+                discontinous_epitope.append(pos)
+            elif residue_name[i] == 'LYS':
+                LYS = 'K'
+                pos = LYS + str(residue_id[i])
+                discontinous_epitope.append(pos)
+            elif residue_name[i] == 'PHE':
+                PHE = 'F'
+                pos = PHE + str(residue_id[i])
+                discontinous_epitope.append(pos)
+            elif residue_name[i] == 'TRP':
+                TRP = 'W'
+                pos = TRP + str(residue_id[i])
+                discontinous_epitope.append(pos)
+            elif residue_name[i] == 'TYR':
+                TYR = 'Y'
+                pos = TYR + str(residue_id[i])
+                discontinous_epitope.append(pos)
+            else:
+                pos = residue_name[i][0] + str(residue_id[i])
+                discontinous_epitope.append(pos)
+        
+        epitope = ','.join(discontinous_epitope)
+        start_pos = residue_id[0]
+        end_pos = residue_id[-1]
+        row_to_append = [protein_id] + [chain] + [epitope] + [start_pos] + [end_pos] + [len(residue_name)]
+        discotope_epitopes.append(row_to_append)
+    with open('epitope_prediction_results/discotope_epitopes.json', 'w', newline="") as f:
+        writer = csv.writer(f)
+        writer.writerows(discotope_epitopes)  
+    print("Discotope prediction done\n") 
+    return discotope_epitopes
+
+
+def predict_all(dictionary_conserved_sequences, alleles_for_mhci, lengths_for_mhci, alleles_for_mhcii, lengths_for_mhcii, list_of_pdb_ids):
     
-    mhci_epitopes = mhci(example_seq_dict, alleles_for_mhci, lengths_for_mhci)
-    mhci_proc_epitopes = mhci_proc(example_seq_dict, alleles_for_mhci, lengths_for_mhci)
-    mhcii_epitopes = mhcii(example_seq_dict, alleles_for_mhcii, lengths_for_mhcii)
+    """This function runs all the prediction methods above and returns a tuple with the lists of lists. It also \
+        creates a folder where all the results are stored as csv files"""
     
-    bepipred2_epitopes = bepipred2(example_seq_dict)
-    bepipred_epitopes = bepipred(example_seq_dict)
-    emini_epitopes = emini(example_seq_dict)
-    choufasman_epitopes = choufasman(example_seq_dict)
-    karplusschulz_epitopes = karplusschulz(example_seq_dict)
-    kolaskartongaonkar_epitopes = kolaskartongaonkar(example_seq_dict)
-    parker_epitopes = parker(example_seq_dict)
+    current_directory = os.getcwd()
+    final_directory = os.path.join(current_directory, r'epitope_prediction_results')
+    if not os.path.exists(final_directory):
+        os.makedirs(final_directory)
+
+    mhci_epitopes = mhci(dictionary_conserved_sequences, alleles_for_mhci, lengths_for_mhci)
+    mhci_proc_epitopes = mhci_proc(dictionary_conserved_sequences, alleles_for_mhci, lengths_for_mhci)
+    mhcii_epitopes = mhcii(dictionary_conserved_sequences, alleles_for_mhcii, lengths_for_mhcii)
+    
+    bepipred2_epitopes = bepipred2(dictionary_conserved_sequences)
+    bepipred_epitopes = bepipred(dictionary_conserved_sequences)
+    emini_epitopes = emini(dictionary_conserved_sequences)
+    choufasman_epitopes = choufasman(dictionary_conserved_sequences)
+    karplusschulz_epitopes = karplusschulz(dictionary_conserved_sequences)
+    kolaskartongaonkar_epitopes = kolaskartongaonkar(dictionary_conserved_sequences)
+    parker_epitopes = parker(dictionary_conserved_sequences)
 
     ellipro_epitopes = ellipro(list_of_pdb_ids)
+    ellipro_linear_epitopes = ellipro_epitopes[0]
+    ellipro_discontinous_epitopes = ellipro_epitopes[1]
+    discotope_epitopes = discotope(list_of_pdb_ids)
     
-    return mhci_epitopes, mhci_proc_epitopes, mhcii_epitopes, bepipred2_epitopes, bepipred_epitopes, emini_epitopes, choufasman_epitopes, karplusschulz_epitopes, kolaskartongaonkar_epitopes, parker_epitopes, ellipro_epitopes
+    return mhci_epitopes, mhci_proc_epitopes, mhcii_epitopes, bepipred2_epitopes, bepipred_epitopes, \
+        emini_epitopes, choufasman_epitopes, karplusschulz_epitopes, kolaskartongaonkar_epitopes, parker_epitopes, \
+        ellipro_linear_epitopes, ellipro_discontinous_epitopes, discotope_epitopes
 
-
-#predicted_epitopes = predict_all(list_of_swissprot_ids, path_to_mafft_alignment, mhci_alleles, mhci_lengths, mhcii_alleles, mhcii_lengths, list_of_pdb_ids)
-#for alist in predicted_epitopes:
-#    print(*alist, sep='\n')
 
 
 # class Netctlpan(Spider):

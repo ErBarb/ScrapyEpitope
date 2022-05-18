@@ -1,9 +1,11 @@
 import os
+import re
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
-import re
+from selenium.webdriver.firefox.options import Options
+
 
 
 def alignment(seq_list, matrix=None, gapopen=None, gapext=None, order=None, nbtree=None, treeout=None, maxiterate=None, ffts=None):
@@ -29,8 +31,11 @@ def get_conserved_sequences(path_to_file, min_seq_conserved_pos = None, min_seq_
     """This function uploads the alignment file and sends the parameters to the Gblocks NGPhylogeny website,
     then returns a dictionary with the conserved regions of each protein"""
 
+    options = Options()
+    options.headless = True
+
     gblocks_url = 'https://ngphylogeny.fr/tools/tool/276/form'
-    driver = webdriver.Firefox(executable_path = '../ScrapyEpitope/geckodriver')
+    driver = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
     driver.maximize_window()
     driver.get(gblocks_url)
 
@@ -97,14 +102,6 @@ def get_conserved_sequences(path_to_file, min_seq_conserved_pos = None, min_seq_
             list_of_fasta.append(cons_seq)
             cleaned_fasta_all = cleaned_fasta_all[cut_point:]
         conserved_sequences_dictionary[protein_id] = list_of_fasta
-
     driver.close()
-    print(*conserved_sequences_dictionary.items(), sep='\n')
+
     return conserved_sequences_dictionary
-
-
-#if __name__ == '__main__':
-#    seq_dict = get_conserved_sequences(path_to_mafft, min_seq_conserved_pos='default', min_seq_flank_pos='default', max_contigous_nonconserved_pos = 8, min_length_block= 10, allowed_gap_pos='None')
-#    for i in seq_dict:
-#        print(i, seq_dict[i])
-
