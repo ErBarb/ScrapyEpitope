@@ -3,15 +3,65 @@ import os
 import requests
 import time
 import csv
+from csv import reader
 from Bio.SeqUtils.ProtParam import ProteinAnalysis
 from urllib import request
+import pyperclip
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.common.keys import Keys
 
+def read_prediction_results():
+    
+    """"""
 
+    with open('epitope_prediction_results/mhci_epitopes.csv', 'r') as read_obj:
+        csv_reader = reader(read_obj)
+        mhci_prediction_list = list(csv_reader)
+    with open('epitope_prediction_results/mhci_proc_epitopes.csv', 'r') as read_obj:
+        csv_reader = reader(read_obj)
+        mhci_proc_prediction_list = list(csv_reader)
+    with open('epitope_prediction_results/mhcii_epitopes.csv', 'r') as read_obj:
+        csv_reader = reader(read_obj)
+        mhcii_prediction_list = list(csv_reader)
+    with open('epitope_prediction_results/bepipred2.0_epitopes.csv', 'r') as read_obj:
+        csv_reader = reader(read_obj)
+        bepipred2_prediction_list = list(csv_reader)
+    with open('epitope_prediction_results/bepipred1.0_epitopes.csv', 'r') as read_obj:
+        csv_reader = reader(read_obj)
+        bepipred_prediction_list = list(csv_reader)
+    with open('epitope_prediction_results/emini_epitopes.csv', 'r') as read_obj:
+        csv_reader = reader(read_obj)
+        emini_prediction_list = list(csv_reader)
+    with open('epitope_prediction_results/choufasman_epitopes.csv', 'r') as read_obj:
+        csv_reader = reader(read_obj)
+        choufasman_prediction_list = list(csv_reader)
+    with open('epitope_prediction_results/karplusschulz_epitopes.csv', 'r') as read_obj:
+        csv_reader = reader(read_obj)
+        karplusschulz_prediction_list = list(csv_reader)
+    with open('epitope_prediction_results/kolaskartongaonkar_epitopes.csv', 'r') as read_obj:
+        csv_reader = reader(read_obj)
+        kolaskartongaonkar_prediction_list = list(csv_reader)
+    with open('epitope_prediction_results/parker_epitopes.csv', 'r') as read_obj:
+        csv_reader = reader(read_obj)
+        parker_prediction_list = list(csv_reader)
+    with open('epitope_prediction_results/ellipro_linear_epitopes.csv', 'r') as read_obj:
+        csv_reader = reader(read_obj)
+        ellipro_linear_prediction_list = list(csv_reader)
+    with open('epitope_prediction_results/ellipro_discontinous_epitopes.csv', 'r') as read_obj:
+        csv_reader = reader(read_obj)
+        ellipro_discontinous_prediction_list = list(csv_reader)
+    with open('epitope_prediction_results/discotope_epitopes.csv', 'r') as read_obj:
+        csv_reader = reader(read_obj)
+        discotope_prediction_list = list(csv_reader)
+
+    return mhci_prediction_list, mhci_proc_prediction_list, mhcii_prediction_list, bepipred2_prediction_list, \
+        bepipred_prediction_list, emini_prediction_list, choufasman_prediction_list, karplusschulz_prediction_list, \
+            kolaskartongaonkar_prediction_list, parker_prediction_list, ellipro_linear_prediction_list, ellipro_discontinous_prediction_list, \
+                discotope_prediction_list
 
 def make_inputs_for_analysis(results_from_prediction, list_of_swissprot_ids):
     
@@ -72,6 +122,7 @@ def make_inputs_for_analysis(results_from_prediction, list_of_swissprot_ids):
         input_string = input_string + '>seq' + str(i+1) + '\n' + list_of_all_linear_epitopes[i] + '\n'
         if len(list_of_all_linear_epitopes[i]) <= 50:
             toxinpred_input = toxinpred_input + '>seq' + str(i+1) + '\n' + list_of_all_linear_epitopes[i] + '\n'
+            #toxinpred_input = toxinpred_input + list_of_all_linear_epitopes[i] + '\n'
 
     seq_file = open('seq_file.txt', 'a') 
     seq_file.write(input_string[:-1])
@@ -80,6 +131,10 @@ def make_inputs_for_analysis(results_from_prediction, list_of_swissprot_ids):
     pop_cov_file = open('pop_cov_file.txt', 'a') 
     pop_cov_file.write(pop_cov_input[:-1])
     pop_cov_file.close()
+
+    toxinpred_file = open('toxinpred_file.txt', 'a') 
+    toxinpred_file.write(toxinpred_input[:-1])
+    toxinpred_file.close()
 
     current_directory = os.getcwd()
     final_directory = os.path.join(current_directory, r'results')
@@ -153,33 +208,50 @@ def analyse_all(tuple_inputs):
             analysis_results[index].append(parameter)
     
 
-
-    algpred2 = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
+    #options=options, 
+    algpred2 = webdriver.Firefox(executable_path = '../ScrapyEpitope/geckodriver')
     algpred2.get(algpred2_url)
     algpred2.find_element(By.XPATH, "/html/body/header/div[3]/section/form/table/tbody/tr/td/font/p/font[2]/input").send_keys(os.getcwd()+"/seq_file.txt")
     algpred2.find_element(By.XPATH, "/html/body/header/div[3]/section/form/table/tbody/tr/td/font/font/p[3]/font/font[2]/input[2]").click()
 
-    toxinpred = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
+    toxinpred = webdriver.Firefox(executable_path = '../ScrapyEpitope/geckodriver')
     wait_toxinpred = WebDriverWait(toxinpred, 6000)
     toxinpred.get(toxinpred_url)
     toxinpred.find_element(By.XPATH, "/html/body/table[2]/tbody/tr/td/form/fieldset/table[1]/tbody/tr[2]/td/textarea").send_keys(tuple_inputs[2][:-1])
-    wait_toxinpred.until(ec.visibility_of_element_located((By.NAME, "checkAll")))
-    toxinpred.find_element(By.NAME, "checkAll").click()
-    toxinpred.find_element(By.XPATH, "/html/body/table[2]/tbody/tr/td/form/fieldset/table[2]/tbody/tr[3]/td/input[2]").click()
+    time.sleep(5)
+    try:
+        toxinpred.find_element(By.NAME, "checkAll").click()
+    except:
+        toxinpred.close()
+        toxinpred = webdriver.Firefox(executable_path = '../ScrapyEpitope/geckodriver')
+        wait_toxinpred = WebDriverWait(toxinpred, 6000)
+        toxinpred.get(toxinpred_url)
+        toxinpred.find_element(By.XPATH, "/html/body/table[2]/tbody/tr/td/form/fieldset/table[1]/tbody/tr[2]/td/textarea").send_keys(tuple_inputs[2][:-1])
+        time.sleep(5)
+        try:
+            toxinpred.find_element(By.NAME, "checkAll").click()
+        except:
+            print("Couldn't predict toxinpred")
+            toxinpred.close()
+            toxinpred_status = "Closed"
+        else:
+            toxinpred.find_element(By.XPATH, "/html/body/table[2]/tbody/tr/td/form/fieldset/table[2]/tbody/tr[3]/td/input[2]").click()
+    else:
+        toxinpred.find_element(By.XPATH, "/html/body/table[2]/tbody/tr/td/form/fieldset/table[2]/tbody/tr[3]/td/input[2]").click()
 
-    immunogenicity_mhci = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
+    immunogenicity_mhci = webdriver.Firefox(executable_path = '../ScrapyEpitope/geckodriver')
     immunogenicity_mhci.get(immunogenicity_mhci_url)
     immunogenicity_mhci.find_element(By.NAME, "sequence_text").send_keys(tuple_inputs[4])
     immunogenicity_mhci.find_element(By.NAME, "submit").click()
 
-    vaxijen = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
+    vaxijen = webdriver.Firefox(executable_path = '../ScrapyEpitope/geckodriver')
     vaxijen.get(vaxijen_url)
     vaxijen.find_element(By.XPATH, "/html/body/div/table/tbody/tr[4]/td[3]/form/table/tbody/tr[1]/td[2]/p/input").send_keys(os.getcwd()+"/seq_file.txt")
     vaxijen.find_element(By.XPATH, "/html/body/div/table/tbody/tr[4]/td[3]/form/table/tbody/tr[2]/td[2]/p/select/option[2]").click()
     vaxijen.find_element(By.XPATH, "/html/body/div/table/tbody/tr[4]/td[3]/form/table/tbody/tr[2]/td[3]/input").send_keys('0.5')
     vaxijen.find_element(By.XPATH, "/html/body/div/table/tbody/tr[4]/td[3]/form/table/tbody/tr[3]/td[2]/input[1]").click()
 
-    cluster = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
+    cluster = webdriver.Firefox(executable_path = '../ScrapyEpitope/geckodriver')
     cluster.maximize_window()
     cluster.get(cluster_analysis_url)
     cluster.find_element(By.NAME, "sequence_text").send_keys(tuple_inputs[1][:-1])
@@ -190,7 +262,7 @@ def analyse_all(tuple_inputs):
     wait_cluster.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div[3]/form/table/tbody")))
     cluster.find_element(By.NAME, "submit").click()
     
-    conservancy = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
+    conservancy = webdriver.Firefox(executable_path = '../ScrapyEpitope/geckodriver')
     conservancy.maximize_window()
     conservancy.get(conservancy_analysis_url)
     conservancy.find_element(By.ID, "id_epitope_sequence").send_keys(tuple_inputs[1][:-1])
@@ -207,22 +279,26 @@ def analyse_all(tuple_inputs):
     population_coverage.find_element(By.NAME, "submit").click()
 
 
-
-    wait_toxinpred.until(ec.visibility_of_element_located((By.ID, "tableTwo")))
-    toxinpred.find_element(By.XPATH, "/html/body/div[2]/table/tfoot/tr/td/select/option[8]").click()
-    toxinpred_results_table = toxinpred.find_element(By.XPATH, '/html/body/div[2]/table/tbody').text.splitlines()
-    toxinpred.close()
-    for index, row in enumerate(toxinpred_results_table):
-        toxinpred_result_row = row.split(' ')
-        index_to_include = int(toxinpred_result_row[0][3:]) - 1
-        included_results = [2,3,4,5,6,8,9,10]
-        only_included_results = [toxinpred_result_row[x] for x in included_results]
-        for element in only_included_results:
-            analysis_results[index_to_include].append(element)
-    for row in analysis_results:
-        if len(row) != 20:
+    if toxinpred_status == "Closed":
+        for row in analysis_results:
             for i in range(8):
                 row.append(None)
+    else:
+        wait_toxinpred.until(ec.visibility_of_element_located((By.ID, "tableTwo")))
+        toxinpred.find_element(By.XPATH, "/html/body/div[2]/table/tfoot/tr/td/select/option[8]").click()
+        toxinpred_results_table = toxinpred.find_element(By.XPATH, '/html/body/div[2]/table/tbody').text.splitlines()
+        toxinpred.close()
+        for index, row in enumerate(toxinpred_results_table):
+            toxinpred_result_row = row.split(' ')
+            index_to_include = int(toxinpred_result_row[0][3:]) - 1
+            included_results = [2,3,4,5,6,8,9,10]
+            only_included_results = [toxinpred_result_row[x] for x in included_results]
+            for element in only_included_results:
+                analysis_results[index_to_include].append(element)
+        for row in analysis_results:
+            if len(row) != 20:
+                for i in range(8):
+                    row.append(None)
 
     wait_vaxijen = WebDriverWait(vaxijen, 6000)
     wait_vaxijen.until(ec.visibility_of_element_located((By.CLASS_NAME, "boilerplate")))
@@ -408,3 +484,9 @@ def make_csv_from_results(results_from_prediction, results_from_analysis):
             f.close()
         writer = csv.writer(f)
         writer.writerows(results_from_prediction[i])
+
+list_of_swissprot_ids = ['P59594', 'P0DTC2', 'K9N5Q8', 'P36334', 'Q0ZME7', 'P15423', 'Q6Q1S2', 'Q5MQD0', 'Q14EB0']
+prediction_results = read_prediction_results()
+analysis_input = make_inputs_for_analysis(prediction_results, list_of_swissprot_ids)
+analysis_results = analyse_all(analysis_input)
+make_csv_from_results(prediction_results, analysis_results)

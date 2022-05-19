@@ -73,8 +73,6 @@ def mhci(conserved_sequences_dict, list_of_alleles, list_of_lengths):
                         for line in response_data_split_by_line:
                             split_line = line.split("\t")
                             response_body.append(split_line)
-                
-                        mhci_results.append(response_body[0])
 
                         df = pd.DataFrame(response_body[1:], columns=response_body[0])
                         df["percentile_rank"] = pd.to_numeric(df["percentile_rank"], errors='coerce')
@@ -102,11 +100,10 @@ def mhci(conserved_sequences_dict, list_of_alleles, list_of_lengths):
                         for i in rows:
                             i = [key] + [conserved_sequence] + i
                             mhci_results.append(i)
-    with open('epitope_prediction_results/mhci_epitopes.json', 'w', newline="") as f: 
+    with open('epitope_prediction_results/mhci_epitopes.csv', 'w', newline="") as f: 
         writer = csv.writer(f)
         writer.writerows(mhci_results)
     print("MHCI prediction done\n")
-    return mhci_results
 
 def mhci_proc(conserved_sequences_dict, list_of_alleles, list_of_lengths):
 
@@ -155,11 +152,10 @@ def mhci_proc(conserved_sequences_dict, list_of_alleles, list_of_lengths):
                     for i in rows:
                         i = [key] + [conserved_sequence] + i
                         mhci_proc_results.append(i)
-    with open('epitope_prediction_results/mhci_proc_epitopes.json', 'w', newline="") as f:
+    with open('epitope_prediction_results/mhci_proc_epitopes.csv', 'w', newline="") as f:
         writer = csv.writer(f)
         writer.writerows(mhci_proc_results)                
     print("MHCI Processing prediction done\n")
-    return mhci_proc_results
 
 def mhcii(conserved_sequences_dict, list_of_alleles, list_of_lengths):
 
@@ -213,11 +209,10 @@ def mhcii(conserved_sequences_dict, list_of_alleles, list_of_lengths):
                     for i in rows:
                         i = [key] + [conserved_sequence] + i
                         mhcii_results.append(i)
-    with open('epitope_prediction_results/mhcii_epitopes.json', 'w', newline="") as f:
+    with open('epitope_prediction_results/mhcii_epitopes.csv', 'w', newline="") as f:
         writer = csv.writer(f)
         writer.writerows(mhcii_results)   
     print("MHCII prediction done\n")
-    return mhcii_results
 
 def bepipred2(conserved_sequences_dict):
 
@@ -284,11 +279,10 @@ def bepipred2(conserved_sequences_dict):
                         bepipred2_results.append(predicted)
                     epitope = ''
                     predicted = []
-    with open('epitope_prediction_results/bepipred2.0_epitopes.json', 'w', newline="") as f:
+    with open('epitope_prediction_results/bepipred2.0_epitopes.csv', 'w', newline="") as f:
         writer = csv.writer(f)
         writer.writerows(bepipred2_results)   
     print("Bepipred 2.0 prediction done\n")
-    return bepipred2_results
 
 def bepipred(conserved_sequences_dict):
     
@@ -355,11 +349,10 @@ def bepipred(conserved_sequences_dict):
                         bepipred_results.append(predicted)
                     epitope = ''
                     predicted = []
-    with open('epitope_prediction_results/bepipred1.0_epitopes.json', 'w', newline="") as f:
+    with open('epitope_prediction_results/bepipred1.0_epitopes.csv', 'w', newline="") as f:
         writer = csv.writer(f)
         writer.writerows(bepipred_results) 
     print("Bepipred 1.0 prediction done\n")
-    return bepipred_results
 
 def emini(conserved_sequences_dict):
     
@@ -426,11 +419,10 @@ def emini(conserved_sequences_dict):
                         emini_results.append(predicted)
                     epitope = ''
                     predicted = []
-    with open('epitope_prediction_results/emini_epitopes.json', 'w', newline="") as f:
+    with open('epitope_prediction_results/emini_epitopes.csv', 'w', newline="") as f:
         writer = csv.writer(f)
         writer.writerows(emini_results) 
     print("Emini prediction done\n")
-    return emini_results
 
 def choufasman(conserved_sequences_dict):
 
@@ -498,11 +490,10 @@ def choufasman(conserved_sequences_dict):
                         choufasman_results.append(predicted)
                     epitope = ''
                     predicted = []
-    with open('epitope_prediction_results/choufasman_epitopes.json', 'w', newline="") as f:
+    with open('epitope_prediction_results/choufasman_epitopes.csv', 'w', newline="") as f:
         writer = csv.writer(f)
         writer.writerows(choufasman_results) 
     print("Chou-Fasman prediction done\n")
-    return choufasman_results
 
 def karplusschulz(conserved_sequences_dict):
 
@@ -572,11 +563,10 @@ def karplusschulz(conserved_sequences_dict):
                         karplusschulz_results.append(predicted)
                     epitope = ''
                     predicted = []
-    with open('epitope_prediction_results/karplusschulz_epitopes.json', 'w', newline="") as f:
+    with open('epitope_prediction_results/karplusschulz_epitopes.csv', 'w', newline="") as f:
         writer = csv.writer(f)
         writer.writerows(karplusschulz_results) 
     print("Karplus-Schulz prediction done\n")
-    return karplusschulz_results
 
 def kolaskartongaonkar(conserved_sequences_dict):
 
@@ -645,11 +635,10 @@ def kolaskartongaonkar(conserved_sequences_dict):
                         kolaskartongaonkar_results.append(predicted)
                     epitope = ''
                     predicted = []
-    with open('epitope_prediction_results/kolaskartongaonkar_epitopes.json', 'w', newline="") as f:
+    with open('epitope_prediction_results/kolaskartongaonkar_epitopes.csv', 'w', newline="") as f:
         writer = csv.writer(f)
         writer.writerows(kolaskartongaonkar_results) 
     print("Kolaskar-Tongaonkar prediction done\n")
-    return kolaskartongaonkar_results
 
 def parker(conserved_sequences_dict):
 
@@ -718,11 +707,10 @@ def parker(conserved_sequences_dict):
                         parker_results.append(predicted)
                     epitope = ''
                     predicted = []
-    with open('epitope_prediction_results/parker_epitopes.json', 'w', newline="") as f:
+    with open('epitope_prediction_results/parker_epitopes.csv', 'w', newline="") as f:
         writer = csv.writer(f)
         writer.writerows(parker_results) 
     print("Parker prediction done\n")
-    return parker_results
 
 def ellipro(list_of_pdb_ids):
     
@@ -799,14 +787,13 @@ def ellipro(list_of_pdb_ids):
                 score = float(arow[3])
                 row_to_append = [protein_id] + [chain] + [epitope] + [start_pos] + [end_pos] + [nr_of_residues] + [score]
                 discontinous_epitopes.append(row_to_append)
-    with open('epitope_prediction_results/ellipro_linear_epitopes.json', 'w', newline="") as f:
+    with open('epitope_prediction_results/ellipro_linear_epitopes.csv', 'w', newline="") as f:
         writer = csv.writer(f)
         writer.writerows(linear_epitopes) 
-    with open('epitope_prediction_results/ellipro_discontinous_epitopes.json', 'w', newline="") as f:
+    with open('epitope_prediction_results/ellipro_discontinous_epitopes.csv', 'w', newline="") as f:
         writer = csv.writer(f)
         writer.writerows(discontinous_epitopes) 
-    print("Ellipro prediction done\n")    
-    return linear_epitopes, discontinous_epitopes
+    print("Ellipro prediction done\n")
 
 def discotope(list_of_pdb_ids):
     
@@ -900,11 +887,10 @@ def discotope(list_of_pdb_ids):
         end_pos = residue_id[-1]
         row_to_append = [protein_id] + [chain] + [epitope] + [start_pos] + [end_pos] + [len(residue_name)]
         discotope_epitopes.append(row_to_append)
-    with open('epitope_prediction_results/discotope_epitopes.json', 'w', newline="") as f:
+    with open('epitope_prediction_results/discotope_epitopes.csv', 'w', newline="") as f:
         writer = csv.writer(f)
         writer.writerows(discotope_epitopes)  
-    print("Discotope prediction done\n") 
-    return discotope_epitopes
+    print("Discotope prediction done\n")
 
 
 def predict_all(dictionary_conserved_sequences, alleles_for_mhci, lengths_for_mhci, alleles_for_mhcii, lengths_for_mhcii, list_of_pdb_ids):
@@ -917,26 +903,20 @@ def predict_all(dictionary_conserved_sequences, alleles_for_mhci, lengths_for_mh
     if not os.path.exists(final_directory):
         os.makedirs(final_directory)
 
-    mhci_epitopes = mhci(dictionary_conserved_sequences, alleles_for_mhci, lengths_for_mhci)
-    mhci_proc_epitopes = mhci_proc(dictionary_conserved_sequences, alleles_for_mhci, lengths_for_mhci)
-    mhcii_epitopes = mhcii(dictionary_conserved_sequences, alleles_for_mhcii, lengths_for_mhcii)
+    mhci(dictionary_conserved_sequences, alleles_for_mhci, lengths_for_mhci)
+    mhci_proc(dictionary_conserved_sequences, alleles_for_mhci, lengths_for_mhci)
+    mhcii(dictionary_conserved_sequences, alleles_for_mhcii, lengths_for_mhcii)
     
-    bepipred2_epitopes = bepipred2(dictionary_conserved_sequences)
-    bepipred_epitopes = bepipred(dictionary_conserved_sequences)
-    emini_epitopes = emini(dictionary_conserved_sequences)
-    choufasman_epitopes = choufasman(dictionary_conserved_sequences)
-    karplusschulz_epitopes = karplusschulz(dictionary_conserved_sequences)
-    kolaskartongaonkar_epitopes = kolaskartongaonkar(dictionary_conserved_sequences)
-    parker_epitopes = parker(dictionary_conserved_sequences)
+    bepipred2(dictionary_conserved_sequences)
+    bepipred(dictionary_conserved_sequences)
+    emini(dictionary_conserved_sequences)
+    choufasman(dictionary_conserved_sequences)
+    karplusschulz(dictionary_conserved_sequences)
+    kolaskartongaonkar(dictionary_conserved_sequences)
+    parker(dictionary_conserved_sequences)
 
-    ellipro_epitopes = ellipro(list_of_pdb_ids)
-    ellipro_linear_epitopes = ellipro_epitopes[0]
-    ellipro_discontinous_epitopes = ellipro_epitopes[1]
-    discotope_epitopes = discotope(list_of_pdb_ids)
-    
-    return mhci_epitopes, mhci_proc_epitopes, mhcii_epitopes, bepipred2_epitopes, bepipred_epitopes, \
-        emini_epitopes, choufasman_epitopes, karplusschulz_epitopes, kolaskartongaonkar_epitopes, parker_epitopes, \
-        ellipro_linear_epitopes, ellipro_discontinous_epitopes, discotope_epitopes
+    ellipro(list_of_pdb_ids)
+    discotope(list_of_pdb_ids)
 
 
 
