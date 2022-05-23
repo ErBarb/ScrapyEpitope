@@ -79,14 +79,14 @@ def mhci(conserved_sequences_dict, list_of_alleles, list_of_lengths):
                         df = df.loc[df['percentile_rank'] <= 10]
 
                         if df.empty == True:
-                            pass
+                            continue
                         else:
                             rows = [[i for i in row[1:]] for row in df.itertuples()]
                             for i in rows:
                                 i = [key] + [conserved_sequence] + i
                                 mhci_results.append(i)
                     except:
-                        pass
+                        continue
 
                 else:
                     df = pd.DataFrame(response_body[1:], columns=response_body[0])
@@ -94,7 +94,7 @@ def mhci(conserved_sequences_dict, list_of_alleles, list_of_lengths):
                     df = df.loc[df['percentile_rank'] <= 10]
 
                     if df.empty == True:
-                        pass
+                        continue
                     else:
                         rows = [[i for i in row[1:]] for row in df.itertuples()]
                         for i in rows:
@@ -146,7 +146,7 @@ def mhci_proc(conserved_sequences_dict, list_of_alleles, list_of_lengths):
                 df = df.loc[df['total_score'] > 0]
 
                 if df.empty == True:
-                    pass
+                    continue
                 else:
                     rows = [[i for i in row[1:]] for row in df.itertuples()]
                     for i in rows:
@@ -203,7 +203,7 @@ def mhcii(conserved_sequences_dict, list_of_alleles, list_of_lengths):
                 df = df.loc[df['adjusted_rank'] <= 10]
 
                 if df.empty == True:
-                    pass
+                    continue
                 else:
                     rows = [[i for i in row[1:]] for row in df.itertuples()]
                     for i in rows:
@@ -757,7 +757,7 @@ def ellipro(list_of_pdb_ids):
         df = df.loc[df['Score'] >= 0.7]
 
         if df.empty == True:
-            pass
+            continue
         else:
             rows = [[i for i in row[1:]] for row in df.itertuples()]
             for i in rows:
@@ -835,7 +835,7 @@ def discotope(list_of_pdb_ids):
         df = df.loc[df['Discotope Score'] >= -3.7]
 
         if df.empty == True:
-            pass
+            continue
         else:
             residue_id = df.iloc[:, 1].to_list()
             residue_name = df.iloc[:, 2].to_list()
