@@ -16,7 +16,7 @@ from selenium.webdriver.common.keys import Keys
 
 
 def read_prediction_results():
-    
+
     """This function will read all the results from the csv files created by the prediction methods in prediction.py, then return them
         in a tuple of lists"""
 
@@ -68,10 +68,10 @@ def read_prediction_results():
 
 
 def make_inputs_for_analysis(results_from_prediction, list_of_swissprot_ids):
-    
-    """This function will get the prediction results and swissprot ids and make the inputs needed for all of the analysis tools and 
+
+    """This function will get the prediction results and swissprot ids and make the inputs needed for all of the analysis tools and
     return them"""
-    
+
     pop_cov_input = ''
     for i in range(len(results_from_prediction)):
         if i == 0 or i == 1:
@@ -120,7 +120,7 @@ def make_inputs_for_analysis(results_from_prediction, list_of_swissprot_ids):
     input_string = ''
     for i in range(len(list_of_all_linear_epitopes)):
         input_string = input_string + '>seq' + str(i+1) + '\n' + list_of_all_linear_epitopes[i] + '\n'
-    
+
     toxinpred_chunks = []
     toxinpred_epitopes = []
     toxinpred_excluded_indexes = []
@@ -138,7 +138,7 @@ def make_inputs_for_analysis(results_from_prediction, list_of_swissprot_ids):
             toxinpred_input = toxinpred_input + '>seq' + str(n + 1) + '\n' + toxinpred_400e_chunk[n][0] + '\n'
         if toxinpred_input != '':
             toxinpred_chunks.append(toxinpred_input)
-    
+
     algpred_chunks = []
     for i in range(0, len(list_of_all_linear_epitopes), 400):
         algpred_400e_chunk = list_of_all_linear_epitopes[i:i + 400]
@@ -156,26 +156,26 @@ def make_inputs_for_analysis(results_from_prediction, list_of_swissprot_ids):
         cData=''.join(response.text)
         all_protein_fasta = all_protein_fasta + cData
 
-    seq_file = open('seq_file.txt', 'a') 
+    seq_file = open('seq_file.txt', 'a')
     seq_file.write(input_string[:-1])
     seq_file.close()
 
-    pop_cov_file = open('pop_cov_file.txt', 'a') 
+    pop_cov_file = open('pop_cov_file.txt', 'a')
     pop_cov_file.write(pop_cov_input[:-1])
     pop_cov_file.close()
 
-    immunogenicity_file = open('immunogenicity_file.txt', 'a') 
+    immunogenicity_file = open('immunogenicity_file.txt', 'a')
     immunogenicity_file.write(immunogenicity_input)
     immunogenicity_file.close()
 
-    cluster_file = open('cluster_file.txt', 'a') 
+    cluster_file = open('cluster_file.txt', 'a')
     cluster_file.write(input_string)
     cluster_file.close()
 
-    conservancy_file = open('conservancy_seq_file.txt', 'a') 
+    conservancy_file = open('conservancy_seq_file.txt', 'a')
     conservancy_file.write(input_string)
     conservancy_file.close()
-    conservancy_file = open('conservancy_protein_file.txt', 'a') 
+    conservancy_file = open('conservancy_protein_file.txt', 'a')
     conservancy_file.write(all_protein_fasta)
     conservancy_file.close()
 
@@ -187,9 +187,9 @@ def make_inputs_for_analysis(results_from_prediction, list_of_swissprot_ids):
     return list_of_all_linear_epitopes, toxinpred_chunks, toxinpred_epitopes, toxinpred_excluded_indexes, immunogenicity_indexes, algpred_chunks
 
 def analyse_all(tuple_inputs):
-    
-    """This function uses Selenium to access the following tools: Toxinpred, Algpred2, Vaxijen and IEDB tools such Immunogenicity for 
-    MHCI, Population Coverage, Cluster and Conservancy analysis. It also uses Protparam module from Biopython to analyse each sequence. 
+
+    """This function uses Selenium to access the following tools: Toxinpred, Algpred2, Vaxijen and IEDB tools such Immunogenicity for
+    MHCI, Population Coverage, Cluster and Conservancy analysis. It also uses Protparam module from Biopython to analyse each sequence.
     Population coverage, cluster and conservancy results are stored in files. The other ones are returned as list of lists."""
 
     options = Options()
@@ -202,14 +202,14 @@ def analyse_all(tuple_inputs):
     immunogenicity_indexes = tuple_inputs[4]
     algpred_chunks = tuple_inputs[5]
 
-    toxinpred_url = 'https://webs.iiitd.edu.in/raghava/toxinpred/multi_submit.php'  
-    algpred2_url = 'https://webs.iiitd.edu.in/raghava/algpred2/batch.html'          
-    vaxijen_url = 'http://www.ddg-pharmfac.net/vaxijen/VaxiJen/VaxiJen.html'        
-    immunogenicity_mhci_url = 'http://tools.iedb.org/immunogenicity/'               
-    # immunogenicity_mhcii_url = ''                                                   
-    population_coverage_url = 'http://tools.iedb.org/population/'                   
-    cluster_analysis_url = 'http://tools.iedb.org/cluster/'                         
-    conservancy_analysis_url = 'http://tools.iedb.org/conservancy/'                 
+    toxinpred_url = 'https://webs.iiitd.edu.in/raghava/toxinpred/multi_submit.php'
+    algpred2_url = 'https://webs.iiitd.edu.in/raghava/algpred2/batch.html'
+    vaxijen_url = 'http://www.ddg-pharmfac.net/vaxijen/VaxiJen/VaxiJen.html'
+    immunogenicity_mhci_url = 'http://tools.iedb.org/immunogenicity/'
+    # immunogenicity_mhcii_url = ''
+    population_coverage_url = 'http://tools.iedb.org/population/'
+    cluster_analysis_url = 'http://tools.iedb.org/cluster/'
+    conservancy_analysis_url = 'http://tools.iedb.org/conservancy/'
 
     analysis_results = []
     for index, value in enumerate(list_of_linear_epitopes):
@@ -221,6 +221,8 @@ def analyse_all(tuple_inputs):
     for index, epitope in enumerate(list_of_linear_epitopes):
         row = []
         x = ProteinAnalysis(epitope)
+        #aa_percentage = x.get_amino_acids_percent()
+        #aa_count = x.count_amino_acids()
         mol_weight = x.molecular_weight()
         mol_weight = round(mol_weight, 3)
         isoel_point = x.isoelectric_point()
@@ -247,9 +249,9 @@ def analyse_all(tuple_inputs):
         row.extend((mol_weight, isoel_point, aromaticity, insta_index, helix_2_struc, turn_2_struc, sheet_2_struc, reduCys, disulfBridge, hydropathicity, chpH))
         for parameter in row:
             analysis_results[index].append(parameter)
-    
 
-    #options=options, 
+
+    #options=options,
 
     immunogenicity_mhci = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
     immunogenicity_mhci.get(immunogenicity_mhci_url)
@@ -274,7 +276,7 @@ def analyse_all(tuple_inputs):
         cluster.find_element(By.NAME, "submit").click()
         wait_cluster.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div[3]/form/table/tbody")))
         cluster.find_element(By.NAME, "submit").click()
-    
+
     conservancy = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
     conservancy.maximize_window()
     conservancy.get(conservancy_analysis_url)
@@ -344,7 +346,7 @@ def analyse_all(tuple_inputs):
                 continue
             else:
                 cluster_row = cluster_results_table[i].split(' ')
-                if len(cluster_row) == 6:    
+                if len(cluster_row) == 6:
                     cluster_list_of_rows.append(cluster_row)
                 else:
                     indexes_to_remove = len(cluster_row) - 6
@@ -379,7 +381,7 @@ def analyse_all(tuple_inputs):
             result_in_text = result_in_text + std_dev + '\t' + new_row[2] + '\t' + new_row[3] + '\t' + new_row[4]
         else:
             result_in_text = result_in_text + new_row[0] + '\t' + new_row[1] + '\t' + new_row[2] + '\t' + new_row[3] + '\n'
-    pop_cov_results = open('results/pop_cov_results.txt', 'a') 
+    pop_cov_results = open('results/pop_cov_results.txt', 'a')
     pop_cov_results.write(result_in_text)
     pop_cov_results.close()
 
@@ -398,18 +400,18 @@ def analyse_all(tuple_inputs):
                 immunogenicity_score = round(float(immunogenicity_mhci_result_row[2]), 3)
                 analysis_results[i].append(immunogenicity_score)
 
-    
+
 
     def algpred_try_until_it_works(chunk_of_400, counter = 10):
         if counter == 0:
             print("Failed algpred after 10 tries")
             return
-        
-        algpred_seq_file = open('algpred_seq_file.txt', 'a') 
+
+        algpred_seq_file = open('algpred_seq_file.txt', 'a')
         algpred_seq_file.write(chunk_of_400)
         algpred_seq_file.close()
 
-        
+
         try:
             print("Runnning algpred2")
             algpred2 = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
@@ -424,7 +426,7 @@ def analyse_all(tuple_inputs):
             print("Retrying algpred ...")
             algpred_try_until_it_works(counter-1)
             return
-        else:    
+        else:
             algpred2_results_table = algpred2.find_element(By.XPATH, '/html/body/header/div[3]/main/div/table[2]/tbody').text.splitlines()
             algpred2.close()
             print("Algpred worked!!!")
@@ -443,7 +445,7 @@ def analyse_all(tuple_inputs):
                 else:
                     input_for_results.append(algpred2_result_row[-1])
             return input_for_results
-    
+
     algpred_all_results = []
     for seq_of_400_epitopes in algpred_chunks:
         algpred_results = algpred_try_until_it_works(seq_of_400_epitopes)
@@ -453,7 +455,7 @@ def analyse_all(tuple_inputs):
         elif algpred_results is None:
             for empty_index in range(400):
                 algpred_all_results.append("")
-    
+
     for i in range(len(analysis_results)):
         analysis_results[i].append(algpred_all_results[i])
 
@@ -479,7 +481,7 @@ def analyse_all(tuple_inputs):
         else:
             print("Toxinpred worked!!!")
             toxinpred.find_element(By.XPATH, "/html/body/table[2]/tbody/tr/td/form/fieldset/table[2]/tbody/tr[3]/td/input[2]").click()
-        
+
         def check_400(other_counter=10):
             if other_counter == 0:
                 print("Failed selection after 10 tries")
@@ -509,7 +511,7 @@ def analyse_all(tuple_inputs):
         else:
             table_of_epitopes = check_400()
             return table_of_epitopes
-        
+
     for index, seq_of_400_epitopes in enumerate(toxinpred_chunks):
         toxinpred_results_table = toxinpred_try_until_it_works(seq_of_400_epitopes)
         if toxinpred_results_table is not None:
@@ -523,13 +525,13 @@ def analyse_all(tuple_inputs):
             for empty_index in range(400):
                 for i in range(8):
                     toxinpred_epitopes[400*index + empty_index].append(None)
-    
+
     none_list = []
     for i in range(8):
         none_list.append(None)
     for index in toxinpred_excluded_indexes:
         toxinpred_epitopes.insert(index, none_list)
-    
+
     for alist in toxinpred_epitopes:
         del alist[0]
 
@@ -554,8 +556,8 @@ def make_csv_from_results(results_from_prediction, results_from_analysis):
 
     """The returned results from the analysis are added to the lists of prediction and saved as csv files for each different method."""
 
-    columns_to_add = ['Mol_Weight', 'Isoelectric_Point', 'Aromaticity','Instability_Index','Helix_2_Struc', 'Turn_2_Struc', 'Sheet_2_Struc', 'Reduces_Cys', 'Disulfide_Bridge', 
-    'Hydropathicity', 'Charge_at_pH7', 'Antigenicity_Score', 'Antigen_Prediction', 'Allergen_Prediction','SVM_Score', 'Toxicity_Prediction', 'Hydrophobicity', 'Steric_hinderance', 
+    columns_to_add = ['Mol_Weight', 'Isoelectric_Point', 'Aromaticity','Instability_Index','Helix_2_Struc', 'Turn_2_Struc', 'Sheet_2_Struc', 'Reduces_Cys', 'Disulfide_Bridge',
+    'Hydropathicity', 'Charge_at_pH7', 'Antigenicity_Score', 'Antigen_Prediction', 'Allergen_Prediction','SVM_Score', 'Toxicity_Prediction', 'Hydrophobicity', 'Steric_hinderance',
     'Sidebulk', 'Amphipathicity', 'Hydrophilicity', 'Net_Hydrogen']
 
     for i in range(len(results_from_prediction[:-2])):
@@ -566,14 +568,14 @@ def make_csv_from_results(results_from_prediction, results_from_analysis):
         else:
             for column_title in columns_to_add:
                 results_from_prediction[i][0].append(column_title)
-        
+
         if len(results_from_prediction[i]) > 1:
             length_to_cut = len(results_from_prediction[i][1:])
             for e in range(length_to_cut):
                 for parameter in results_from_analysis[e][1:]:
                     results_from_prediction[i][e+1].append(parameter)
             results_from_analysis = results_from_analysis[length_to_cut:]
-    
+
     for i in range(len(results_from_prediction)):
         if i == 0:
             f = open("results/mhci.csv", "w", newline="")
