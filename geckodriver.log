@@ -973,3 +973,553 @@ Read port: 44465
 1653223624115	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
 console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://webs.iiitd.edu.in"
 1653223641124	Marionette	INFO	Stopped listening on port 44465
+1653326532452	geckodriver	INFO	Listening on 127.0.0.1:44381
+1653326532939	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "43937" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilezlU5h5"
+*** You are running in headless mode.
+1653326534230	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilezlU5h5/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:43937/devtools/browser/94043952-9187-4c5c-979c-62c6d6532e55
+1653326539970	Marionette	INFO	Listening on port 37655
+Read port: 37655
+1653326540092	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "http://tools.iedb.org"
+JavaScript error: http://tools.iedb.org/static/js/sequence_validation.js, line 89: TypeError: document.querySelector(...) is null
+1653326543862	geckodriver	INFO	Listening on 127.0.0.1:58033
+1653326544367	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "58143" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilezkyOuq"
+*** You are running in headless mode.
+1653326545596	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilezkyOuq/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:58143/devtools/browser/5342e1b2-8bda-488a-a271-12ef421f5dc5
+1653326549588	Marionette	INFO	Listening on port 43889
+Read port: 43889
+1653326549683	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "http://www.ddg-pharmfac.net"
+1653326555164	geckodriver	INFO	Listening on 127.0.0.1:58337
+1653326555175	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "41123" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileBPRXJf"
+*** You are running in headless mode.
+1653326556150	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileBPRXJf/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:41123/devtools/browser/2e847767-6cb1-4b7c-a6c8-aa12fe413de0
+1653326560999	Marionette	INFO	Listening on port 45731
+Read port: 45731
+1653326561127	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: http://tools.iedb.org/conservancy/, line 33: SyntaxError: JSON.parse: unexpected end of data at line 1 column 1 of the JSON data
+JavaScript error: http://tools.iedb.org/static/js/sequence_validation.js, line 89: TypeError: document.querySelector(...) is null
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "http://tools.iedb.org"
+1653326568739	geckodriver	INFO	Listening on 127.0.0.1:44039
+1653326569247	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "55581" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilehSjuz4"
+1653326571720	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilehSjuz4/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:55581/devtools/browser/e28e9b9e-bb36-4ed4-a4a8-8e13ef480133
+1653326576831	Marionette	INFO	Listening on port 34805
+Read port: 34805
+1653326576948	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: http://tools.iedb.org/population/, line 29: TypeError: sessionStorage.getItem(...) is null
+JavaScript error: http://tools.iedb.org/static/js/sequence_validation.js, line 89: TypeError: document.querySelector(...) is null
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "http://tools.iedb.org"
+JavaScript error: http://tools.iedb.org/static/js/sequence_validation.js, line 89: TypeError: document.querySelector(...) is null
+JavaScript error: http://tools.iedb.org/static/js/sequence_validation.js, line 89: TypeError: document.querySelector(...) is null
+1653326694795	Marionette	INFO	Stopped listening on port 43889
+
+###!!! [Parent][PContentParent] Error: Send(msgname=PContent::Msg_DestroyBrowsingContextGroup) Closed channel: cannot send/recv
+
+1653326800556	Marionette	INFO	Stopped listening on port 45731
+
+###!!! [Parent][PContentParent] Error: Send(msgname=PContent::Msg_DestroyBrowsingContextGroup) Closed channel: cannot send/recv
+
+
+###!!! [Parent][PImageBridgeParent] Error: RunMessage(msgname=PImageBridge::Msg_WillClose) Channel closing: too late to send/recv, messages will be lost
+
+1653326801442	Marionette	INFO	Stopped listening on port 34805
+1653326814828	Marionette	INFO	Stopped listening on port 37655
+1653326817596	geckodriver	INFO	Listening on 127.0.0.1:52539
+1653326818104	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "47833" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileLOoISG"
+*** You are running in headless mode.
+1653326819086	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileLOoISG/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:47833/devtools/browser/16febd5b-a563-4a3d-b92b-9add66c59de9
+1653326822796	Marionette	INFO	Listening on port 44325
+Read port: 44325
+1653326822912	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 103: ReferenceError: $ is not defined
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 180: ReferenceError: $ is not defined
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://webs.iiitd.edu.in"
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 120: TypeError: document.getElementById(...) is null
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch_action.php, line 123: ReferenceError: $ is not defined
+1653326946542	Marionette	INFO	Stopped listening on port 44325
+1653326947007	geckodriver	INFO	Listening on 127.0.0.1:52177
+1653326947013	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "47923" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofile7rAZVx"
+*** You are running in headless mode.
+1653326947729	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofile7rAZVx/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:47923/devtools/browser/c3d38b9b-2155-425e-ab77-de0c20f928af
+1653326950264	Marionette	INFO	Listening on port 38181
+Read port: 38181
+1653326950383	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 103: ReferenceError: $ is not defined
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 180: ReferenceError: $ is not defined
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://webs.iiitd.edu.in"
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 120: TypeError: document.getElementById(...) is null
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch_action.php, line 123: ReferenceError: $ is not defined
+1653327029444	Marionette	INFO	Stopped listening on port 38181
+
+###!!! [Parent][PImageBridgeParent] Error: RunMessage(msgname=PImageBridge::Msg_WillClose) Channel closing: too late to send/recv, messages will be lost
+
+1653327030161	geckodriver	INFO	Listening on 127.0.0.1:33831
+1653327030172	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "39893" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileTdx21w"
+*** You are running in headless mode.
+1653327030928	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileTdx21w/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:39893/devtools/browser/349992b7-7788-4a7f-ba06-baca626a9942
+1653327033753	Marionette	INFO	Listening on port 46593
+Read port: 46593
+1653327033850	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 103: ReferenceError: $ is not defined
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 180: ReferenceError: $ is not defined
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://webs.iiitd.edu.in"
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 120: TypeError: document.getElementById(...) is null
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch_action.php, line 123: ReferenceError: $ is not defined
+1653327113396	Marionette	INFO	Stopped listening on port 46593
+1653327114004	geckodriver	INFO	Listening on 127.0.0.1:35953
+1653327114511	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "50169" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilex4hvli"
+*** You are running in headless mode.
+1653327115218	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilex4hvli/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:50169/devtools/browser/e4ffb545-ef57-4aa8-82c9-8eee72f098c0
+1653327117872	Marionette	INFO	Listening on port 42889
+Read port: 42889
+1653327117970	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 103: ReferenceError: $ is not defined
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 180: ReferenceError: $ is not defined
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://webs.iiitd.edu.in"
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 120: TypeError: document.getElementById(...) is null
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch_action.php, line 123: ReferenceError: $ is not defined
+1653327196292	Marionette	INFO	Stopped listening on port 42889
+1653327196984	geckodriver	INFO	Listening on 127.0.0.1:44885
+1653327197491	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "57827" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileBEfYxX"
+*** You are running in headless mode.
+1653327198157	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileBEfYxX/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:57827/devtools/browser/478ba448-4a91-4308-982f-1cfd51b2bd3b
+1653327200606	Marionette	INFO	Listening on port 40375
+Read port: 40375
+1653327200656	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 103: ReferenceError: $ is not defined
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 180: ReferenceError: $ is not defined
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://webs.iiitd.edu.in"
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 120: TypeError: document.getElementById(...) is null
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch_action.php, line 123: ReferenceError: $ is not defined
+1653327282915	Marionette	INFO	Stopped listening on port 40375
+
+###!!! [Parent][PCompositorManagerParent] Error: RunMessage(msgname=PCompositorBridge::Msg___delete__) Channel closing: too late to send/recv, messages will be lost
+
+
+###!!! [Parent][PImageBridgeParent] Error: RunMessage(msgname=PImageBridge::Msg_WillClose) Channel closing: too late to send/recv, messages will be lost
+
+1653327283683	geckodriver	INFO	Listening on 127.0.0.1:52867
+1653327284188	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "38633" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilehcJDWx"
+*** You are running in headless mode.
+1653327284855	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilehcJDWx/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:38633/devtools/browser/fe772512-1cf8-447c-a11f-9c5a86412315
+1653327287371	Marionette	INFO	Listening on port 39563
+Read port: 39563
+1653327287450	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 103: ReferenceError: $ is not defined
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 180: ReferenceError: $ is not defined
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://webs.iiitd.edu.in"
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 120: TypeError: document.getElementById(...) is null
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch_action.php, line 123: ReferenceError: $ is not defined
+1653327369642	Marionette	INFO	Stopped listening on port 39563
+
+###!!! [Parent][PImageBridgeParent] Error: RunMessage(msgname=PImageBridge::Msg_WillClose) Channel closing: too late to send/recv, messages will be lost
+
+1653327370325	geckodriver	INFO	Listening on 127.0.0.1:43925
+1653327370832	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "57155" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofiledSFbri"
+*** You are running in headless mode.
+1653327371504	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofiledSFbri/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:57155/devtools/browser/1338df30-e90e-430b-92f4-1cd571c98267
+1653327374111	Marionette	INFO	Listening on port 42385
+Read port: 42385
+1653327374193	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 103: ReferenceError: $ is not defined
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 180: ReferenceError: $ is not defined
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://webs.iiitd.edu.in"
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 120: TypeError: document.getElementById(...) is null
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch_action.php, line 123: ReferenceError: $ is not defined
+1653327452704	Marionette	INFO	Stopped listening on port 42385
+1653327453338	geckodriver	INFO	Listening on 127.0.0.1:58429
+1653327453347	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "43249" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilesu0DMW"
+*** You are running in headless mode.
+1653327454027	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilesu0DMW/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:43249/devtools/browser/942c40c0-c252-40b8-bb9e-2f8bc767db66
+1653327456480	Marionette	INFO	Listening on port 39939
+Read port: 39939
+1653327456516	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 103: ReferenceError: $ is not defined
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 180: ReferenceError: $ is not defined
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://webs.iiitd.edu.in"
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 120: TypeError: document.getElementById(...) is null
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch_action.php, line 123: ReferenceError: $ is not defined
+1653327534451	Marionette	INFO	Stopped listening on port 39939
+
+###!!! [Parent][PCompositorManagerParent] Error: RunMessage(msgname=PCompositorBridge::Msg___delete__) Channel closing: too late to send/recv, messages will be lost
+
+
+###!!! [Parent][PImageBridgeParent] Error: RunMessage(msgname=PImageBridge::Msg_WillClose) Channel closing: too late to send/recv, messages will be lost
+
+1653327535141	geckodriver	INFO	Listening on 127.0.0.1:42569
+1653327535647	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "54299" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilecZe62O"
+*** You are running in headless mode.
+1653327536274	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilecZe62O/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:54299/devtools/browser/ced170c4-7246-4397-848e-77e25adb729f
+1653327539038	Marionette	INFO	Listening on port 39965
+Read port: 39965
+1653327539108	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 103: ReferenceError: $ is not defined
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 180: ReferenceError: $ is not defined
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://webs.iiitd.edu.in"
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 120: TypeError: document.getElementById(...) is null
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch_action.php, line 123: ReferenceError: $ is not defined
+1653327617773	Marionette	INFO	Stopped listening on port 39965
+1653327618490	geckodriver	INFO	Listening on 127.0.0.1:58425
+1653327618996	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "54927" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilehROfJR"
+*** You are running in headless mode.
+1653327619648	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilehROfJR/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:54927/devtools/browser/d247c67c-ad8c-4500-b84e-45cebc816c3d
+1653327622212	Marionette	INFO	Listening on port 40103
+Read port: 40103
+1653327622257	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 103: ReferenceError: $ is not defined
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 180: ReferenceError: $ is not defined
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://webs.iiitd.edu.in"
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 120: TypeError: document.getElementById(...) is null
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch_action.php, line 123: ReferenceError: $ is not defined
+1653327700765	Marionette	INFO	Stopped listening on port 40103
+
+###!!! [Parent][PImageBridgeParent] Error: RunMessage(msgname=PImageBridge::Msg_WillClose) Channel closing: too late to send/recv, messages will be lost
+
+1653327701394	geckodriver	INFO	Listening on 127.0.0.1:46573
+1653327701408	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "53085" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilefEQmMg"
+*** You are running in headless mode.
+1653327702059	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilefEQmMg/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:53085/devtools/browser/94fcf638-ef61-42df-a66a-6d19395f59c2
+1653327704637	Marionette	INFO	Listening on port 34867
+Read port: 34867
+1653327704795	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 103: ReferenceError: $ is not defined
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 180: ReferenceError: $ is not defined
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://webs.iiitd.edu.in"
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 120: TypeError: document.getElementById(...) is null
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch_action.php, line 123: ReferenceError: $ is not defined
+1653327783240	Marionette	INFO	Stopped listening on port 34867
+
+###!!! [Parent][PImageBridgeParent] Error: RunMessage(msgname=PImageBridge::Msg_WillClose) Channel closing: too late to send/recv, messages will be lost
+
+1653327783848	geckodriver	INFO	Listening on 127.0.0.1:39231
+1653327783856	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "46291" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilecwrI5L"
+*** You are running in headless mode.
+1653327784463	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilecwrI5L/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:46291/devtools/browser/bed2dfb4-209c-45d7-924b-72c4c149e0d4
+1653327787082	Marionette	INFO	Listening on port 35435
+Read port: 35435
+1653327787118	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 103: ReferenceError: $ is not defined
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 180: ReferenceError: $ is not defined
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://webs.iiitd.edu.in"
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 120: TypeError: document.getElementById(...) is null
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch_action.php, line 123: ReferenceError: $ is not defined
+1653327866083	Marionette	INFO	Stopped listening on port 35435
+1653327866787	geckodriver	INFO	Listening on 127.0.0.1:57751
+1653327867295	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "56543" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofile8HZzrl"
+*** You are running in headless mode.
+1653327867962	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofile8HZzrl/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:56543/devtools/browser/6733d8dc-59f3-4618-bf55-108fbd0ee3f0
+1653327870665	Marionette	INFO	Listening on port 36937
+Read port: 36937
+1653327870759	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 103: ReferenceError: $ is not defined
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 180: ReferenceError: $ is not defined
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://webs.iiitd.edu.in"
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 120: TypeError: document.getElementById(...) is null
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch_action.php, line 123: ReferenceError: $ is not defined
+1653327954812	Marionette	INFO	Stopped listening on port 36937
+1653327955544	geckodriver	INFO	Listening on 127.0.0.1:36431
+1653327956050	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "45887" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileJsbLeP"
+*** You are running in headless mode.
+1653327956733	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileJsbLeP/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:45887/devtools/browser/e360bb8e-5d51-49c4-b751-ae7042872608
+1653327959387	Marionette	INFO	Listening on port 46199
+Read port: 46199
+1653327959515	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 103: ReferenceError: $ is not defined
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 180: ReferenceError: $ is not defined
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://webs.iiitd.edu.in"
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 120: TypeError: document.getElementById(...) is null
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch_action.php, line 123: ReferenceError: $ is not defined
+1653328030833	Marionette	INFO	Stopped listening on port 46199
+1653328031555	geckodriver	INFO	Listening on 127.0.0.1:48265
+1653328032060	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "42595" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileTk2TiU"
+*** You are running in headless mode.
+1653328032729	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileTk2TiU/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:42595/devtools/browser/fa3a55c5-3be0-4cc6-98e5-43271920597f
+1653328035313	Marionette	INFO	Listening on port 46091
+Read port: 46091
+1653328035427	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://webs.iiitd.edu.in"
+1653328256451	Marionette	INFO	Stopped listening on port 46091
+
+###!!! [Parent][PContentParent] Error: Send(msgname=PContent::Msg_DestroyBrowsingContextGroup) Closed channel: cannot send/recv
+
+
+###!!! [Parent][PImageBridgeParent] Error: RunMessage(msgname=PImageBridge::Msg_WillClose) Channel closing: too late to send/recv, messages will be lost
+
+1653328256922	geckodriver	INFO	Listening on 127.0.0.1:43907
+1653328257427	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "51923" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilepEGrSZ"
+*** You are running in headless mode.
+1653328258102	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilepEGrSZ/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:51923/devtools/browser/1c4d7617-99ed-467a-83dd-f019aa9f1579
+1653328260709	Marionette	INFO	Listening on port 34175
+Read port: 34175
+1653328260793	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://webs.iiitd.edu.in"
+1653328482056	Marionette	INFO	Stopped listening on port 34175
+
+###!!! [Parent][PCompositorManagerParent] Error: RunMessage(msgname=PCompositorBridge::Msg___delete__) Channel closing: too late to send/recv, messages will be lost
+
+
+###!!! [Parent][PImageBridgeParent] Error: RunMessage(msgname=PImageBridge::Msg_WillClose) Channel closing: too late to send/recv, messages will be lost
+
+1653328482539	geckodriver	INFO	Listening on 127.0.0.1:42329
+1653328482545	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "55731" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilep5qz2m"
+*** You are running in headless mode.
+1653328483225	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilep5qz2m/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:55731/devtools/browser/b8b69973-0068-4a2f-b087-ba9c61207c09
+1653328485924	Marionette	INFO	Listening on port 40307
+Read port: 40307
+1653328486016	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://webs.iiitd.edu.in"
+1653328716212	Marionette	INFO	Stopped listening on port 40307
+
+###!!! [Parent][PContentParent] Error: Send(msgname=PContent::Msg_DestroyBrowsingContextGroup) Closed channel: cannot send/recv
+
+1653328716724	geckodriver	INFO	Listening on 127.0.0.1:36855
+1653328717229	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "52025" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileMjmlqE"
+*** You are running in headless mode.
+1653328717892	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileMjmlqE/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:52025/devtools/browser/14f5d422-917b-4a15-8031-4fe5a5baa3b7
+1653328720443	Marionette	INFO	Listening on port 43625
+Read port: 43625
+1653328720494	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://webs.iiitd.edu.in"
+1653328939342	Marionette	INFO	Stopped listening on port 43625
+
+###!!! [Parent][PContentParent] Error: Send(msgname=PContent::Msg_DestroyBrowsingContextGroup) Closed channel: cannot send/recv
+
+1653328939825	geckodriver	INFO	Listening on 127.0.0.1:45155
+1653328939851	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "54105" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileqhwCjJ"
+*** You are running in headless mode.
+1653328940509	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileqhwCjJ/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:54105/devtools/browser/c002621d-5016-4f2b-910b-7b5b12e7112c
+1653328943011	Marionette	INFO	Listening on port 45231
+Read port: 45231
+1653328943116	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://webs.iiitd.edu.in"
+1653329161893	Marionette	INFO	Stopped listening on port 45231
+
+###!!! [Parent][PContentParent] Error: Send(msgname=PContent::Msg_DestroyBrowsingContextGroup) Closed channel: cannot send/recv
+
+
+###!!! [Child][PContentChild] Error: RunMessage(msgname=PContent::Reply_DiscardBrowsingContext) Channel closing: too late to send/recv, messages will be lost
+
+1653329162370	geckodriver	INFO	Listening on 127.0.0.1:33395
+1653329162386	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "34003" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilelzmePH"
+*** You are running in headless mode.
+1653329163077	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilelzmePH/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:34003/devtools/browser/f31bbe88-2c6c-4730-bb54-ebb9408b2462
+1653329165871	Marionette	INFO	Listening on port 34179
+Read port: 34179
+1653329165955	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://webs.iiitd.edu.in"
+1653329398223	Marionette	INFO	Stopped listening on port 34179
+
+###!!! [Parent][PContentParent] Error: Send(msgname=PContent::Msg_DestroyBrowsingContextGroup) Closed channel: cannot send/recv
+
+
+###!!! [Parent][PImageBridgeParent] Error: RunMessage(msgname=PImageBridge::Msg_WillClose) Channel closing: too late to send/recv, messages will be lost
+
+1653329398702	geckodriver	INFO	Listening on 127.0.0.1:57715
+1653329399209	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "42929" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileMu1DJD"
+*** You are running in headless mode.
+1653329399892	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileMu1DJD/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:42929/devtools/browser/b6ff0156-6f85-46b6-b35c-4bbd083ec21a
+1653329402685	Marionette	INFO	Listening on port 45273
+Read port: 45273
+1653329402762	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://webs.iiitd.edu.in"
+1653329625582	Marionette	INFO	Stopped listening on port 45273
+
+###!!! [Parent][PContentParent] Error: Send(msgname=PContent::Msg_DestroyBrowsingContextGroup) Closed channel: cannot send/recv
+
+
+###!!! [Parent][PImageBridgeParent] Error: RunMessage(msgname=PImageBridge::Msg_WillClose) Channel closing: too late to send/recv, messages will be lost
+
+1653329626058	geckodriver	INFO	Listening on 127.0.0.1:59003
+1653329626064	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "58637" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileARRSIZ"
+*** You are running in headless mode.
+1653329626730	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileARRSIZ/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:58637/devtools/browser/b6da5113-a6cc-44b8-9cbe-7a53c662cac7
+1653329629293	Marionette	INFO	Listening on port 35613
+Read port: 35613
+1653329629416	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://webs.iiitd.edu.in"
+1653329853999	Marionette	INFO	Stopped listening on port 35613
+
+###!!! [Parent][PContentParent] Error: Send(msgname=PContent::Msg_DestroyBrowsingContextGroup) Closed channel: cannot send/recv
+
+
+###!!! [Child][PContentChild] Error: Send(msgname=PBrowser::Msg___delete__) Channel closing: too late to send/recv, messages will be lost
+
+
+###!!! [Parent][PImageBridgeParent] Error: RunMessage(msgname=PImageBridge::Msg_WillClose) Channel closing: too late to send/recv, messages will be lost
+
+1653329854455	geckodriver	INFO	Listening on 127.0.0.1:39053
+1653329854465	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "36195" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilemehgNA"
+*** You are running in headless mode.
+1653329855157	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilemehgNA/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:36195/devtools/browser/9ee93922-afd1-4588-9dba-77c0b3ce1d1a
+1653329857718	Marionette	INFO	Listening on port 36703
+Read port: 36703
+1653329857823	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://webs.iiitd.edu.in"
+1653330087057	Marionette	INFO	Stopped listening on port 36703
+1653330087551	geckodriver	INFO	Listening on 127.0.0.1:44197
+1653330088057	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "44167" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileJXI5py"
+*** You are running in headless mode.
+1653330088756	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileJXI5py/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:44167/devtools/browser/6550ec8a-954c-4ce9-9540-039eeb71d0ff
+1653330091529	Marionette	INFO	Listening on port 38445
+Read port: 38445
+1653330091630	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://webs.iiitd.edu.in"
+1653330312859	Marionette	INFO	Stopped listening on port 38445
+
+###!!! [Child][PContentChild] Error: RunMessage(msgname=PContent::Msg_DestroyBrowsingContextGroup) Channel closing: too late to send/recv, messages will be lost
+
+1653330313346	geckodriver	INFO	Listening on 127.0.0.1:43203
+1653330313851	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "40099" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileq7Ft6T"
+*** You are running in headless mode.
+1653330314577	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileq7Ft6T/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:40099/devtools/browser/ace6e26b-c8c2-4293-b248-90cfd17ac926
+1653330317281	Marionette	INFO	Listening on port 37821
+Read port: 37821
+1653330317319	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://webs.iiitd.edu.in"
+1653330549445	Marionette	INFO	Stopped listening on port 37821
+
+###!!! [Parent][PContentParent] Error: Send(msgname=PContent::Msg_DestroyBrowsingContextGroup) Closed channel: cannot send/recv
+
+
+###!!! [Child][PContentChild] Error: RunMessage(msgname=PContent::Reply_DiscardBrowsingContext) Channel closing: too late to send/recv, messages will be lost
+
+
+###!!! [Parent][PImageBridgeParent] Error: RunMessage(msgname=PImageBridge::Msg_WillClose) Channel closing: too late to send/recv, messages will be lost
+
+1653330549933	geckodriver	INFO	Listening on 127.0.0.1:60337
+1653330549940	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "51729" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileF422n6"
+*** You are running in headless mode.
+1653330550601	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileF422n6/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:51729/devtools/browser/a10e5d7d-257f-42b6-9bc6-1be0d2e41791
+1653330553139	Marionette	INFO	Listening on port 41683
+Read port: 41683
+1653330553191	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://webs.iiitd.edu.in"
+1653330775361	Marionette	INFO	Stopped listening on port 41683
+
+###!!! [Child][PContentChild] Error: Send(msgname=PBrowser::Msg___delete__) Channel closing: too late to send/recv, messages will be lost
+
+
+###!!! [Parent][PContentParent] Error: Send(msgname=PContent::Msg_DestroyBrowsingContextGroup) Closed channel: cannot send/recv
+
+1653330775836	geckodriver	INFO	Listening on 127.0.0.1:39397
+1653330775841	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "59891" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileMH3kud"
+*** You are running in headless mode.
+1653330776522	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileMH3kud/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:59891/devtools/browser/f3b94e62-e186-48d6-b92e-7ed5c86ecbb0
+1653330779050	Marionette	INFO	Listening on port 40127
+Read port: 40127
+1653330779115	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://webs.iiitd.edu.in"
+1653330999168	Marionette	INFO	Stopped listening on port 40127
+
+###!!! [Parent][PContentParent] Error: Send(msgname=PContent::Msg_DestroyBrowsingContextGroup) Closed channel: cannot send/recv
+
+1653330999623	geckodriver	INFO	Listening on 127.0.0.1:60117
+1653331000137	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "53407" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileCWOwqT"
+*** You are running in headless mode.
+1653331000822	Marionette	INFO	Marionette enabled
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileCWOwqT/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:53407/devtools/browser/afaa6a90-5afe-4a89-a900-3c97962493bf
+1653331003442	Marionette	INFO	Listening on port 36217
+Read port: 36217
+1653331003509	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://webs.iiitd.edu.in"
+1653331020670	Marionette	INFO	Stopped listening on port 36217
+
+###!!! [Parent][PCompositorManagerParent] Error: RunMessage(msgname=PCompositorBridge::Msg___delete__) Channel closing: too late to send/recv, messages will be lost
+
+
+###!!! [Parent][PImageBridgeParent] Error: RunMessage(msgname=PImageBridge::Msg_WillClose) Channel closing: too late to send/recv, messages will be lost
+

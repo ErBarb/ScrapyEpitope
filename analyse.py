@@ -605,8 +605,8 @@ def make_csv_from_results(results_from_prediction, results_from_analysis):
         writer.writerows(results_from_prediction[i])
         f.close()
 
-list_of_swissprot_ids = ['P59594', 'P0DTC2', 'K9N5Q8', 'P36334', 'Q0ZME7', 'P15423', 'Q6Q1S2', 'Q5MQD0', 'Q14EB0']
-prediction_results = read_prediction_results()
-analysis_input = make_inputs_for_analysis(prediction_results, list_of_swissprot_ids)
-analysis_results = analyse_all(analysis_input)
-make_csv_from_results(prediction_results, analysis_results)
+# list_of_swissprot_ids = ['P59594', 'P0DTC2', 'K9N5Q8', 'P36334', 'Q0ZME7', 'P15423', 'Q6Q1S2', 'Q5MQD0', 'Q14EB0']
+# prediction_results = read_prediction_results()
+# analysis_input = make_inputs_for_analysis(prediction_results, list_of_swissprot_ids)
+# analysis_results = analyse_all(analysis_input)
+# make_csv_from_results(prediction_results, analysis_results)
