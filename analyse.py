@@ -184,6 +184,8 @@ def make_inputs_for_analysis(results_from_prediction, list_of_swissprot_ids):
     if not os.path.exists(final_directory):
         os.makedirs(final_directory)
 
+    list_of_all_linear_epitopes = ['KNKDGFLYVY','QAMEKVNECVKSQSSRINFCGNGNH','RQLAQQKVNECVKSQSKRYGFCGNG','VIAWNSNNLDSKGNYNYLYRKPFERDIYFPLQSYGFQPTNVGYQPYRVVVLSFELLHAPATVCGPKKSTNLVKNK', 'ATAGWTFGA', 'TATAGWTF']
+
     return list_of_all_linear_epitopes, toxinpred_chunks, toxinpred_epitopes, toxinpred_excluded_indexes, immunogenicity_indexes, algpred_chunks
 
 def analyse_all(tuple_inputs):
@@ -217,325 +219,369 @@ def analyse_all(tuple_inputs):
         row.insert(0,list_of_linear_epitopes[index])
         analysis_results.append(row)
 
-    # Protparam
-    for index, epitope in enumerate(list_of_linear_epitopes):
-        row = []
-        x = ProteinAnalysis(epitope)
-        mol_weight = x.molecular_weight()
-        mol_weight = round(mol_weight, 3)
-        isoel_point = x.isoelectric_point()
-        isoel_point = round(isoel_point, 3)
-        aromaticity = x.aromaticity()
-        aromaticity = round(aromaticity, 3)
-        insta_index = x.instability_index()
-        insta_index = round(insta_index, 3)
-        sec_struc = x.secondary_structure_fraction()
-        sec_struc = [round(num, 3) for num in sec_struc]
-        helix_2_struc = sec_struc[0]
-        turn_2_struc = sec_struc[1]
-        sheet_2_struc = sec_struc[2]
-        epsilon_prot = x.molar_extinction_coefficient()
-        reduCys = epsilon_prot[0]
-        disulfBridge = epsilon_prot[1]
-        hydropathicity = x.gravy()
-        hydropathicity = round(hydropathicity, 3)
-        #flex_list = [str(round(num, 2)) for num in x.flexibility()]
-        #flexibility = ': '.join(flex_list)
-        chpH = x.charge_at_pH(7)
-        chpH = round(chpH, 3)
-        #row.extend((mol_weight, isoel_point, aromaticity, insta_index, helix_2_struc, turn_2_struc, sheet_2_struc, reduCys, disulfBridge, hydropathicity, flexibility, chpH))
-        row.extend((mol_weight, isoel_point, aromaticity, insta_index, helix_2_struc, turn_2_struc, sheet_2_struc, reduCys, disulfBridge, hydropathicity, chpH))
-        for parameter in row:
-            analysis_results[index].append(parameter)
+    # # Protparam
+    # for index, epitope in enumerate(list_of_linear_epitopes):
+    #     row = []
+    #     x = ProteinAnalysis(epitope)
+    #     mol_weight = x.molecular_weight()
+    #     mol_weight = round(mol_weight, 3)
+    #     isoel_point = x.isoelectric_point()
+    #     isoel_point = round(isoel_point, 3)
+    #     aromaticity = x.aromaticity()
+    #     aromaticity = round(aromaticity, 3)
+    #     insta_index = x.instability_index()
+    #     insta_index = round(insta_index, 3)
+    #     sec_struc = x.secondary_structure_fraction()
+    #     sec_struc = [round(num, 3) for num in sec_struc]
+    #     helix_2_struc = sec_struc[0]
+    #     turn_2_struc = sec_struc[1]
+    #     sheet_2_struc = sec_struc[2]
+    #     epsilon_prot = x.molar_extinction_coefficient()
+    #     reduCys = epsilon_prot[0]
+    #     disulfBridge = epsilon_prot[1]
+    #     hydropathicity = x.gravy()
+    #     hydropathicity = round(hydropathicity, 3)
+    #     #flex_list = [str(round(num, 2)) for num in x.flexibility()]
+    #     #flexibility = ': '.join(flex_list)
+    #     chpH = x.charge_at_pH(7)
+    #     chpH = round(chpH, 3)
+    #     #row.extend((mol_weight, isoel_point, aromaticity, insta_index, helix_2_struc, turn_2_struc, sheet_2_struc, reduCys, disulfBridge, hydropathicity, flexibility, chpH))
+    #     row.extend((mol_weight, isoel_point, aromaticity, insta_index, helix_2_struc, turn_2_struc, sheet_2_struc, reduCys, disulfBridge, hydropathicity, chpH))
+    #     for parameter in row:
+    #         analysis_results[index].append(parameter)
     
 
-    #options=options, 
+    # #options=options, 
 
-    immunogenicity_mhci = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
-    immunogenicity_mhci.get(immunogenicity_mhci_url)
-    immunogenicity_mhci.find_element(By.NAME, "sequence_file").send_keys(os.getcwd()+"/immunogenicity_file.txt")
-    immunogenicity_mhci.find_element(By.NAME, "submit").click()
+    # immunogenicity_mhci = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
+    # immunogenicity_mhci.get(immunogenicity_mhci_url)
+    # immunogenicity_mhci.find_element(By.NAME, "sequence_file").send_keys(os.getcwd()+"/immunogenicity_file.txt")
+    # immunogenicity_mhci.find_element(By.NAME, "submit").click()
 
-    vaxijen = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
-    vaxijen.get(vaxijen_url)
-    vaxijen.find_element(By.XPATH, "/html/body/div/table/tbody/tr[4]/td[3]/form/table/tbody/tr[1]/td[2]/p/input").send_keys(os.getcwd()+"/seq_file.txt")
-    vaxijen.find_element(By.XPATH, "/html/body/div/table/tbody/tr[4]/td[3]/form/table/tbody/tr[2]/td[2]/p/select/option[2]").click()
-    vaxijen.find_element(By.XPATH, "/html/body/div/table/tbody/tr[4]/td[3]/form/table/tbody/tr[2]/td[3]/input").send_keys('0.5')
-    vaxijen.find_element(By.XPATH, "/html/body/div/table/tbody/tr[4]/td[3]/form/table/tbody/tr[3]/td[2]/input[1]").click()
+    # vaxijen = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
+    # vaxijen.get(vaxijen_url)
+    # vaxijen.find_element(By.XPATH, "/html/body/div/table/tbody/tr[4]/td[3]/form/table/tbody/tr[1]/td[2]/p/input").send_keys(os.getcwd()+"/seq_file.txt")
+    # vaxijen.find_element(By.XPATH, "/html/body/div/table/tbody/tr[4]/td[3]/form/table/tbody/tr[2]/td[2]/p/select/option[2]").click()
+    # vaxijen.find_element(By.XPATH, "/html/body/div/table/tbody/tr[4]/td[3]/form/table/tbody/tr[2]/td[3]/input").send_keys('0.5')
+    # vaxijen.find_element(By.XPATH, "/html/body/div/table/tbody/tr[4]/td[3]/form/table/tbody/tr[3]/td[2]/input[1]").click()
 
-    if len(list_of_linear_epitopes) < 3000:
-        cluster = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
-        cluster.maximize_window()
-        cluster.get(cluster_analysis_url)
-        cluster.find_element(By.NAME, "sequence_file").send_keys(os.getcwd()+"/cluster_file.txt")
-        cluster.find_element(By.NAME, "submit").click()
-        wait_cluster = WebDriverWait(cluster, 6000)
-        wait_cluster.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div[3]/form/table/tbody/tr[2]/th")))
-        cluster.find_element(By.NAME, "submit").click()
-        wait_cluster.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div[3]/form/table/tbody")))
-        cluster.find_element(By.NAME, "submit").click()
+    # if len(list_of_linear_epitopes) < 3000:
+    #     cluster = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
+    #     cluster.maximize_window()
+    #     cluster.get(cluster_analysis_url)
+    #     cluster.find_element(By.NAME, "sequence_file").send_keys(os.getcwd()+"/cluster_file.txt")
+    #     cluster.find_element(By.NAME, "submit").click()
+    #     wait_cluster = WebDriverWait(cluster, 6000)
+    #     wait_cluster.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div[3]/form/table/tbody/tr[2]/th")))
+    #     cluster.find_element(By.NAME, "submit").click()
+    #     wait_cluster.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div[3]/form/table/tbody")))
+    #     cluster.find_element(By.NAME, "submit").click()
     
-    conservancy = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
-    conservancy.maximize_window()
-    conservancy.get(conservancy_analysis_url)
-    conservancy.find_element(By.NAME, "epitope_file").send_keys(os.getcwd()+"/conservancy_seq_file.txt")
-    conservancy.find_element(By.NAME, "protein_file").send_keys(os.getcwd()+"/conservancy_protein_file.txt")
-    conservancy.find_element(By.NAME, "submit").click()
+    # conservancy = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
+    # conservancy.maximize_window()
+    # conservancy.get(conservancy_analysis_url)
+    # conservancy.find_element(By.NAME, "epitope_file").send_keys(os.getcwd()+"/conservancy_seq_file.txt")
+    # conservancy.find_element(By.NAME, "protein_file").send_keys(os.getcwd()+"/conservancy_protein_file.txt")
+    # conservancy.find_element(By.NAME, "submit").click()
 
-    population_coverage = webdriver.Firefox(executable_path = '../ScrapyEpitope/geckodriver')
-    population_coverage.maximize_window()
-    population_coverage.get(population_coverage_url)
-    population_coverage.find_element(By.ID, "id_epitope_allele_file").send_keys(os.getcwd()+"/pop_cov_file.txt")
-    population_coverage.find_element(By.XPATH, "/html/body/div[3]/form/table[2]/tbody/tr[2]/td[1]/select/option[1]").click()
-    population_coverage.find_element(By.XPATH, "/html/body/div[3]/form/table[2]/tbody/tr[4]/td/input").click()
-    time.sleep(3)
-    population_coverage.find_element(By.NAME, "submit").click()
-
-
-    wait_vaxijen = WebDriverWait(vaxijen, 6000)
-    wait_vaxijen.until(ec.visibility_of_element_located((By.CLASS_NAME, "boilerplate")))
-    vaxijen_results_body = vaxijen.find_element(By.XPATH, '/html/body/div/table/tbody/tr[4]/td[3]/table/tbody').text.splitlines()
-    vaxijen.close()
-    print("Vaxijen done")
-    vaxijen_results = []
-    for value in vaxijen_results_body:
-        if value.startswith('Overall') == True:
-            result = []
-            antigenicity_val = float(re.search(r'[-+]?\d*\.*\d+', value).group())
-            result.append(antigenicity_val)
-            if antigenicity_val >= 0.5:
-                result.append('Probable Antigen')
-            else:
-                result.append('Probable Non-Antigen')
-            vaxijen_results.append(result)
-    for i in range(len(vaxijen_results)):
-       analysis_results[i].append(vaxijen_results[i][0])
-       analysis_results[i].append(vaxijen_results[i][1])
+    # population_coverage = webdriver.Firefox(executable_path = '../ScrapyEpitope/geckodriver')
+    # population_coverage.maximize_window()
+    # population_coverage.get(population_coverage_url)
+    # population_coverage.find_element(By.ID, "id_epitope_allele_file").send_keys(os.getcwd()+"/pop_cov_file.txt")
+    # population_coverage.find_element(By.XPATH, "/html/body/div[3]/form/table[2]/tbody/tr[2]/td[1]/select/option[1]").click()
+    # population_coverage.find_element(By.XPATH, "/html/body/div[3]/form/table[2]/tbody/tr[4]/td/input").click()
+    # time.sleep(3)
+    # population_coverage.find_element(By.NAME, "submit").click()
 
 
-
-    wait_conservancy = WebDriverWait(conservancy, 6000)
-    wait_conservancy.until(ec.visibility_of_element_located((By.ID, "result_table")))
-    conservancy_results_columns = conservancy.find_element(By.XPATH, '/html/body/div[3]/table/thead/tr').text.splitlines()
-    conservancy_results_table = conservancy.find_element(By.XPATH, '/html/body/div[3]/table/tbody').text.splitlines()
-    conservancy.close()
-    print("Conservancy done")
-    conservancy_list_of_rows = []
-    conservancy_list_of_rows.append(conservancy_results_columns)
-    for row in conservancy_results_table:
-        conservancy_row = row.split(' ')
-        conservancy_list_of_rows.append(conservancy_row)
-    with open('results/conservancy_analysis.csv', 'w') as f:
-        writer = csv.writer(f)
-        writer.writerows(conservancy_list_of_rows)
+    # wait_vaxijen = WebDriverWait(vaxijen, 6000)
+    # wait_vaxijen.until(ec.visibility_of_element_located((By.CLASS_NAME, "boilerplate")))
+    # vaxijen_results_body = vaxijen.find_element(By.XPATH, '/html/body/div/table/tbody/tr[4]/td[3]/table/tbody').text.splitlines()
+    # vaxijen.close()
+    # print("Vaxijen done")
+    # vaxijen_results = []
+    # for value in vaxijen_results_body:
+    #     if value.startswith('Overall') == True:
+    #         result = []
+    #         antigenicity_val = float(re.search(r'[-+]?\d*\.*\d+', value).group())
+    #         result.append(antigenicity_val)
+    #         if antigenicity_val >= 0.5:
+    #             result.append('Probable Antigen')
+    #         else:
+    #             result.append('Probable Non-Antigen')
+    #         vaxijen_results.append(result)
+    # for i in range(len(vaxijen_results)):
+    #    analysis_results[i].append(vaxijen_results[i][0])
+    #    analysis_results[i].append(vaxijen_results[i][1])
 
 
 
-    if len(list_of_linear_epitopes) < 3000:
-        wait_cluster.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div[3]/div/div[3]/div[2]")))
-        cluster_results_table = cluster.find_element(By.XPATH, '/html/body/div[3]/div/div[3]/div[2]/div[1]/table/tbody').text.splitlines()
-        cluster.close()
-        print("Cluster done")
-        cluster_list_of_rows = []
-        cluster_columns = ['Cluster.Sub-Cluster Number','Peptide Number','Alignment','Position','Description','Peptide']
-        cluster_list_of_rows.append(cluster_columns)
-        for i in range(len(cluster_results_table)):
-            if i == 0:
-                continue
-            else:
-                cluster_row = cluster_results_table[i].split(' ')
-                if len(cluster_row) == 6:    
-                    cluster_list_of_rows.append(cluster_row)
-                else:
-                    indexes_to_remove = len(cluster_row) - 6
-                    seq = cluster_row.pop(4)
-                    for i in range(indexes_to_remove):
-                        removed_duplicate = cluster_row.pop(4)
-                        seq = seq + removed_duplicate
-                    cluster_row.insert(4, seq)
-                    cluster_list_of_rows.append(cluster_row)
-        with open('results/cluster_analysis.csv', 'w') as f:
-            writer = csv.writer(f)
-            writer.writerows(cluster_list_of_rows)
+    # wait_conservancy = WebDriverWait(conservancy, 6000)
+    # wait_conservancy.until(ec.visibility_of_element_located((By.ID, "result_table")))
+    # conservancy_results_columns = conservancy.find_element(By.XPATH, '/html/body/div[3]/table/thead/tr').text.splitlines()
+    # conservancy_results_table = conservancy.find_element(By.XPATH, '/html/body/div[3]/table/tbody').text.splitlines()
+    # conservancy.close()
+    # print("Conservancy done")
+    # conservancy_list_of_rows = []
+    # conservancy_list_of_rows.append(conservancy_results_columns)
+    # for row in conservancy_results_table:
+    #     conservancy_row = row.split(' ')
+    #     conservancy_list_of_rows.append(conservancy_row)
+    # with open('results/conservancy_analysis.csv', 'w') as f:
+    #     writer = csv.writer(f)
+    #     writer.writerows(conservancy_list_of_rows)
 
 
 
-    wait_population_coverage = WebDriverWait(population_coverage, 6000)
-    wait_population_coverage.until(ec.visibility_of_element_located((By.CLASS_NAME, "popcov")))
-    population_coverage_results_table = population_coverage.find_element(By.XPATH, '/html/body/div[3]/table[1]/tbody').text.splitlines()
-    with open('results/population_coverage_graph.png', 'wb') as file:
-        file.write(population_coverage.find_element(By.XPATH, '/html/body/div[3]/table[2]/tbody/tr[3]/td/img').screenshot_as_png)
-    population_coverage.close()
-    print("Population coverage done")
-    result_in_text = ''
-    for index, row in enumerate(population_coverage_results_table):
-        new_row = row.split(' ')
-        if index == 0:
-            result_in_text = new_row[1] + ': ' + new_row[2] + '\n' + new_row[0] + '\t'
-        elif index == 1:
-            result_in_text = result_in_text + new_row[0][:-1] + '\t' + new_row[1][:-1] + '\t' + new_row[2][:-1] + '\n'
-        elif index == 4:
-            std_dev = new_row[0] + '_' + new_row[1]
-            result_in_text = result_in_text + std_dev + '\t' + new_row[2] + '\t' + new_row[3] + '\t' + new_row[4]
-        else:
-            result_in_text = result_in_text + new_row[0] + '\t' + new_row[1] + '\t' + new_row[2] + '\t' + new_row[3] + '\n'
-    pop_cov_results = open('results/pop_cov_results.txt', 'a') 
-    pop_cov_results.write(result_in_text)
-    pop_cov_results.close()
+    # if len(list_of_linear_epitopes) < 3000:
+    #     wait_cluster.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div[3]/div/div[3]/div[2]")))
+    #     cluster_results_table = cluster.find_element(By.XPATH, '/html/body/div[3]/div/div[3]/div[2]/div[1]/table/tbody').text.splitlines()
+    #     cluster.close()
+    #     print("Cluster done")
+    #     cluster_list_of_rows = []
+    #     cluster_columns = ['Cluster.Sub-Cluster Number','Peptide Number','Alignment','Position','Description','Peptide']
+    #     cluster_list_of_rows.append(cluster_columns)
+    #     for i in range(len(cluster_results_table)):
+    #         if i == 0:
+    #             continue
+    #         else:
+    #             cluster_row = cluster_results_table[i].split(' ')
+    #             if len(cluster_row) == 6:    
+    #                 cluster_list_of_rows.append(cluster_row)
+    #             else:
+    #                 indexes_to_remove = len(cluster_row) - 6
+    #                 seq = cluster_row.pop(4)
+    #                 for i in range(indexes_to_remove):
+    #                     removed_duplicate = cluster_row.pop(4)
+    #                     seq = seq + removed_duplicate
+    #                 cluster_row.insert(4, seq)
+    #                 cluster_list_of_rows.append(cluster_row)
+    #     with open('results/cluster_analysis.csv', 'w') as f:
+    #         writer = csv.writer(f)
+    #         writer.writerows(cluster_list_of_rows)
 
 
 
-    wait_immunogenicity_mhci = WebDriverWait(immunogenicity_mhci, 6000)
-    wait_immunogenicity_mhci.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div[3]/table")))
-    immunogenicity_mhci_results_table = immunogenicity_mhci.find_element(By.XPATH, '/html/body/div[3]/table/tbody').text.splitlines()
-    immunogenicity_mhci.close()
-    print("Immunogenicity done")
-    immunogenicity_mhci_results_table = list(dict.fromkeys(immunogenicity_mhci_results_table))
-    for row in immunogenicity_mhci_results_table:
-        immunogenicity_mhci_result_row = row.split(' ')
-        for i in range(immunogenicity_indexes):
-            if immunogenicity_mhci_result_row[0] in analysis_results[i]:
-                immunogenicity_score = round(float(immunogenicity_mhci_result_row[2]), 3)
-                analysis_results[i].append(immunogenicity_score)
+    # wait_population_coverage = WebDriverWait(population_coverage, 6000)
+    # wait_population_coverage.until(ec.visibility_of_element_located((By.CLASS_NAME, "popcov")))
+    # population_coverage_results_table = population_coverage.find_element(By.XPATH, '/html/body/div[3]/table[1]/tbody').text.splitlines()
+    # with open('results/population_coverage_graph.png', 'wb') as file:
+    #     file.write(population_coverage.find_element(By.XPATH, '/html/body/div[3]/table[2]/tbody/tr[3]/td/img').screenshot_as_png)
+    # population_coverage.close()
+    # print("Population coverage done")
+    # result_in_text = ''
+    # for index, row in enumerate(population_coverage_results_table):
+    #     new_row = row.split(' ')
+    #     if index == 0:
+    #         result_in_text = new_row[1] + ': ' + new_row[2] + '\n' + new_row[0] + '\t'
+    #     elif index == 1:
+    #         result_in_text = result_in_text + new_row[0][:-1] + '\t' + new_row[1][:-1] + '\t' + new_row[2][:-1] + '\n'
+    #     elif index == 4:
+    #         std_dev = new_row[0] + '_' + new_row[1]
+    #         result_in_text = result_in_text + std_dev + '\t' + new_row[2] + '\t' + new_row[3] + '\t' + new_row[4]
+    #     else:
+    #         result_in_text = result_in_text + new_row[0] + '\t' + new_row[1] + '\t' + new_row[2] + '\t' + new_row[3] + '\n'
+    # pop_cov_results = open('results/pop_cov_results.txt', 'a') 
+    # pop_cov_results.write(result_in_text)
+    # pop_cov_results.close()
+
+
+
+    # wait_immunogenicity_mhci = WebDriverWait(immunogenicity_mhci, 6000)
+    # wait_immunogenicity_mhci.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div[3]/table")))
+    # immunogenicity_mhci_results_table = immunogenicity_mhci.find_element(By.XPATH, '/html/body/div[3]/table/tbody').text.splitlines()
+    # immunogenicity_mhci.close()
+    # print("Immunogenicity done")
+    # immunogenicity_mhci_results_table = list(dict.fromkeys(immunogenicity_mhci_results_table))
+    # for row in immunogenicity_mhci_results_table:
+    #     immunogenicity_mhci_result_row = row.split(' ')
+    #     for i in range(immunogenicity_indexes):
+    #         if immunogenicity_mhci_result_row[0] in analysis_results[i]:
+    #             immunogenicity_score = round(float(immunogenicity_mhci_result_row[2]), 3)
+    #             analysis_results[i].append(immunogenicity_score)
 
     
 
-    def algpred_try_until_it_works(chunk_of_400, counter = 10):
-        if counter == 0:
-            print("Failed algpred after 10 tries")
-            return
+    # def algpred_try_until_it_works(chunk_of_400, counter = 10):
+    #     if counter == 0:
+    #         print("Failed algpred after 10 tries")
+    #         return
         
-        algpred_seq_file = open('algpred_seq_file.txt', 'a') 
-        algpred_seq_file.write(chunk_of_400)
-        algpred_seq_file.close()
+    #     algpred_seq_file = open('algpred_seq_file.txt', 'a') 
+    #     algpred_seq_file.write(chunk_of_400)
+    #     algpred_seq_file.close()
 
         
+    #     try:
+    #         print("Runnning algpred2")
+    #         algpred2 = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
+    #         algpred2.get(algpred2_url)
+    #         algpred2.find_element(By.XPATH, "/html/body/header/div[3]/section/form/table/tbody/tr/td/font/p/font[2]/input").send_keys(os.getcwd()+"/algpred_seq_file.txt")
+    #         algpred2.find_element(By.XPATH, "/html/body/header/div[3]/section/form/table/tbody/tr/td/font/font/p[3]/font/font[2]/input[2]").click()
+    #         wait_algpred2 = WebDriverWait(algpred2, 1200)
+    #         wait_algpred2.until(ec.visibility_of_element_located((By.CLASS_NAME, "scrollable")))
+    #     except:
+    #         algpred2.close()
+    #         os.remove(os.getcwd()+"/algpred_seq_file.txt")
+    #         print("Retrying algpred ...")
+    #         algpred_try_until_it_works(counter-1)
+    #         return
+    #     else:    
+    #         algpred2_results_table = algpred2.find_element(By.XPATH, '/html/body/header/div[3]/main/div/table[2]/tbody').text.splitlines()
+    #         algpred2.close()
+    #         print("Algpred worked!!!")
+    #         os.remove(os.getcwd()+"/algpred_seq_file.txt")
+    #         input_for_results = []
+    #         for index, row in enumerate(algpred2_results_table):
+    #             algpred2_result_row = row.split(' ')
+    #             seq_nr = int(algpred2_result_row[0][3:])
+    #             if index != len(algpred2_results_table) - 1:
+    #                 algpred2_result_next_row = algpred2_results_table[index+1].split(' ')
+    #                 seq_nr_next = int(algpred2_result_next_row[0][3:])
+    #                 if seq_nr != seq_nr_next:
+    #                     input_for_results.append(algpred2_result_row[-1])
+    #                 else:
+    #                     continue
+    #             else:
+    #                 input_for_results.append(algpred2_result_row[-1])
+    #         return input_for_results
+    
+    # algpred_all_results = []
+    # for seq_of_400_epitopes in algpred_chunks:
+    #     algpred_results = algpred_try_until_it_works(seq_of_400_epitopes)
+    #     if algpred_results is not None:
+    #         for parameter in algpred_results:
+    #             algpred_all_results.append(parameter)
+    #     elif algpred_results is None:
+    #         for empty_index in range(400):
+    #             algpred_all_results.append("")
+    
+    # for i in range(len(analysis_results)):
+    #     analysis_results[i].append(algpred_all_results[i])
+
+
+
+    # def toxinpred_try_until_it_works(chunk_of_400, counter=10):
+    #     if counter == 0:
+    #         print("Failed after 10 tries")
+    #         return
+    #     try:
+    #         print("Running toxinpred")
+    #         toxinpred = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
+    #         wait_toxinpred = WebDriverWait(toxinpred, 600)
+    #         toxinpred.get(toxinpred_url)
+    #         toxinpred.find_element(By.XPATH, "/html/body/table[2]/tbody/tr/td/form/fieldset/table[1]/tbody/tr[2]/td/textarea").send_keys(chunk_of_400)
+    #         time.sleep(5)
+    #         toxinpred.find_element(By.NAME, "checkAll").click()
+    #     except:
+    #         toxinpred.close()
+    #         print("Retrying toxinpred...")
+    #         toxinpred_try_until_it_works(chunk_of_400, counter-1)
+    #         return
+    #     else:
+    #         print("Toxinpred worked!!!")
+    #         toxinpred.find_element(By.XPATH, "/html/body/table[2]/tbody/tr/td/form/fieldset/table[2]/tbody/tr[3]/td/input[2]").click()
+        
+    #     def check_400(other_counter=10):
+    #         if other_counter == 0:
+    #             print("Failed selection after 10 tries")
+    #             return
+
+    #         try:
+    #             toxinpred.find_element(By.XPATH, "/html/body/div[2]/table/tfoot/tr/td/select").click()
+    #             toxinpred.find_element(By.XPATH, "/html/body/div[2]/table/tfoot/tr/td/select/option[8]").click()
+    #         except:
+    #             toxinpred.refresh()
+    #             print("Retrying selection")
+    #             check_400(other_counter-1)
+    #             return
+    #         else:
+    #             toxinpred_results_table = toxinpred.find_element(By.XPATH, '/html/body/div[2]/table/tbody').text.splitlines()
+    #             toxinpred.close()
+    #             return toxinpred_results_table
+
+    #     try:
+    #         wait_toxinpred.until(ec.visibility_of_element_located((By.ID, "tableTwo")))
+    #         time.sleep(5)
+    #     except:
+    #         toxinpred.close()
+    #         print("Nothing detected. Retrying...")
+    #         toxinpred_try_until_it_works(chunk_of_400, counter-1)
+    #         return
+    #     else:
+    #         table_of_epitopes = check_400()
+    #         return table_of_epitopes
+        
+    # for index, seq_of_400_epitopes in enumerate(toxinpred_chunks):
+    #     toxinpred_results_table = toxinpred_try_until_it_works(seq_of_400_epitopes)
+    #     if toxinpred_results_table is not None:
+    #         for results_index, row in enumerate(toxinpred_results_table):
+    #             toxinpred_result_row = row.split(' ')
+    #             toxinpred_row_included_indexes = [2,3,4,5,6,8,9,10]
+    #             toxinpred_new_result_row = [toxinpred_result_row[x] for x in toxinpred_row_included_indexes]
+    #             for parameter in toxinpred_new_result_row:
+    #                 toxinpred_epitopes[400*index + results_index].append(parameter)
+    #     elif toxinpred_results_table is None:
+    #         for empty_index in range(400):
+    #             for i in range(8):
+    #                 toxinpred_epitopes[400*index + empty_index].append(None)
+    
+    # none_list = []
+    # for i in range(8):
+    #     none_list.append(None)
+    # for index in toxinpred_excluded_indexes:
+    #     toxinpred_epitopes.insert(index, none_list)
+    
+    # for alist in toxinpred_epitopes:
+    #     del alist[0]
+
+    # for i in range(len(analysis_results)):
+    #     for n in range(len(toxinpred_epitopes[i])):
+    #         analysis_results[i].append(toxinpred_epitopes[i][n])
+
+    #options=options
+    for index, seq in enumerate(list_of_linear_epitopes):
         try:
-            print("Runnning algpred2")
-            algpred2 = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
-            algpred2.get(algpred2_url)
-            algpred2.find_element(By.XPATH, "/html/body/header/div[3]/section/form/table/tbody/tr/td/font/p/font[2]/input").send_keys(os.getcwd()+"/algpred_seq_file.txt")
-            algpred2.find_element(By.XPATH, "/html/body/header/div[3]/section/form/table/tbody/tr/td/font/font/p[3]/font/font[2]/input[2]").click()
-            wait_algpred2 = WebDriverWait(algpred2, 1200)
-            wait_algpred2.until(ec.visibility_of_element_located((By.CLASS_NAME, "scrollable")))
-        except:
-            algpred2.close()
-            os.remove(os.getcwd()+"/algpred_seq_file.txt")
-            print("Retrying algpred ...")
-            algpred_try_until_it_works(counter-1)
-            return
-        else:    
-            algpred2_results_table = algpred2.find_element(By.XPATH, '/html/body/header/div[3]/main/div/table[2]/tbody').text.splitlines()
-            algpred2.close()
-            print("Algpred worked!!!")
-            os.remove(os.getcwd()+"/algpred_seq_file.txt")
-            input_for_results = []
-            for index, row in enumerate(algpred2_results_table):
-                algpred2_result_row = row.split(' ')
-                seq_nr = int(algpred2_result_row[0][3:])
-                if index != len(algpred2_results_table) - 1:
-                    algpred2_result_next_row = algpred2_results_table[index+1].split(' ')
-                    seq_nr_next = int(algpred2_result_next_row[0][3:])
-                    if seq_nr != seq_nr_next:
-                        input_for_results.append(algpred2_result_row[-1])
-                    else:
-                        continue
-                else:
-                    input_for_results.append(algpred2_result_row[-1])
-            return input_for_results
-    
-    algpred_all_results = []
-    for seq_of_400_epitopes in algpred_chunks:
-        algpred_results = algpred_try_until_it_works(seq_of_400_epitopes)
-        if algpred_results is not None:
-            for parameter in algpred_results:
-                algpred_all_results.append(parameter)
-        elif algpred_results is None:
-            for empty_index in range(400):
-                algpred_all_results.append("")
-    
-    for i in range(len(analysis_results)):
-        analysis_results[i].append(algpred_all_results[i])
-
-
-
-    def toxinpred_try_until_it_works(chunk_of_400, counter=10):
-        if counter == 0:
-            print("Failed after 10 tries")
-            return
-        try:
-            print("Running toxinpred")
-            toxinpred = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
-            wait_toxinpred = WebDriverWait(toxinpred, 600)
-            toxinpred.get(toxinpred_url)
-            toxinpred.find_element(By.XPATH, "/html/body/table[2]/tbody/tr/td/form/fieldset/table[1]/tbody/tr[2]/td/textarea").send_keys(chunk_of_400)
-            time.sleep(5)
-            toxinpred.find_element(By.NAME, "checkAll").click()
-        except:
-            toxinpred.close()
-            print("Retrying toxinpred...")
-            toxinpred_try_until_it_works(chunk_of_400, counter-1)
-            return
+            expasy = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
+            wait_expasy = WebDriverWait(expasy, 600)
+            expasy.get('https://web.expasy.org/protparam/')
+            expasy.find_element(By.XPATH, "/html/body/div[2]/div[2]/form/textarea").send_keys(seq)
+            expasy.find_element(By.XPATH, "/html/body/div[2]/div[2]/form/p[1]/input[2]").click()
+        except Exception as e:
+            print(e)
         else:
-            print("Toxinpred worked!!!")
-            toxinpred.find_element(By.XPATH, "/html/body/table[2]/tbody/tr/td/form/fieldset/table[2]/tbody/tr[3]/td/input[2]").click()
-        
-        def check_400(other_counter=10):
-            if other_counter == 0:
-                print("Failed selection after 10 tries")
-                return
+            wait_expasy.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div[2]/div[2]/pre[2]/form/input[1]")))
+            
+            expasy_text = expasy.find_element(By.XPATH, '/html/body/div[2]/div[2]/pre[2]').text.splitlines()
+            aa_composition_table = expasy_text[5:28]
+            neg_residues = expasy_text[32]
+            pos_residues = expasy_text[33]
+            atomic_composition = expasy_text[35:42]
+            half_life = expasy_text[56:64]
+            aliphatic_index = expasy_text[-3]
+            if len(expasy_text) == 75:
+                half_life = expasy_text[56:64]
+            elif len(expasy_text) == 71:
+                half_life = expasy_text[52:60]
+            elif len(expasy_text) == 72:
+                half_life = expasy_text[53:61]
+            elif len(expasy_text) == 79:
+                half_life = expasy_text[60:68]
+            elif len(expasy_text) == 76:
+                half_life = expasy_text[57:65]
+            
+            expasy_results = []
 
-            try:
-                toxinpred.find_element(By.XPATH, "/html/body/div[2]/table/tfoot/tr/td/select").click()
-                toxinpred.find_element(By.XPATH, "/html/body/div[2]/table/tfoot/tr/td/select/option[8]").click()
-            except:
-                toxinpred.refresh()
-                print("Retrying selection")
-                check_400(other_counter-1)
-                return
-            else:
-                toxinpred_results_table = toxinpred.find_element(By.XPATH, '/html/body/div[2]/table/tbody').text.splitlines()
-                toxinpred.close()
-                return toxinpred_results_table
+            # print(expasy_results)
+            # print(len(expasy_text), seq, index)
+            # print(aa_composition_table)
+            #print(neg_residues)
+            #print(pos_residues)
+            #print(atomic_composition)
+            #print(half_life)
+            print(aliphatic_index)
 
-        try:
-            wait_toxinpred.until(ec.visibility_of_element_located((By.ID, "tableTwo")))
-            time.sleep(5)
-        except:
-            toxinpred.close()
-            print("Nothing detected. Retrying...")
-            toxinpred_try_until_it_works(chunk_of_400, counter-1)
-            return
-        else:
-            table_of_epitopes = check_400()
-            return table_of_epitopes
-        
-    for index, seq_of_400_epitopes in enumerate(toxinpred_chunks):
-        toxinpred_results_table = toxinpred_try_until_it_works(seq_of_400_epitopes)
-        if toxinpred_results_table is not None:
-            for results_index, row in enumerate(toxinpred_results_table):
-                toxinpred_result_row = row.split(' ')
-                toxinpred_row_included_indexes = [2,3,4,5,6,8,9,10]
-                toxinpred_new_result_row = [toxinpred_result_row[x] for x in toxinpred_row_included_indexes]
-                for parameter in toxinpred_new_result_row:
-                    toxinpred_epitopes[400*index + results_index].append(parameter)
-        elif toxinpred_results_table is None:
-            for empty_index in range(400):
-                for i in range(8):
-                    toxinpred_epitopes[400*index + empty_index].append(None)
-    
-    none_list = []
-    for i in range(8):
-        none_list.append(None)
-    for index in toxinpred_excluded_indexes:
-        toxinpred_epitopes.insert(index, none_list)
-    
-    for alist in toxinpred_epitopes:
-        del alist[0]
-
-    for i in range(len(analysis_results)):
-        for n in range(len(toxinpred_epitopes[i])):
-            analysis_results[i].append(toxinpred_epitopes[i][n])
+            expasy.close()
 
 
 
@@ -605,8 +651,8 @@ def make_csv_from_results(results_from_prediction, results_from_analysis):
         writer.writerows(results_from_prediction[i])
         f.close()
 
-# list_of_swissprot_ids = ['P59594', 'P0DTC2', 'K9N5Q8', 'P36334', 'Q0ZME7', 'P15423', 'Q6Q1S2', 'Q5MQD0', 'Q14EB0']
-# prediction_results = read_prediction_results()
-# analysis_input = make_inputs_for_analysis(prediction_results, list_of_swissprot_ids)
-# analysis_results = analyse_all(analysis_input)
+list_of_swissprot_ids = ['P59594', 'P0DTC2', 'K9N5Q8', 'P36334', 'Q0ZME7', 'P15423', 'Q6Q1S2', 'Q5MQD0', 'Q14EB0']
+prediction_results = read_prediction_results()
+analysis_input = make_inputs_for_analysis(prediction_results, list_of_swissprot_ids)
+analysis_results = analyse_all(analysis_input)
 # make_csv_from_results(prediction_results, analysis_results)

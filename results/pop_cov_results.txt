@@ -1,5 +1,0 @@
-Class: combined
-population/area	coverage	average_hit	pc90
-World	84.49%	845.42	139.86
-Average	84.49	845.42	139.86
-Standard_deviation	0.0	0.0	0.0
