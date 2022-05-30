@@ -208,7 +208,7 @@ def analyse_all(tuple_inputs):
     algpred2_url = 'https://webs.iiitd.edu.in/raghava/algpred2/batch.html'
     vaxijen_url = 'http://www.ddg-pharmfac.net/vaxijen/VaxiJen/VaxiJen.html'
     immunogenicity_mhci_url = 'http://tools.iedb.org/immunogenicity/'
-    # immunogenicity_mhcii_url = ''
+    expasy_url = 'https://web.expasy.org/protparam/'
     population_coverage_url = 'http://tools.iedb.org/population/'
     cluster_analysis_url = 'http://tools.iedb.org/cluster/'
     conservancy_analysis_url = 'http://tools.iedb.org/conservancy/'
@@ -251,13 +251,13 @@ def analyse_all(tuple_inputs):
     #         analysis_results[index].append(parameter)
     
 
-    # #options=options, 
-
+    # # Go to immunogenicity url, upload immunogenicity file and click submit:
     # immunogenicity_mhci = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
     # immunogenicity_mhci.get(immunogenicity_mhci_url)
     # immunogenicity_mhci.find_element(By.NAME, "sequence_file").send_keys(os.getcwd()+"/immunogenicity_file.txt")
     # immunogenicity_mhci.find_element(By.NAME, "submit").click()
 
+    # # Go to vaxijen url, upload sequence file, set option viruses, set threshold at 0.5 and click submit:
     # vaxijen = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
     # vaxijen.get(vaxijen_url)
     # vaxijen.find_element(By.XPATH, "/html/body/div/table/tbody/tr[4]/td[3]/form/table/tbody/tr[1]/td[2]/p/input").send_keys(os.getcwd()+"/seq_file.txt")
@@ -265,6 +265,7 @@ def analyse_all(tuple_inputs):
     # vaxijen.find_element(By.XPATH, "/html/body/div/table/tbody/tr[4]/td[3]/form/table/tbody/tr[2]/td[3]/input").send_keys('0.5')
     # vaxijen.find_element(By.XPATH, "/html/body/div/table/tbody/tr[4]/td[3]/form/table/tbody/tr[3]/td[2]/input[1]").click()
 
+    # # Go to cluster analysis url, upload cluster file, click submit and doesnt change any other option on the next pages until results show:
     # if len(list_of_linear_epitopes) < 3000:
     #     cluster = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
     #     cluster.maximize_window()
@@ -277,6 +278,7 @@ def analyse_all(tuple_inputs):
     #     wait_cluster.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div[3]/form/table/tbody")))
     #     cluster.find_element(By.NAME, "submit").click()
     
+    # # Go to conservancy analysis url, upload protein and epitope files and click submit:
     # conservancy = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
     # conservancy.maximize_window()
     # conservancy.get(conservancy_analysis_url)
@@ -284,16 +286,43 @@ def analyse_all(tuple_inputs):
     # conservancy.find_element(By.NAME, "protein_file").send_keys(os.getcwd()+"/conservancy_protein_file.txt")
     # conservancy.find_element(By.NAME, "submit").click()
 
-    # population_coverage = webdriver.Firefox(executable_path = '../ScrapyEpitope/geckodriver')
-    # population_coverage.maximize_window()
-    # population_coverage.get(population_coverage_url)
-    # population_coverage.find_element(By.ID, "id_epitope_allele_file").send_keys(os.getcwd()+"/pop_cov_file.txt")
-    # population_coverage.find_element(By.XPATH, "/html/body/div[3]/form/table[2]/tbody/tr[2]/td[1]/select/option[1]").click()
-    # population_coverage.find_element(By.XPATH, "/html/body/div[3]/form/table[2]/tbody/tr[4]/td/input").click()
-    # time.sleep(3)
-    # population_coverage.find_element(By.NAME, "submit").click()
+    # # Population coverage:
+    # def retry_pop_cov(counter=10):
+
+    #     """The following function tries 10 times to make population coverage work, since it can run into errors. It uploads the file, then 
+    #     selects 'World' option, select both mhc classes and clicks submit. It then waits for the results, saves the graph in a .png file and 
+    #     returns the results table"""
+
+    #     if counter == 0:
+    #         print("Failed population coverage analysis after 10 tries")
+    #         return
+        
+    #     try:
+    #         population_coverage = webdriver.Firefox(executable_path = '../ScrapyEpitope/geckodriver')
+    #         population_coverage.maximize_window()
+    #         population_coverage.get(population_coverage_url)
+    #         population_coverage.find_element(By.ID, "id_epitope_allele_file").send_keys(os.getcwd()+"/pop_cov_file.txt")
+    #         population_coverage.find_element(By.XPATH, "/html/body/div[3]/form/table[2]/tbody/tr[2]/td[1]/select/option[1]").click()
+    #         population_coverage.find_element(By.XPATH, "/html/body/div[3]/form/table[2]/tbody/tr[4]/td/input").click()
+    #         time.sleep(3)
+    #         population_coverage.find_element(By.NAME, "submit").click()
+    #         wait_population_coverage = WebDriverWait(population_coverage, 6000)
+    #         wait_population_coverage.until(ec.visibility_of_element_located((By.CLASS_NAME, "popcov")))
+    #         population_coverage_results_table = population_coverage.find_element(By.XPATH, '/html/body/div[3]/table[1]/tbody').text.splitlines()
+    #     except:
+    #         population_coverage.close()
+    #         print("Retrying algpred ...")
+    #         retry_pop_cov(counter-1)
+    #         return
+    #     else:
+    #         with open('results/population_coverage_graph.png', 'wb') as file:
+    #             file.write(population_coverage.find_element(By.XPATH, '/html/body/div[3]/table[2]/tbody/tr[3]/td/img').screenshot_as_png)
+    #         population_coverage.close()
+    #         print("Population coverage done")
+    #         return population_coverage_results_table
 
 
+    # # Waits for vaxijen to load and stores the results in analysis_results
     # wait_vaxijen = WebDriverWait(vaxijen, 6000)
     # wait_vaxijen.until(ec.visibility_of_element_located((By.CLASS_NAME, "boilerplate")))
     # vaxijen_results_body = vaxijen.find_element(By.XPATH, '/html/body/div/table/tbody/tr[4]/td[3]/table/tbody').text.splitlines()
@@ -315,7 +344,7 @@ def analyse_all(tuple_inputs):
     #    analysis_results[i].append(vaxijen_results[i][1])
 
 
-
+    # # Waits for conservancy to load and stores the results in a .csv file
     # wait_conservancy = WebDriverWait(conservancy, 6000)
     # wait_conservancy.until(ec.visibility_of_element_located((By.ID, "result_table")))
     # conservancy_results_columns = conservancy.find_element(By.XPATH, '/html/body/div[3]/table/thead/tr').text.splitlines()
@@ -332,7 +361,7 @@ def analyse_all(tuple_inputs):
     #     writer.writerows(conservancy_list_of_rows)
 
 
-
+    # # Waits for cluster to load and stores the results in a .csv file
     # if len(list_of_linear_epitopes) < 3000:
     #     wait_cluster.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div[3]/div/div[3]/div[2]")))
     #     cluster_results_table = cluster.find_element(By.XPATH, '/html/body/div[3]/div/div[3]/div[2]/div[1]/table/tbody').text.splitlines()
@@ -361,14 +390,8 @@ def analyse_all(tuple_inputs):
     #         writer.writerows(cluster_list_of_rows)
 
 
-
-    # wait_population_coverage = WebDriverWait(population_coverage, 6000)
-    # wait_population_coverage.until(ec.visibility_of_element_located((By.CLASS_NAME, "popcov")))
-    # population_coverage_results_table = population_coverage.find_element(By.XPATH, '/html/body/div[3]/table[1]/tbody').text.splitlines()
-    # with open('results/population_coverage_graph.png', 'wb') as file:
-    #     file.write(population_coverage.find_element(By.XPATH, '/html/body/div[3]/table[2]/tbody/tr[3]/td/img').screenshot_as_png)
-    # population_coverage.close()
-    # print("Population coverage done")
+    # # Gets results from population coverage function, and stores them in a .txt file
+    # population_coverage_results_table = retry_pop_cov()
     # result_in_text = ''
     # for index, row in enumerate(population_coverage_results_table):
     #     new_row = row.split(' ')
@@ -386,7 +409,7 @@ def analyse_all(tuple_inputs):
     # pop_cov_results.close()
 
 
-
+    # # Waits for immunogenicity to load and stores the results in analysis_results
     # wait_immunogenicity_mhci = WebDriverWait(immunogenicity_mhci, 6000)
     # wait_immunogenicity_mhci.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div[3]/table")))
     # immunogenicity_mhci_results_table = immunogenicity_mhci.find_element(By.XPATH, '/html/body/div[3]/table/tbody').text.splitlines()
@@ -403,6 +426,11 @@ def analyse_all(tuple_inputs):
 
 
     # def algpred_try_until_it_works(chunk_of_400, counter = 10):
+
+    #     """The following function tries 10 times to make algpred2 work, since it can run into errors. It uploads the sequences in chunks of 400
+    #     and clicks submit. It then waits for the results and saves them in their respective order. After all sequences are analysed it returns a
+    #     list of lists with all the results"""
+
     #     if counter == 0:
     #         print("Failed algpred after 10 tries")
     #         return
@@ -411,7 +439,6 @@ def analyse_all(tuple_inputs):
     #     algpred_seq_file.write(chunk_of_400)
     #     algpred_seq_file.close()
 
-        
     #     try:
     #         print("Runnning algpred2")
     #         algpred2 = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
@@ -420,6 +447,7 @@ def analyse_all(tuple_inputs):
     #         algpred2.find_element(By.XPATH, "/html/body/header/div[3]/section/form/table/tbody/tr/td/font/font/p[3]/font/font[2]/input[2]").click()
     #         wait_algpred2 = WebDriverWait(algpred2, 1200)
     #         wait_algpred2.until(ec.visibility_of_element_located((By.CLASS_NAME, "scrollable")))
+    #         algpred2_results_table = algpred2.find_element(By.XPATH, '/html/body/header/div[3]/main/div/table[2]/tbody').text.splitlines()
     #     except:
     #         algpred2.close()
     #         os.remove(os.getcwd()+"/algpred_seq_file.txt")
@@ -427,7 +455,6 @@ def analyse_all(tuple_inputs):
     #         algpred_try_until_it_works(counter-1)
     #         return
     #     else:    
-    #         algpred2_results_table = algpred2.find_element(By.XPATH, '/html/body/header/div[3]/main/div/table[2]/tbody').text.splitlines()
     #         algpred2.close()
     #         print("Algpred worked!!!")
     #         os.remove(os.getcwd()+"/algpred_seq_file.txt")
@@ -446,6 +473,7 @@ def analyse_all(tuple_inputs):
     #                 input_for_results.append(algpred2_result_row[-1])
     #         return input_for_results
     
+    # # The returned results of algpred2 are transfered into analysis_results
     # algpred_all_results = []
     # for seq_of_400_epitopes in algpred_chunks:
     #     algpred_results = algpred_try_until_it_works(seq_of_400_epitopes)
@@ -462,26 +490,15 @@ def analyse_all(tuple_inputs):
 
 
     # def toxinpred_try_until_it_works(chunk_of_400, counter=10):
+
+    #     """The following function tries 10 times to make toxinpred work, since it can run into errors. It uploads the sequences in chunks of 400
+    #     and clicks submit. It then waits for the results and saves them in their respective order. After all sequences are analysed it returns a
+    #     list of lists with all the results"""
+
     #     if counter == 0:
     #         print("Failed after 10 tries")
     #         return
-    #     try:
-    #         print("Running toxinpred")
-    #         toxinpred = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
-    #         wait_toxinpred = WebDriverWait(toxinpred, 600)
-    #         toxinpred.get(toxinpred_url)
-    #         toxinpred.find_element(By.XPATH, "/html/body/table[2]/tbody/tr/td/form/fieldset/table[1]/tbody/tr[2]/td/textarea").send_keys(chunk_of_400)
-    #         time.sleep(5)
-    #         toxinpred.find_element(By.NAME, "checkAll").click()
-    #     except:
-    #         toxinpred.close()
-    #         print("Retrying toxinpred...")
-    #         toxinpred_try_until_it_works(chunk_of_400, counter-1)
-    #         return
-    #     else:
-    #         print("Toxinpred worked!!!")
-    #         toxinpred.find_element(By.XPATH, "/html/body/table[2]/tbody/tr/td/form/fieldset/table[2]/tbody/tr[3]/td/input[2]").click()
-        
+
     #     def check_400(other_counter=10):
     #         if other_counter == 0:
     #             print("Failed selection after 10 tries")
@@ -501,17 +518,27 @@ def analyse_all(tuple_inputs):
     #             return toxinpred_results_table
 
     #     try:
+    #         print("Running toxinpred")
+    #         toxinpred = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
+    #         wait_toxinpred = WebDriverWait(toxinpred, 600)
+    #         toxinpred.get(toxinpred_url)
+    #         toxinpred.find_element(By.XPATH, "/html/body/table[2]/tbody/tr/td/form/fieldset/table[1]/tbody/tr[2]/td/textarea").send_keys(chunk_of_400)
+    #         time.sleep(5)
+    #         toxinpred.find_element(By.NAME, "checkAll").click()
+    #         print("Toxinpred worked!!!")
+    #         toxinpred.find_element(By.XPATH, "/html/body/table[2]/tbody/tr/td/form/fieldset/table[2]/tbody/tr[3]/td/input[2]").click()
     #         wait_toxinpred.until(ec.visibility_of_element_located((By.ID, "tableTwo")))
     #         time.sleep(5)
     #     except:
     #         toxinpred.close()
-    #         print("Nothing detected. Retrying...")
+    #         print("Retrying toxinpred...")
     #         toxinpred_try_until_it_works(chunk_of_400, counter-1)
     #         return
     #     else:
     #         table_of_epitopes = check_400()
     #         return table_of_epitopes
         
+    # # Gets toxinpred results and stores them in analysis_results:
     # for index, seq_of_400_epitopes in enumerate(toxinpred_chunks):
     #     toxinpred_results_table = toxinpred_try_until_it_works(seq_of_400_epitopes)
     #     if toxinpred_results_table is not None:
@@ -539,12 +566,14 @@ def analyse_all(tuple_inputs):
     #     for n in range(len(toxinpred_epitopes[i])):
     #         analysis_results[i].append(toxinpred_epitopes[i][n])
 
-    #options=options
+
+
+    expasy_results = []
     for index, seq in enumerate(list_of_linear_epitopes):
         try:
             expasy = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
             wait_expasy = WebDriverWait(expasy, 600)
-            expasy.get('https://web.expasy.org/protparam/')
+            expasy.get(expasy_url)
             expasy.find_element(By.XPATH, "/html/body/div[2]/div[2]/form/textarea").send_keys(seq)
             expasy.find_element(By.XPATH, "/html/body/div[2]/div[2]/form/p[1]/input[2]").click()
         except Exception as e:
@@ -570,7 +599,7 @@ def analyse_all(tuple_inputs):
             elif len(expasy_text) == 76:
                 half_life = expasy_text[57:65]
             
-            expasy_results = []
+            
 
             # print(expasy_results)
             # print(len(expasy_text), seq, index)
