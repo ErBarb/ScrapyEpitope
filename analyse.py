@@ -1,5 +1,6 @@
 import re
 import os
+from xmlrpc.client import ProtocolError
 import requests
 import time
 import csv
@@ -197,10 +198,9 @@ def make_inputs_for_analysis(results_from_prediction, list_of_swissprot_ids):
     if not os.path.exists(final_directory):
         os.makedirs(final_directory)
 
-    #list_of_all_linear_epitopes = ['KNKDGFLYVY','QAMEKVNECVKSQSSRINFCGNGNH','RQLAQQKVNECVKSQSKRYGFCGNG',
-    # 'VIAWNSNNLDSKGNYNYLYRKPFERDIYFPLQSYGFQPTNVGYQPYRVVVLSFELLHAPATVCGPKKSTNLVKNK', 'ATAGWTFGA', 'TATAGWTF']
-
     return list_of_all_linear_epitopes, toxinpred_chunks, toxinpred_epitopes, toxinpred_excluded_indexes, immunogenicity_indexes, algpred_chunks
+
+
 
 def analyse_all(tuple_inputs):
 
@@ -226,6 +226,7 @@ def analyse_all(tuple_inputs):
     population_coverage_url = 'http://tools.iedb.org/population/'
     cluster_analysis_url = 'http://tools.iedb.org/cluster/'
     conservancy_analysis_url = 'http://tools.iedb.org/conservancy/'
+    protein_sol_url = 'https://protein-sol.manchester.ac.uk/'
 
     analysis_results = []
     for index, value in enumerate(list_of_linear_epitopes):
@@ -308,7 +309,7 @@ def analyse_all(tuple_inputs):
         returns the results table"""
 
         if counter == 0:
-            print("Failed population coverage analysis after 10 tries")
+            print("Population coverage analysis failed  after 10 tries")
             return
         
         try:
@@ -323,9 +324,11 @@ def analyse_all(tuple_inputs):
             wait_population_coverage = WebDriverWait(population_coverage, 6000)
             wait_population_coverage.until(ec.visibility_of_element_located((By.CLASS_NAME, "popcov")))
             population_coverage_results_table = population_coverage.find_element(By.XPATH, '/html/body/div[3]/table[1]/tbody').text.splitlines()
+            if population_coverage_results_table is None:
+                retry_pop_cov(counter-1)
         except:
             population_coverage.close()
-            print("Retrying algpred ...")
+            print("Retrying population coverage ...")
             retry_pop_cov(counter-1)
             return
         else:
@@ -406,21 +409,24 @@ def analyse_all(tuple_inputs):
 
     # Gets results from population coverage function, and stores them in a .txt file
     population_coverage_results_table = retry_pop_cov()
-    result_in_text = ''
-    for index, row in enumerate(population_coverage_results_table):
-        new_row = row.split(' ')
-        if index == 0:
-            result_in_text = new_row[1] + ': ' + new_row[2] + '\n' + new_row[0] + '\t'
-        elif index == 1:
-            result_in_text = result_in_text + new_row[0][:-1] + '\t' + new_row[1][:-1] + '\t' + new_row[2][:-1] + '\n'
-        elif index == 4:
-            std_dev = new_row[0] + '_' + new_row[1]
-            result_in_text = result_in_text + std_dev + '\t' + new_row[2] + '\t' + new_row[3] + '\t' + new_row[4]
-        else:
-            result_in_text = result_in_text + new_row[0] + '\t' + new_row[1] + '\t' + new_row[2] + '\t' + new_row[3] + '\n'
-    pop_cov_results = open('results/pop_cov_results.txt', 'a') 
-    pop_cov_results.write(result_in_text)
-    pop_cov_results.close()
+    if population_coverage_results_table is None:
+        print("Population Coverage failed")
+    else:
+        result_in_text = ''
+        for index, row in enumerate(population_coverage_results_table):
+            new_row = row.split(' ')
+            if index == 0:
+                result_in_text = new_row[1] + ': ' + new_row[2] + '\n' + new_row[0] + '\t'
+            elif index == 1:
+                result_in_text = result_in_text + new_row[0][:-1] + '\t' + new_row[1][:-1] + '\t' + new_row[2][:-1] + '\n'
+            elif index == 4:
+                std_dev = new_row[0] + '_' + new_row[1]
+                result_in_text = result_in_text + std_dev + '\t' + new_row[2] + '\t' + new_row[3] + '\t' + new_row[4]
+            else:
+                result_in_text = result_in_text + new_row[0] + '\t' + new_row[1] + '\t' + new_row[2] + '\t' + new_row[3] + '\n'
+        pop_cov_results = open('results/pop_cov_results.txt', 'a') 
+        pop_cov_results.write(result_in_text)
+        pop_cov_results.close()
 
 
     # Waits for immunogenicity to load and stores the results in analysis_results
@@ -446,7 +452,7 @@ def analyse_all(tuple_inputs):
         list of lists with all the results"""
 
         if counter == 0:
-            print("Failed algpred after 10 tries")
+            print("Algpred failed after 10 tries")
             return
         
         algpred_seq_file = open('algpred_seq_file.txt', 'a') 
@@ -469,7 +475,6 @@ def analyse_all(tuple_inputs):
             return
         else:    
             algpred2.close()
-            print("Algpred2 done")
             os.remove(os.getcwd()+"/algpred_seq_file.txt")
             input_for_results = []
             for index, row in enumerate(algpred2_results_table):
@@ -495,11 +500,12 @@ def analyse_all(tuple_inputs):
                 algpred_all_results.append(parameter)
         elif algpred_results is None:
             for empty_index in range(400):
-                algpred_all_results.append("")
+                algpred_all_results.append(None)
     
+    print("Algpred2 done")
+
     for i in range(len(analysis_results)):
         analysis_results[i].append(algpred_all_results[i])
-
 
 
     def toxinpred_try_until_it_works(chunk_of_400, counter=10):
@@ -535,7 +541,6 @@ def analyse_all(tuple_inputs):
             toxinpred.find_element(By.XPATH, "/html/body/table[2]/tbody/tr/td/form/fieldset/table[1]/tbody/tr[2]/td/textarea").send_keys(chunk_of_400)
             time.sleep(5)
             toxinpred.find_element(By.NAME, "checkAll").click()
-            print("Toxinpred done")
             toxinpred.find_element(By.XPATH, "/html/body/table[2]/tbody/tr/td/form/fieldset/table[2]/tbody/tr[3]/td/input[2]").click()
             wait_toxinpred.until(ec.visibility_of_element_located((By.ID, "tableTwo")))
             time.sleep(5)
@@ -559,13 +564,13 @@ def analyse_all(tuple_inputs):
                 for parameter in toxinpred_new_result_row:
                     toxinpred_epitopes[400*index + results_index].append(parameter)
         elif toxinpred_results_table is None:
+            empty_list = [None] * 9
             for empty_index in range(400):
-                for i in range(8):
-                    toxinpred_epitopes[400*index + empty_index].append(None)
+                toxinpred_epitopes[400*index + empty_index].append(empty_list)
     
-    none_list = []
-    for i in range(8):
-        none_list.append(None)
+    print("Toxinpred done")
+
+    none_list = [None] * 9
     for index in toxinpred_excluded_indexes:
         toxinpred_epitopes.insert(index, none_list)
     
@@ -575,10 +580,13 @@ def analyse_all(tuple_inputs):
     for i in range(len(analysis_results)):
         for n in range(len(toxinpred_epitopes[i])):
             analysis_results[i].append(toxinpred_epitopes[i][n])
+    print(toxinpred_epitopes)
+    print(analysis_results)
 
 
-    # Expasy:
+    # Expasy and protein solubility:
     expasy_results = []
+    protein_sol_results = []
     aa_composition_results = [['peptide', 'Ala (A)', 'Arg (R)', 'Asn (N)', 'Asp (D)', 'Cys (C)', 'Gln (Q)', 'Glu (E)', 'Gly (G)', 'His (H)', 'Ile (I)', 'Leu (L)'
     , 'Lys (K)', 'Met (M)', 'Phe (F)', 'Pro (P)', 'Ser (S)', 'Thr (T)', 'Trp (W)', 'Tyr (Y)', 'Val (V)', 'Pyl (O)', 'Sec (U)']]
     atomic_composition_results = [['peptide', 'Carbon (C)', 'Hydrogen (H)', 'Nitrogen (N)', 'Oxygen (O)', 'Sulfur (S)']]
@@ -590,9 +598,23 @@ def analyse_all(tuple_inputs):
             expasy.get(expasy_url)
             expasy.find_element(By.XPATH, "/html/body/div[2]/div[2]/form/textarea").send_keys(seq)
             expasy.find_element(By.XPATH, "/html/body/div[2]/div[2]/form/p[1]/input[2]").click()
+
+            if len(seq) >= 21:
+                protein_sol = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
+                protein_sol.get(protein_sol_url)
+                protein_sol.find_element(By.NAME, "sequence-input").send_keys(seq)
+                protein_sol.find_element(By.NAME, "singleprediction").click()
+                time.sleep(3)
+                protein_sol_result = protein_sol.find_element(By.XPATH, '/html/body/div[3]/div/div[1]/p[2]').text
+                protein_sol_results.append(protein_sol_result)
+                protein_sol.close()
+            else:
+                protein_sol_results.append(None)
+            
             wait_expasy.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div[2]/div[2]/pre[2]/form/input[1]")))
             expasy_text = expasy.find_element(By.XPATH, '/html/body/div[2]/div[2]/pre[2]').text.splitlines()
             expasy.close()
+            
         except Exception as e:
             print(e, seq, index)
             break
@@ -633,10 +655,16 @@ def analyse_all(tuple_inputs):
         expasy_row.append(float(aliphatic_index.split()[2]))
         expasy_results.append(expasy_row)
 
+    print("Expasy analysis done")
+    print("Protein solubility analysis done")
+
     for i in range(len(analysis_results)):
         for n in range(len(expasy_results[i])):
             analysis_results[i].append(expasy_results[i][n])
-    #print(analysis_results[0:4])
+
+    if len(analysis_results) == len(protein_sol_results):
+        for i in range(len(analysis_results)):
+            analysis_results[i].append(protein_sol_results[i])
 
     with open('results/aa_composition.csv', 'w') as f:
         writer = csv.writer(f)
@@ -658,7 +686,6 @@ def analyse_all(tuple_inputs):
     return analysis_results
 
 
-
 def make_csv_from_results(results_from_prediction, results_from_analysis):
 
     """The returned results from the analysis are added to the lists of prediction and saved as csv files for each different method."""
@@ -666,7 +693,7 @@ def make_csv_from_results(results_from_prediction, results_from_analysis):
     columns_to_add = ['Peptide', 'Mol_Weight', 'Isoelectric_Point', 'Aromaticity','Instability_Index','Helix_2_Struc', 'Turn_2_Struc', 'Sheet_2_Struc', 'Reduces_Cys', 'Disulfide_Bridge',
     'Hydropathicity', 'Charge_at_pH7', 'Antigenicity_Score', 'Antigen_Prediction', 'Allergen_Prediction','SVM_Score', 'Toxicity_Prediction', 'Hydrophobicity', 'Steric_hinderance',
     'Sidebulk', 'Amphipathicity', 'Hydrophilicity', 'Net_Hydrogen','(-)_Charged_Residues (Asp+Glu)','(+)_Charged_Residues (Arg+Lys)', 'Half_Life_hours (mammalian reticulocytes, in vitro)', 
-    'Aliphatic_Index']
+    'Aliphatic_Index', 'Solubility']
 
     # Divide results_from_analysis into 11 lists
     results_lists = []
@@ -686,23 +713,6 @@ def make_csv_from_results(results_from_prediction, results_from_analysis):
             results_lists.append(list_to_append)
         else:
             results_lists.append(list_to_append)
-
-
-    # for i in range(len(results_from_prediction[:-2])):
-    #     if i == 0 or i == 1:
-    #         for column_title in columns_to_add:
-    #             results_from_prediction[i][0].append(column_title)
-    #         results_from_prediction[i][0].insert(len(results_from_prediction[i][0])-9,'Immunogenicity_Score')
-    #     else:
-    #         for column_title in columns_to_add:
-    #             results_from_prediction[i][0].append(column_title)
-
-    #     if len(results_from_prediction[i]) > 1:
-    #         length_to_cut = len(results_from_prediction[i][1:])
-    #         for e in range(length_to_cut):
-    #             for parameter in results_from_analysis[e][1:]:
-    #                 results_from_prediction[i][e+1].append(parameter)
-    #         results_from_analysis = results_from_analysis[length_to_cut:]
 
     for i in range(len(results_lists)):
         if i == 0:
@@ -735,8 +745,8 @@ def make_csv_from_results(results_from_prediction, results_from_analysis):
         writer.writerows(results_lists[i])
         f.close()
 
-list_of_swissprot_ids = ['P59594', 'P0DTC2', 'K9N5Q8', 'P36334', 'Q0ZME7', 'P15423', 'Q6Q1S2', 'Q5MQD0', 'Q14EB0']
-prediction_results = read_prediction_results()
-analysis_input = make_inputs_for_analysis(prediction_results, list_of_swissprot_ids)
-analysis_results = analyse_all(analysis_input)
-make_csv_from_results(prediction_results, analysis_results)
+# list_of_swissprot_ids = ['P59594', 'P0DTC2', 'K9N5Q8', 'P36334', 'Q0ZME7', 'P15423', 'Q6Q1S2', 'Q5MQD0', 'Q14EB0']
+# prediction_results = read_prediction_results()
+# analysis_input = make_inputs_for_analysis(prediction_results, list_of_swissprot_ids)
+# analysis_results = analyse_all(analysis_input)
+# make_csv_from_results(prediction_results, analysis_results)
