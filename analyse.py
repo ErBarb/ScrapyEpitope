@@ -4,6 +4,7 @@ import requests
 import time
 import csv
 from csv import reader
+import pandas as pd
 from Bio.SeqUtils.ProtParam import ProteinAnalysis
 from urllib import request
 from selenium import webdriver
@@ -17,48 +18,60 @@ from selenium.webdriver.common.keys import Keys
 
 def read_prediction_results():
 
-    """This function will read all the results from the csv files created by the prediction methods in prediction.py, then return them
-        in a tuple of lists"""
+    """This function will read all the results from the csv files created by the prediction methods in prediction.py, remove the duplicate peptides,
+    then return them in a tuple of lists"""
 
-    with open('epitope_prediction_results/mhci_epitopes.csv', 'r') as read_obj:
-        csv_reader = reader(read_obj)
-        mhci_prediction_list = list(csv_reader)
-    with open('epitope_prediction_results/mhci_proc_epitopes.csv', 'r') as read_obj:
-        csv_reader = reader(read_obj)
-        mhci_proc_prediction_list = list(csv_reader)
-    with open('epitope_prediction_results/mhcii_epitopes.csv', 'r') as read_obj:
-        csv_reader = reader(read_obj)
-        mhcii_prediction_list = list(csv_reader)
-    with open('epitope_prediction_results/bepipred2.0_epitopes.csv', 'r') as read_obj:
-        csv_reader = reader(read_obj)
-        bepipred2_prediction_list = list(csv_reader)
-    with open('epitope_prediction_results/bepipred1.0_epitopes.csv', 'r') as read_obj:
-        csv_reader = reader(read_obj)
-        bepipred_prediction_list = list(csv_reader)
-    with open('epitope_prediction_results/emini_epitopes.csv', 'r') as read_obj:
-        csv_reader = reader(read_obj)
-        emini_prediction_list = list(csv_reader)
-    with open('epitope_prediction_results/choufasman_epitopes.csv', 'r') as read_obj:
-        csv_reader = reader(read_obj)
-        choufasman_prediction_list = list(csv_reader)
-    with open('epitope_prediction_results/karplusschulz_epitopes.csv', 'r') as read_obj:
-        csv_reader = reader(read_obj)
-        karplusschulz_prediction_list = list(csv_reader)
-    with open('epitope_prediction_results/kolaskartongaonkar_epitopes.csv', 'r') as read_obj:
-        csv_reader = reader(read_obj)
-        kolaskartongaonkar_prediction_list = list(csv_reader)
-    with open('epitope_prediction_results/parker_epitopes.csv', 'r') as read_obj:
-        csv_reader = reader(read_obj)
-        parker_prediction_list = list(csv_reader)
-    with open('epitope_prediction_results/ellipro_linear_epitopes.csv', 'r') as read_obj:
-        csv_reader = reader(read_obj)
-        ellipro_linear_prediction_list = list(csv_reader)
-    with open('epitope_prediction_results/ellipro_discontinous_epitopes.csv', 'r') as read_obj:
-        csv_reader = reader(read_obj)
-        ellipro_discontinous_prediction_list = list(csv_reader)
-    with open('epitope_prediction_results/discotope_epitopes.csv', 'r') as read_obj:
-        csv_reader = reader(read_obj)
-        discotope_prediction_list = list(csv_reader)
+    df = pd.read_csv('epitope_prediction_results/mhci_epitopes.csv')
+    df.drop_duplicates(subset=['peptide'], keep=False, inplace=True)
+    mhci_prediction_list = [df.columns.tolist()] + df.values.tolist()
+
+    df = pd.read_csv('epitope_prediction_results/mhci_proc_epitopes.csv')
+    df.drop_duplicates(subset=['peptide'], keep=False, inplace=True)
+    mhci_proc_prediction_list = [df.columns.tolist()] + df.values.tolist()
+
+    df = pd.read_csv('epitope_prediction_results/mhcii_epitopes.csv')
+    df.drop_duplicates(subset=['peptide'], keep=False, inplace=True)
+    mhcii_prediction_list = [df.columns.tolist()] + df.values.tolist()
+
+    df = pd.read_csv('epitope_prediction_results/bepipred2.0_epitopes.csv')
+    df.drop_duplicates(subset=['predicted_epitope'], keep=False, inplace=True)
+    bepipred2_prediction_list = [df.columns.tolist()] + df.values.tolist()
+
+    df = pd.read_csv('epitope_prediction_results/bepipred1.0_epitopes.csv')
+    df.drop_duplicates(subset=['predicted_epitope'], keep=False, inplace=True)
+    bepipred_prediction_list = [df.columns.tolist()] + df.values.tolist()
+
+    df = pd.read_csv('epitope_prediction_results/emini_epitopes.csv')
+    df.drop_duplicates(subset=['predicted_epitope'], keep=False, inplace=True)
+    emini_prediction_list = [df.columns.tolist()] + df.values.tolist()
+
+    df = pd.read_csv('epitope_prediction_results/choufasman_epitopes.csv')
+    df.drop_duplicates(subset=['predicted_epitope'], keep=False, inplace=True)
+    choufasman_prediction_list = [df.columns.tolist()] + df.values.tolist()
+
+    df = pd.read_csv('epitope_prediction_results/karplusschulz_epitopes.csv')
+    df.drop_duplicates(subset=['predicted_epitope'], keep=False, inplace=True)
+    karplusschulz_prediction_list = [df.columns.tolist()] + df.values.tolist()
+
+    df = pd.read_csv('epitope_prediction_results/kolaskartongaonkar_epitopes.csv')
+    df.drop_duplicates(subset=['predicted_epitope'], keep=False, inplace=True)
+    kolaskartongaonkar_prediction_list = [df.columns.tolist()] + df.values.tolist()
+
+    df = pd.read_csv('epitope_prediction_results/parker_epitopes.csv')
+    df.drop_duplicates(subset=['predicted_epitope'], keep=False, inplace=True)
+    parker_prediction_list = [df.columns.tolist()] + df.values.tolist()
+
+    df = pd.read_csv('epitope_prediction_results/ellipro_linear_epitopes.csv')
+    df.drop_duplicates(subset=['peptide'], keep=False, inplace=True)
+    ellipro_linear_prediction_list = [df.columns.tolist()] + df.values.tolist()
+
+    df = pd.read_csv('epitope_prediction_results/ellipro_discontinous_epitopes.csv')
+    df.drop_duplicates(subset=['peptide'], keep=False, inplace=True)
+    ellipro_discontinous_prediction_list = [df.columns.tolist()] + df.values.tolist()
+
+    df = pd.read_csv('epitope_prediction_results/discotope_epitopes.csv')
+    df.drop_duplicates(subset=['peptide'], keep=False, inplace=True)
+    discotope_prediction_list = [df.columns.tolist()] + df.values.tolist()
 
     return mhci_prediction_list, mhci_proc_prediction_list, mhcii_prediction_list, bepipred2_prediction_list, \
         bepipred_prediction_list, emini_prediction_list, choufasman_prediction_list, karplusschulz_prediction_list, \
@@ -441,7 +454,6 @@ def analyse_all(tuple_inputs):
         algpred_seq_file.close()
 
         try:
-            print("Runnning algpred2")
             algpred2 = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
             algpred2.get(algpred2_url)
             algpred2.find_element(By.XPATH, "/html/body/header/div[3]/section/form/table/tbody/tr/td/font/p/font[2]/input").send_keys(os.getcwd()+"/algpred_seq_file.txt")
@@ -457,7 +469,7 @@ def analyse_all(tuple_inputs):
             return
         else:    
             algpred2.close()
-            print("Algpred worked!!!")
+            print("Algpred2 done")
             os.remove(os.getcwd()+"/algpred_seq_file.txt")
             input_for_results = []
             for index, row in enumerate(algpred2_results_table):
@@ -502,7 +514,6 @@ def analyse_all(tuple_inputs):
 
         def check_400(other_counter=10):
             if other_counter == 0:
-                print("Failed selection after 10 tries")
                 return
 
             try:
@@ -510,7 +521,6 @@ def analyse_all(tuple_inputs):
                 toxinpred.find_element(By.XPATH, "/html/body/div[2]/table/tfoot/tr/td/select/option[8]").click()
             except:
                 toxinpred.refresh()
-                print("Retrying selection")
                 check_400(other_counter-1)
                 return
             else:
@@ -519,14 +529,13 @@ def analyse_all(tuple_inputs):
                 return toxinpred_results_table
 
         try:
-            print("Running toxinpred")
             toxinpred = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
             wait_toxinpred = WebDriverWait(toxinpred, 600)
             toxinpred.get(toxinpred_url)
             toxinpred.find_element(By.XPATH, "/html/body/table[2]/tbody/tr/td/form/fieldset/table[1]/tbody/tr[2]/td/textarea").send_keys(chunk_of_400)
             time.sleep(5)
             toxinpred.find_element(By.NAME, "checkAll").click()
-            print("Toxinpred worked!!!")
+            print("Toxinpred done")
             toxinpred.find_element(By.XPATH, "/html/body/table[2]/tbody/tr/td/form/fieldset/table[2]/tbody/tr[3]/td/input[2]").click()
             wait_toxinpred.until(ec.visibility_of_element_located((By.ID, "tableTwo")))
             time.sleep(5)
@@ -604,7 +613,6 @@ def analyse_all(tuple_inputs):
             half_life = expasy_text[60:68]
         elif len(expasy_text) == 76:
             half_life = expasy_text[57:65]
-        #print(half_life[4])
 
         aa_row = [seq]
         for i in range(len(aa_composition)):
@@ -628,6 +636,7 @@ def analyse_all(tuple_inputs):
     for i in range(len(analysis_results)):
         for n in range(len(expasy_results[i])):
             analysis_results[i].append(expasy_results[i][n])
+    #print(analysis_results[0:4])
 
     with open('results/aa_composition.csv', 'w') as f:
         writer = csv.writer(f)
@@ -637,7 +646,6 @@ def analyse_all(tuple_inputs):
         writer = csv.writer(f)
         writer.writerows(atomic_composition_results)
 
-    #print(analysis_results[-20:])
 
 
     os.remove(os.getcwd()+"/seq_file.txt")
@@ -655,28 +663,48 @@ def make_csv_from_results(results_from_prediction, results_from_analysis):
 
     """The returned results from the analysis are added to the lists of prediction and saved as csv files for each different method."""
 
-    columns_to_add = ['Mol_Weight', 'Isoelectric_Point', 'Aromaticity','Instability_Index','Helix_2_Struc', 'Turn_2_Struc', 'Sheet_2_Struc', 'Reduces_Cys', 'Disulfide_Bridge',
+    columns_to_add = ['Peptide', 'Mol_Weight', 'Isoelectric_Point', 'Aromaticity','Instability_Index','Helix_2_Struc', 'Turn_2_Struc', 'Sheet_2_Struc', 'Reduces_Cys', 'Disulfide_Bridge',
     'Hydropathicity', 'Charge_at_pH7', 'Antigenicity_Score', 'Antigen_Prediction', 'Allergen_Prediction','SVM_Score', 'Toxicity_Prediction', 'Hydrophobicity', 'Steric_hinderance',
     'Sidebulk', 'Amphipathicity', 'Hydrophilicity', 'Net_Hydrogen','(-)_Charged_Residues (Asp+Glu)','(+)_Charged_Residues (Arg+Lys)', 'Half_Life_hours (mammalian reticulocytes, in vitro)', 
     'Aliphatic_Index']
 
-    for i in range(len(results_from_prediction[:-2])):
+    # Divide results_from_analysis into 11 lists
+    results_lists = []
+    for i in range(len(results_from_prediction)-2):
+        list_to_append = []
         if i == 0 or i == 1:
-            for column_title in columns_to_add:
-                results_from_prediction[i][0].append(column_title)
-            results_from_prediction[i][0].insert(len(results_from_prediction[i][0])-9,'Immunogenicity_Score')
+            list_to_append.append(columns_to_add[:])
+            list_to_append[0].insert(14,'Immunogenicity_Score')
         else:
-            for column_title in columns_to_add:
-                results_from_prediction[i][0].append(column_title)
+            list_to_append.append(columns_to_add)
 
         if len(results_from_prediction[i]) > 1:
-            length_to_cut = len(results_from_prediction[i][1:])
-            for e in range(length_to_cut):
-                for parameter in results_from_analysis[e][1:]:
-                    results_from_prediction[i][e+1].append(parameter)
-            results_from_analysis = results_from_analysis[length_to_cut:]
+            lengths_to_cut = len(results_from_prediction[i])-1
+            rows_for_list = results_from_analysis[:lengths_to_cut]
+            results_from_analysis = results_from_analysis[lengths_to_cut:]
+            list_to_append.extend(rows_for_list)
+            results_lists.append(list_to_append)
+        else:
+            results_lists.append(list_to_append)
 
-    for i in range(len(results_from_prediction)):
+
+    # for i in range(len(results_from_prediction[:-2])):
+    #     if i == 0 or i == 1:
+    #         for column_title in columns_to_add:
+    #             results_from_prediction[i][0].append(column_title)
+    #         results_from_prediction[i][0].insert(len(results_from_prediction[i][0])-9,'Immunogenicity_Score')
+    #     else:
+    #         for column_title in columns_to_add:
+    #             results_from_prediction[i][0].append(column_title)
+
+    #     if len(results_from_prediction[i]) > 1:
+    #         length_to_cut = len(results_from_prediction[i][1:])
+    #         for e in range(length_to_cut):
+    #             for parameter in results_from_analysis[e][1:]:
+    #                 results_from_prediction[i][e+1].append(parameter)
+    #         results_from_analysis = results_from_analysis[length_to_cut:]
+
+    for i in range(len(results_lists)):
         if i == 0:
             f = open("results/mhci.csv", "w", newline="")
         if i == 1:
@@ -699,16 +727,16 @@ def make_csv_from_results(results_from_prediction, results_from_analysis):
             f = open("results/parker.csv", "w", newline="")
         if i == 10:
             f = open("results/ellipro_linear.csv", "w", newline="")
-        if i == 11:
-            f = open("results/ellipro_discontinous.csv", "w", newline="")
-        if i == 12:
-            f = open("results/discotope.csv", "w", newline="")
+        # if i == 11:
+        #     f = open("results/ellipro_discontinous.csv", "w", newline="")
+        # if i == 12:
+        #     f = open("results/discotope.csv", "w", newline="")
         writer = csv.writer(f)
-        writer.writerows(results_from_prediction[i])
+        writer.writerows(results_lists[i])
         f.close()
 
 list_of_swissprot_ids = ['P59594', 'P0DTC2', 'K9N5Q8', 'P36334', 'Q0ZME7', 'P15423', 'Q6Q1S2', 'Q5MQD0', 'Q14EB0']
 prediction_results = read_prediction_results()
 analysis_input = make_inputs_for_analysis(prediction_results, list_of_swissprot_ids)
 analysis_results = analyse_all(analysis_input)
-# make_csv_from_results(prediction_results, analysis_results)
+make_csv_from_results(prediction_results, analysis_results)

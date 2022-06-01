@@ -91,7 +91,7 @@ def mhci(conserved_sequences_dict, list_of_alleles, list_of_lengths):
                 else:
                     df = pd.DataFrame(response_body[1:], columns=response_body[0])
                     df["percentile_rank"] = pd.to_numeric(df["percentile_rank"], errors='coerce')
-                    df = df.loc[df['percentile_rank'] <= 10]
+                    df = df.loc[df['percentile_rank'] <= 1]
 
                     if df.empty == True:
                         continue
@@ -200,7 +200,7 @@ def mhcii(conserved_sequences_dict, list_of_alleles, list_of_lengths):
                 
                 df = pd.DataFrame(response_body[1:], columns=response_body[0])
                 df["adjusted_rank"] = pd.to_numeric(df["adjusted_rank"])
-                df = df.loc[df['adjusted_rank'] <= 10]
+                df = df.loc[df['adjusted_rank'] <= 1]
 
                 if df.empty == True:
                     continue

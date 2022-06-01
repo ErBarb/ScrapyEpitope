@@ -20,8 +20,8 @@ mhcii_lengths = [11, 12, 13]
 list_of_pdb_ids = ['6vxx']
 
 # alignment(list_of_swissprot_ids, matrix='bl62', gapopen=1.53, gapext=0.123, order='aligned', nbtree=2, treeout='true', maxiterate=2, ffts='none')
-conserved_sequences_mafft = get_conserved_sequences(path_to_mafft_alignment, min_seq_conserved_pos='default', min_seq_flank_pos='default', max_contigous_nonconserved_pos = 8, min_length_block= 10, allowed_gap_pos='None')
-predict_all(conserved_sequences_mafft, mhci_alleles, mhci_lengths, mhcii_alleles, mhcii_lengths, list_of_pdb_ids)
+# conserved_sequences_mafft = get_conserved_sequences(path_to_mafft_alignment, min_seq_conserved_pos='default', min_seq_flank_pos='default', max_contigous_nonconserved_pos = 8, min_length_block= 10, allowed_gap_pos='None')
+predict_all(example_seq_dict, mhci_alleles, mhci_lengths, mhcii_alleles, mhcii_lengths, list_of_pdb_ids)
 prediction_results = read_prediction_results()
 analysis_input = make_inputs_for_analysis(prediction_results, list_of_swissprot_ids)
 print("Analysing sequences...")
