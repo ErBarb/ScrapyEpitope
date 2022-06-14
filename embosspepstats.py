@@ -398,8 +398,8 @@ def getResult(jobId):
                     fh = open(filename, "wb")
                     fh.write(result)
                     fh.close()
-                if outputLevel > 0:
-                    print("Creating result file: " + filename)
+                #if outputLevel > 0:
+                #    print("Creating result file: " + filename)
     printDebugMessage(u'getResult', u'End', 1)
 
 
@@ -550,10 +550,10 @@ elif options.email and not options.jobid:
                   "" % (os.path.basename(__file__), jobId))
     else:
         # Sync mode
-        if outputLevel > 0:
-            print("JobId: " + jobId, file=sys.stderr)
-        else:
-            print(jobId)
+        #if outputLevel > 0:
+        #    print("JobId: " + jobId, file=sys.stderr)
+        #else:
+        #    print(jobId)
         time.sleep(pollFreq)
         getResult(jobId)
 # Get job status

@@ -6,6 +6,7 @@ import time
 import csv
 from csv import reader
 import pandas as pd
+import matplotlib.pyplot as plt
 from Bio.SeqUtils.ProtParam import ProteinAnalysis
 from urllib import request
 from selenium import webdriver
@@ -14,6 +15,81 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.keys import Keys
+
+
+
+def dssp_analysis(list_of_pdb_ids):
+    
+    """"""
+
+    options = Options()
+    options.headless = True
+
+    for id in list_of_pdb_ids:
+        try:
+            dssp_url = 'https://www3.cmbi.umcn.nl/xssp/'
+            dssp = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
+            dssp.get(dssp_url)
+            #wait_dssp = WebDriverWait(dssp, 60)
+
+            dssp.find_element(By.ID, "pdb_id").send_keys(id)
+            time.sleep(3)
+            dssp.find_element(By.XPATH, "/html/body/div/form/div[3]/button[2]").click()
+            time.sleep(5)
+            dssp_results = dssp.find_element(By.XPATH, '/html/body/div/div/div/textarea').text.splitlines()
+            dssp.close()
+            dssp_only_table = dssp_results[28:]
+
+            acc_results = []
+            for row in dssp_only_table:
+                newrow = row.split()[:-9]
+                try:
+                    acc_results.append(int(newrow[13]))
+                except:
+                    try:
+                        acc_results.append(int(newrow[12]))
+                    except:
+                        try:
+                            acc_results.append(int(newrow[11]))
+                        except:
+                            try:
+                                acc_results.append(int(newrow[10]))
+                            except:
+                                try:
+                                    acc_results.append(int(newrow[9]))
+                                except:
+                                    try:
+                                        acc_results.append(int(newrow[8]))
+                                    except:
+                                        try:
+                                            acc_results.append(int(newrow[7]))
+                                        except:
+                                            try:
+                                                acc_results.append(int(newrow[6]))
+                                            except:
+                                                try:
+                                                    if newrow[1] == '!' or newrow[1] == '!*':
+                                                        acc_results.append(0)
+                                                except:
+                                                    print("Failed to fetch DSSP output for: " + id)
+                                                    break
+
+            current_directory = os.getcwd()
+            final_directory = os.path.join(current_directory, r'acc_results')
+            if not os.path.exists(final_directory):
+                os.makedirs(final_directory)
+
+            lst = list(range(1,len(dssp_only_table)+1))
+            plt.plot(lst, acc_results)
+            plt.ylabel('ACC')
+            plt.xlabel('Residue #')
+            plt.savefig('acc_results/' + id + '.png')
+            plt.clf()
+
+        except:
+            print("Failed to fetch DSSP output for: " + id)
+            dssp.close()
+    print("DSSP analysis done")
 
 
 
@@ -580,8 +656,6 @@ def analyse_all(tuple_inputs):
     for i in range(len(analysis_results)):
         for n in range(len(toxinpred_epitopes[i])):
             analysis_results[i].append(toxinpred_epitopes[i][n])
-    print(toxinpred_epitopes)
-    print(analysis_results)
 
 
     # Expasy and protein solubility:
@@ -591,7 +665,7 @@ def analyse_all(tuple_inputs):
     , 'Lys (K)', 'Met (M)', 'Phe (F)', 'Pro (P)', 'Ser (S)', 'Thr (T)', 'Trp (W)', 'Tyr (Y)', 'Val (V)', 'Pyl (O)', 'Sec (U)']]
     atomic_composition_results = [['peptide', 'Carbon (C)', 'Hydrogen (H)', 'Nitrogen (N)', 'Oxygen (O)', 'Sulfur (S)']]
 
-    for index, seq in enumerate(list_of_linear_epitopes[-1000:]):
+    for index, seq in enumerate(list_of_linear_epitopes):
         try:
             expasy = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
             wait_expasy = WebDriverWait(expasy, 600)
@@ -616,7 +690,6 @@ def analyse_all(tuple_inputs):
             expasy.close()
             
         except Exception as e:
-            print(e, seq, index)
             break
         
         aa_composition = expasy_text[6:28]
@@ -675,6 +748,59 @@ def analyse_all(tuple_inputs):
         writer.writerows(atomic_composition_results)
 
 
+    # Pepstats:
+    def pepstats(list_of_sequences):
+        
+        pepstats_results = []
+        for seq in list_of_sequences:
+            os.system(
+                'python embosspepstats.py --email erald.bb@gmail.com --sequence ' + seq + ' --outfile pepstats_results --quiet')
+
+            results_row = []
+
+            with open('pepstats_results.out.txt') as f:
+                lines = f.readlines()
+                aa_properties = lines[-11:-1]
+                exp_inclusion_bodies = float(lines[7].split()[-1])
+
+                tiny_aa = float(aa_properties[1].split('\t')[-1][:-1])
+                small_aa = float(aa_properties[2].split('\t')[-1][:-1])
+                aliphatic_aa = float(aa_properties[3].split('\t')[-1][:-1])
+                aromatic_aa = float(aa_properties[4].split('\t')[-1][:-1])
+                non_polar_aa = float(aa_properties[5].split('\t')[-1][:-1])
+                polar_aa = float(aa_properties[6].split('\t')[-1][:-1])
+                charged_aa = float(aa_properties[7].split('\t')[-1][:-1])
+                basic_aa = float(aa_properties[8].split('\t')[-1][:-1])
+                acidic_aa = float(aa_properties[9].split('\t')[-1][:-1])
+                
+                results_row.append(tiny_aa)
+                results_row.append(small_aa)
+                results_row.append(aliphatic_aa)
+                results_row.append(aromatic_aa)
+                results_row.append(non_polar_aa)
+                results_row.append(polar_aa)
+                results_row.append(charged_aa)
+                results_row.append(basic_aa)
+                results_row.append(acidic_aa)
+                results_row.append(exp_inclusion_bodies)
+
+                pepstats_results.append(results_row)
+
+            os.remove(os.getcwd()+"/pepstats_results.out.txt")
+            os.remove(os.getcwd()+"/pepstats_results.sequence.txt")
+
+        return pepstats_results
+
+    pepstats_results = pepstats(list_of_linear_epitopes)
+    if len(pepstats_results) == len(analysis_results):
+        for i in range(len(analysis_results)):
+            for n in range(len(pepstats_results[i])):
+                analysis_results[i].append(pepstats_results[i][n])
+        print("Pepstats analysis done")
+    else:
+        print("Not all epitopes analysed with Pepstats")
+
+
 
     os.remove(os.getcwd()+"/seq_file.txt")
     os.remove(os.getcwd()+"/pop_cov_file.txt")
@@ -686,14 +812,16 @@ def analyse_all(tuple_inputs):
     return analysis_results
 
 
+
 def make_csv_from_results(results_from_prediction, results_from_analysis):
 
     """The returned results from the analysis are added to the lists of prediction and saved as csv files for each different method."""
 
-    columns_to_add = ['Peptide', 'Mol_Weight', 'Isoelectric_Point', 'Aromaticity','Instability_Index','Helix_2_Struc', 'Turn_2_Struc', 'Sheet_2_Struc', 'Reduces_Cys', 'Disulfide_Bridge',
-    'Hydropathicity', 'Charge_at_pH7', 'Antigenicity_Score', 'Antigen_Prediction', 'Allergen_Prediction','SVM_Score', 'Toxicity_Prediction', 'Hydrophobicity', 'Steric_hinderance',
-    'Sidebulk', 'Amphipathicity', 'Hydrophilicity', 'Net_Hydrogen','(-)_Charged_Residues (Asp+Glu)','(+)_Charged_Residues (Arg+Lys)', 'Half_Life_hours (mammalian reticulocytes, in vitro)', 
-    'Aliphatic_Index', 'Solubility']
+    columns_to_add = ['peptide', 'mol_weight', 'isoelectric_point', 'aromaticity','instability_index','helix_2_struc', 'turn_2_struc', 'sheet_2_struc', 'reduces_cys', 'disulfide_bridge',
+    'hydropathicity', 'charge_at_pH7', 'antigenicity_score', 'antigen_prediction', 'allergen_prediction','toxinpred_svm_score', 'toxicity_prediction', 'hydrophobicity', 'steric_hinderance',
+    'sidebulk', 'amphipathicity', 'hydrophilicity', 'net_hydrogen','(-)_charged_residues (asp+glu)','(+)_charged_residues (arg+lys)', 'half_life_hours (mammalian reticulocytes, in vitro)', 
+    'aliphatic_index', 'solubility', 'tiny_aa_percentage', 'small_aa_percentage', 'aliphatic_aa_percentage', 'aromatic_aa_percentage', 'non_polar_aa_percentage', 'polar_aa_percentage', 
+    'charged_aa_percentage', 'basic_aa_percentage', 'acidic_aa_percentage', 'improbability_of_expression_in_inclusion_bodies']
 
     # Divide results_from_analysis into 11 lists
     results_lists = []

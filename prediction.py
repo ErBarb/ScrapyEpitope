@@ -10,6 +10,8 @@ from msa import alignment
 from msa import get_conserved_sequences
 import requests
 import csv
+import re
+
 # import scrapy
 # from scrapy import Spider
 # from scrapy.http import FormRequest
@@ -18,7 +20,36 @@ import csv
 # from scrapy.crawler import CrawlerRunner
 # from twisted.internet import reactor, defer
 
+def get_pdb_from_swissprot(list_of_swissprot_ids):
 
+    """"""
+
+    options = Options()
+    options.headless = True
+
+    pdb_ids = []
+    for id in list_of_swissprot_ids:
+        try:
+            uniprot_url = 'https://www.uniprot.org/uniprot/' + id
+            uniprot = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
+            uniprot.get(uniprot_url)
+            wait_uniprot = WebDriverWait(uniprot, 30)
+            wait_uniprot.until(ec.visibility_of_element_located((By.XPATH, '//div[@id="structure"]/protvista-uniprot-structure/div/div[2]/protvista-datatable/table/tbody')))
+            uniprot_pdb_ids = uniprot.find_element(By.XPATH, '//div[@id="structure"]/protvista-uniprot-structure/div/div[2]/protvista-datatable/table/tbody').text.splitlines()
+            for row in uniprot_pdb_ids:
+                newrow = row.split()
+                if (newrow[2] == 'EM' or newrow[2] == 'X-ray') and (newrow[6].startswith('1-') == True):
+                    pdb_ids.append(newrow[1])
+                    break
+            else:
+                if (newrow[2] == 'EM' or newrow[2] == 'X-ray') and re.search("^1.-", newrow[6]):
+                    pdb_ids.append(newrow[1])
+            uniprot.close()
+        except:
+            print("No PDB format for: " + id)
+            uniprot.close()
+    
+    return pdb_ids
 
 def mhci(conserved_sequences_dict, list_of_alleles, list_of_lengths):
     
