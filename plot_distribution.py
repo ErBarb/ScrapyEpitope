@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-fp = open('/content/drive/My Drive/Colab Notebooks/Data/HPLG/epitope_table_export_1654247913.csv','r')
+fp = open('/content/drive/My Drive/Colab Notebooks/Data/HPLG/epitope_table_export_1654247913.csv','r') # Link to file containing epitopes data
 start_pos = []
 end_pos = []
 for ln in fp:
