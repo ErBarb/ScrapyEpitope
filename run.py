@@ -1,7 +1,10 @@
 from msa import alignment
 from msa import get_conserved_sequences
+from msa import prediction_choice
+from msa import get_protein_sequences
 from prediction import predict_all
 from prediction import get_pdb_from_swissprot
+from prediction import epitope_distribution_plots
 from analyse import dssp_analysis
 from analyse import make_inputs_for_analysis
 from analyse import analyse_all
@@ -54,12 +57,17 @@ def run_pipeline():
     mhcii_alleles = [x.strip() for x in mhcii_alleles_str.split(',')]
     mhcii_lengths = [x.strip() for x in mhcii_lengths_str.split(',')]
 
-    alignment(list_of_swissprot_ids, matrix='bl62', gapopen=1.53, gapext=0.123, order='aligned', nbtree=2, treeout='true', maxiterate=2, ffts='none')
-    path_to_alignment = input("Enter the path to your alignment file: ")
-    conserved_sequences_mafft = get_conserved_sequences(path_to_alignment, min_seq_conserved_pos='default', min_seq_flank_pos='default', max_contigous_nonconserved_pos = 8, min_length_block= 10, allowed_gap_pos='None')
-    
+    prediction_choice = prediction_choice()
+    if prediction_choice == "2":
+        alignment(list_of_swissprot_ids, matrix='bl62', gapopen=1.53, gapext=0.123, order='aligned', nbtree=2, treeout='true', maxiterate=2, ffts='none')
+        path_to_alignment = input("Enter the path to your alignment file (either MAFFT or MUSCLE): ")
+        sequences = get_conserved_sequences(path_to_alignment, min_seq_conserved_pos='default', min_seq_flank_pos='default', max_contigous_nonconserved_pos = 8, min_length_block= 10, allowed_gap_pos='None')
+    elif prediction_choice == "1":
+        sequences = get_protein_sequences(list_of_swissprot_ids)
+
     list_of_pdb_ids = get_pdb_from_swissprot(list_of_swissprot_ids)
-    predict_all(conserved_sequences_mafft, mhci_alleles, mhci_lengths, mhcii_alleles, mhcii_lengths, list_of_pdb_ids)
+    predict_all(sequences, mhci_alleles, mhci_lengths, mhcii_alleles, mhcii_lengths, list_of_pdb_ids)
+    epitope_distribution_plots()
 
     dssp_analysis(list_of_pdb_ids)
     prediction_results = read_prediction_results()

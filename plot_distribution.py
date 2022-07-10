@@ -44,9 +44,10 @@ for i in range(0,len(start_pos)):
     count[j] = count[j]+1
 print(count)
 
-x_axis = []
-for i in range(1,1274):
-  x_axis.append(i)
+x_axis = [i for i in range(1, 1274)]
+# for i in range(1,1274):
+#   x_axis.append(i)
+x_axis = list(range(1,1274))
 print(len(x_axis))
 print(x_axis)
 

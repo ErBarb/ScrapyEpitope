@@ -93,14 +93,18 @@ def dssp_analysis(list_of_pdb_ids):
 
 
 
-def read_prediction_results():
+def read_prediction_results(list_of_swissprot_ids):
 
     """This function will read all the results from the csv files created by the prediction methods in prediction.py, remove the duplicate peptides,
     then return them in a tuple of lists"""
 
+    data_for_distribution = []
+
     df = pd.read_csv('epitope_prediction_results/mhci_epitopes.csv')
     df.drop_duplicates(subset=['peptide'], keep=False, inplace=True)
     mhci_prediction_list = [df.columns.tolist()] + df.values.tolist()
+    #protein_ids = df['protein_id'].tolist()
+    #print(protein_ids)
 
     df = pd.read_csv('epitope_prediction_results/mhci_proc_epitopes.csv')
     df.drop_duplicates(subset=['peptide'], keep=False, inplace=True)
@@ -873,8 +877,8 @@ def make_csv_from_results(results_from_prediction, results_from_analysis):
         writer.writerows(results_lists[i])
         f.close()
 
-# list_of_swissprot_ids = ['P59594', 'P0DTC2', 'K9N5Q8', 'P36334', 'Q0ZME7', 'P15423', 'Q6Q1S2', 'Q5MQD0', 'Q14EB0']
-# prediction_results = read_prediction_results()
+list_of_swissprot_ids = ['P59594', 'P0DTC2', 'K9N5Q8', 'P36334', 'Q0ZME7', 'P15423', 'Q6Q1S2', 'Q5MQD0', 'Q14EB0']
+prediction_results = read_prediction_results(list_of_swissprot_ids)
 # analysis_input = make_inputs_for_analysis(prediction_results, list_of_swissprot_ids)
 # analysis_results = analyse_all(analysis_input)
 # make_csv_from_results(prediction_results, analysis_results)

@@ -1,3 +1,4 @@
+from tkinter import E
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -11,14 +12,9 @@ from msa import get_conserved_sequences
 import requests
 import csv
 import re
+from collections import defaultdict
+import itertools
 
-# import scrapy
-# from scrapy import Spider
-# from scrapy.http import FormRequest
-# from scrapy.utils.project import get_project_settings
-# from scrapy.utils.log import configure_logging
-# from scrapy.crawler import CrawlerRunner
-# from twisted.internet import reactor, defer
 
 def get_pdb_from_swissprot(list_of_swissprot_ids):
 
@@ -33,9 +29,10 @@ def get_pdb_from_swissprot(list_of_swissprot_ids):
             uniprot_url = 'https://www.uniprot.org/uniprot/' + id
             uniprot = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
             uniprot.get(uniprot_url)
-            wait_uniprot = WebDriverWait(uniprot, 30)
-            wait_uniprot.until(ec.visibility_of_element_located((By.XPATH, '//div[@id="structure"]/protvista-uniprot-structure/div/div[2]/protvista-datatable/table/tbody')))
-            uniprot_pdb_ids = uniprot.find_element(By.XPATH, '//div[@id="structure"]/protvista-uniprot-structure/div/div[2]/protvista-datatable/table/tbody').text.splitlines()
+            wait_uniprot = WebDriverWait(uniprot, 60)
+            wait_uniprot.until(ec.visibility_of_element_located((By.XPATH, '//section[@id="structure"]/div/div[2]/protvista-uniprot-structure/div/div[2]/protvista-datatable/table/tbody')))
+            uniprot_pdb_ids = uniprot.find_element(By.XPATH, '//section[@id="structure"]/div/div[2]/protvista-uniprot-structure/div/div[2]/protvista-datatable/table/tbody').text.splitlines()
+            wait_uniprot.until(ec.visibility_of_element_located((By.XPATH, '//section[@id="sequence-container"]/ul/li[1]/div/div[2]')))
             for row in uniprot_pdb_ids:
                 newrow = row.split()
                 if (newrow[2] == 'EM' or newrow[2] == 'X-ray') and (newrow[6].startswith('1-') == True):
@@ -50,6 +47,27 @@ def get_pdb_from_swissprot(list_of_swissprot_ids):
             uniprot.close()
     
     return pdb_ids
+
+def getStartEndPositions(pattern, seq):
+    all_instances = [m.start() for m in re.finditer(pattern, seq)]
+
+    if len(all_instances) > 1:
+        raise Exception("Too many found")
+    elif len(all_instances) == 0:
+        return None
+
+    return (all_instances[0] + 1, all_instances[0] + 1 + len(pattern))
+
+def swissprotIDSequenceLength(list_of_swissprot_ids):
+    protein_dict = {}
+    for id in list_of_swissprot_ids:
+        baseUrl="http://www.uniprot.org/uniprot/"
+        currentUrl=baseUrl+id+".fasta"
+        response = requests.post(currentUrl)
+        response_lines = response.text.split("\n")[1:]
+        cData=''.join(response_lines)
+        protein_dict[id] = (cData, len(cData))
+    return protein_dict
 
 def mhci(conserved_sequences_dict, list_of_alleles, list_of_lengths):
     
@@ -66,9 +84,9 @@ def mhci(conserved_sequences_dict, list_of_alleles, list_of_lengths):
         ["peptide"] + ["core"] + ["icore"] + ["score"] + ["percentile_rank"]
     mhci_results.append(columns)
 
-    for key in conserved_sequences_dict:
+    for key, value in conserved_sequences_dict.items():
         print("Predicting linear epitopes of protein " + key + " with MHCI")
-        for conserved_sequence in conserved_sequences_dict[key]:
+        for conserved_sequence in value:
             if len(conserved_sequence) >= max(list_of_lengths):
                 
                 headers = {
@@ -131,6 +149,7 @@ def mhci(conserved_sequences_dict, list_of_alleles, list_of_lengths):
                         for i in rows:
                             i = [key] + [conserved_sequence] + i
                             mhci_results.append(i)
+
     with open('epitope_prediction_results/mhci_epitopes.csv', 'w', newline="") as f: 
         writer = csv.writer(f)
         writer.writerows(mhci_results)
@@ -152,9 +171,9 @@ def mhci_proc(conserved_sequences_dict, list_of_alleles, list_of_lengths):
         ["peptide"] + ["proteasome_score"] + ["tap_score"] + ["mhci_score"] + ["processing_score"] + ["total_score"] + ["mhci_ic50"]
     mhci_proc_results.append(columns)
 
-    for key in conserved_sequences_dict:
+    for key, value in conserved_sequences_dict.items():
         print("Predicting linear epitopes of protein " + key + " with MHCI Processing")
-        for conserved_sequence in conserved_sequences_dict[key]:
+        for conserved_sequence in value:
             if len(conserved_sequence) >= max(list_of_lengths):
 
                 headers = {
@@ -210,9 +229,9 @@ def mhcii(conserved_sequences_dict, list_of_alleles, list_of_lengths):
     
     mhcii_results.append(columns)
 
-    for key in conserved_sequences_dict:
+    for key, value in conserved_sequences_dict.items():
         print("Predicting linear epitopes of protein " + key + " with MHCII")
-        for conserved_sequence in conserved_sequences_dict[key]:
+        for conserved_sequence in value:
             if len(conserved_sequence) >= max(list_of_lengths):
 
                 headers = {
@@ -255,9 +274,9 @@ def bepipred2(conserved_sequences_dict):
     columns = ["protein_id"] + ["conserved_sequence"] + ["predicted_epitope"] + ["start_position"] + ["end_position"]
     bepipred2_results.append(columns)
 
-    for key in conserved_sequences_dict:
+    for key, sequences in conserved_sequences_dict.items():
         print("Predicting linear epitopes of protein " + key + " with Bepipred 2.0")
-        for conserved_sequence in conserved_sequences_dict[key]:
+        for conserved_sequence in sequences:
             
             headers = {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -324,9 +343,9 @@ def bepipred(conserved_sequences_dict):
     columns = ["protein_id"] + ["conserved_sequence"] + ["predicted_epitope"] + ["start_position"] + ["end_position"]
     bepipred_results.append(columns)
 
-    for key in conserved_sequences_dict:
+    for key, sequences in conserved_sequences_dict.items():
         print("Predicting linear epitopes of protein " + key + " with Bepipred 1.0")
-        for conserved_sequence in conserved_sequences_dict[key]:
+        for conserved_sequence in sequences:
             
             time.sleep(1)
             headers = {
@@ -394,9 +413,9 @@ def emini(conserved_sequences_dict):
     columns = ["protein_id"] + ["conserved_sequence"] + ["predicted_epitope"] + ["start_position"] + ["end_position"]
     emini_results.append(columns)
 
-    for key in conserved_sequences_dict:
+    for key, sequences in conserved_sequences_dict.items():
         print("Predicting linear epitopes of protein " + key + " with Emini")
-        for conserved_sequence in conserved_sequences_dict[key]:
+        for conserved_sequence in sequences:
             
             time.sleep(1)
             headers = {
@@ -464,9 +483,9 @@ def choufasman(conserved_sequences_dict):
     columns = ["protein_id"] + ["conserved_sequence"] + ["predicted_epitope"] + ["start_position"] + ["end_position"]
     choufasman_results.append(columns)
 
-    for key in conserved_sequences_dict:
+    for key, sequences in conserved_sequences_dict.items():
         print("Predicting linear epitopes of protein " + key + " with Chou-Fasman")
-        for conserved_sequence in conserved_sequences_dict[key]:
+        for conserved_sequence in sequences:
             
             time.sleep(1)
             headers = {
@@ -536,9 +555,9 @@ def karplusschulz(conserved_sequences_dict):
     columns = ["protein_id"] + ["conserved_sequence"] + ["predicted_epitope"] + ["start_position"] + ["end_position"]
     karplusschulz_results.append(columns)
 
-    for key in conserved_sequences_dict:
+    for key, sequences in conserved_sequences_dict.items():
         print("Predicting linear epitopes of protein " + key + " with Karplus-Schulz")
-        for conserved_sequence in conserved_sequences_dict[key]:
+        for conserved_sequence in sequences:
             
             time.sleep(1)
             headers = {
@@ -609,9 +628,9 @@ def kolaskartongaonkar(conserved_sequences_dict):
     columns = ["protein_id"] + ["conserved_sequence"] + ["predicted_epitope"] + ["start_position"] + ["end_position"]
     kolaskartongaonkar_results.append(columns)
 
-    for key in conserved_sequences_dict:
+    for key, sequences in conserved_sequences_dict.items():
         print("Predicting linear epitopes of protein " + key + " with Kolaskar-Tongaonkar")
-        for conserved_sequence in conserved_sequences_dict[key]:
+        for conserved_sequence in sequences:
             
             time.sleep(1)
             headers = {
@@ -681,9 +700,9 @@ def parker(conserved_sequences_dict):
     columns = ["protein_id"] + ["conserved_sequence"] + ["predicted_epitope"] + ["start_position"] + ["end_position"]
     parker_results.append(columns)
 
-    for key in conserved_sequences_dict:
+    for key, sequences in conserved_sequences_dict.items():
         print("Predicting linear epitopes of protein " + key + " with Parker")
-        for conserved_sequence in conserved_sequences_dict[key]:
+        for conserved_sequence in sequences:
             
             time.sleep(1)
             headers = {
@@ -950,76 +969,180 @@ def predict_all(dictionary_conserved_sequences, alleles_for_mhci, lengths_for_mh
     discotope(list_of_pdb_ids)
 
 
+def get_start_end_in_dict(rows_of_method_protein, method_dict, swissprot_id, protein_seq):
 
-# class Netctlpan(Spider):
-#     name = 'Netctlpan'
-#     start_urls = ['http://tools.iedb.org/netchop/']
-#     global netctlpan
-#     global fasta
+    start_end_list = []
+    for index, row in rows_of_method_protein.iterrows():
+        
+        start_end_cell = []
+        try:
+            # print(row['peptide'], row['start'], row['end'])
+            row['start'] = getStartEndPositions(row['peptide'], protein_seq)[0]
+            row['end'] = getStartEndPositions(row['peptide'], protein_seq)[1]
+            start_end_cell.append(row['start'])
+            start_end_cell.append(row['end'])
+            start_end_list.append(start_end_cell)
+        except:
+            try:
+                # print(row['predicted_epitope'], row['start_position'], row['end_position'])
+                row['start_position'] = getStartEndPositions(row['predicted_epitope'], protein_seq)[0]
+                row['end_position'] = getStartEndPositions(row['predicted_epitope'], protein_seq)[1]
+                start_end_cell.append(row['start_position'])
+                start_end_cell.append(row['end_position'])
+                start_end_list.append(start_end_cell)
+            except Exception as E:
+                print(E)   
 
-#     def parse(self, response):
-#         yield FormRequest.from_response(
-#             response,
-#             url=self.start_urls[0],
-#             formdata={
-#                 'pred_tool': 'netchop',
-#                 'pred_method': 'netctlpan',
-#                 'sequence_text': fasta,
-#                 'sequence_file': '(binary)',
-#                 'method': '0',
-#                 'netchop_threshold': '0.5',
-#                 'netctl_cleavage': '0.15',
-#                 'netctl_tap': '0.05',
-#                 'supertype': 'A1',
-#                 'netctl_threshold': '0.75',
-#                 'species_list': 'human',
-#                 'freq': 'freq',
-#                 'allele_list': 'HLA-A01:01',
-#                 'length_list': '9',
-#                 'netctlpan_threshold': '-99.9',
-#                 'netctlpan_cleavage': '0.225',
-#                 'netctlpan_tap': '0.025',
-#                 'epitope_threshold': '1.0'
-#             },
-#             callback=self.results_page)
+    method_dict[swissprot_id] = start_end_list
 
-#     def results_page(self, response):
-#         url = 'http://tools.iedb.org/netchop/table/'
-#         yield scrapy.Request(url=url, callback=self.get_results, dont_filter=True)
 
-#     def get_results(self, results):
-#         row = []
-#         for cell in results.xpath('/html/body/div[3]/table/tbody/tr'):
-#             row.append(cell.xpath('td[1]//text()').extract_first())
-#             row.append(cell.xpath('td[2]//text()').extract_first())
-#             row.append(cell.xpath('td[3]//text()').extract_first())
-#             row.append(cell.xpath('td[4]//text()').extract_first())
-#             row.append(cell.xpath('td[5]//text()').extract_first())
-#             row.append(cell.xpath('td[6]//text()').extract_first())
-#             netctlpan.append(row)
-#             row = []
-#         print(netctlpan)
+def epitope_distribution_plots(protein_dict):
 
-#configure_logging()
-#settings = get_project_settings()
-#runner = CrawlerRunner(settings)
+    """"""
 
-# @defer.inlineCallbacks
-# def crawl():
-    # yield runner.crawl(Ellipro)
-    # yield runner.crawl(Discotope)
-    # yield runner.crawl(Bepipred2)
-    # yield runner.crawl(Bepipred)
-    # yield runner.crawl(Emini)
-    # yield runner.crawl(Kolaskar)
-    # yield runner.crawl(Chou_Fasman)
-    # yield runner.crawl(Karplus_Schulz)
-    # yield runner.crawl(Parker)
-    # yield runner.crawl(MhcII)
-    # yield runner.crawl(Netctlpan)
-    # reactor.stop()
+    choice = input("""The following options are available for the epitope distribution anaysis:\n
+    1. Plot the linear epitopes from a single method against the protein length for each protein (ex. 9 proteins x 10 methods (linear) --> 90 plots)\n
+    2. Plot the linear T-Cell and B-Cell epitopes against the protein length for each protein (ex. 9 proteins x 2 cell types --> 18 plots)\n
+    3. Plot all linear epitopes against the protein length for each protein (ex. 9 proteins --> 9 plots)\n
+Please enter 1, 2 or 3...\n""")
 
-# crawl()
-# reactor.run()  # the script will block here until the last crawl call is finished
+    epitopes_dict = {}
+
+    mhci_df = pd.read_csv('epitope_prediction_results/mhci_epitopes.csv')
+    mhci_proc_df = pd.read_csv('epitope_prediction_results/mhci_proc_epitopes.csv')
+    mhcii_df = pd.read_csv('epitope_prediction_results/mhcii_epitopes.csv')
+    bepipred2_df = pd.read_csv('epitope_prediction_results/bepipred2.0_epitopes.csv')
+    bepipred1_df = pd.read_csv('epitope_prediction_results/bepipred1.0_epitopes.csv')
+    emini_df = pd.read_csv('epitope_prediction_results/emini_epitopes.csv')
+    choufasman_df = pd.read_csv('epitope_prediction_results/choufasman_epitopes.csv')
+    karplusschulz_df = pd.read_csv('epitope_prediction_results/karplusschulz_epitopes.csv')
+    kolaskartongaonkar_df = pd.read_csv('epitope_prediction_results/kolaskartongaonkar_epitopes.csv')
+    parker_df = pd.read_csv('epitope_prediction_results/parker_epitopes.csv')
+
+    # ellipro_linear_df = pd.read_csv('epitope_prediction_results/ellipro_linear_epitopes.csv')
+    # ellipro_discontinous_df = pd.read_csv('epitope_prediction_results/ellipro_discontinous_epitopes.csv')
+    # discotope_df = pd.read_csv('epitope_prediction_results/discotope_epitopes.csv')
+    # df.drop_duplicates(subset=['peptide'], keep=False, inplace=True)
+
+    mhci_dict = {}
+    mhci_proc_dict = {}
+    mhcii_dict = {}
+    bepipred2_dict = {}
+    bepipred1_dict = {}
+    emini_dict = {}
+    choufasman_dict = {}
+    karplusschulz_dict = {}
+    kolaskartongaonkar_dict = {}
+    parker_dict = {}
+    # ellipro_linear_dict = {}
+    # ellipro_discontinous_dict = {}
+    # discotope_dict = {}
+
+
+
+    for key, value in protein_dict.items():
+
+        rows_of_mhci_protein = mhci_df.loc[mhci_df['protein_id'] == key]
+        rows_of_mhci_proc_protein = mhci_proc_df.loc[mhci_proc_df['protein_id'] == key]
+        rows_of_mhcii_protein = mhcii_df.loc[mhcii_df['protein_id'] == key]
+        rows_of_bepipred2_protein = bepipred2_df.loc[bepipred2_df['protein_id'] == key]
+        rows_of_bepipred1_protein = bepipred1_df.loc[bepipred1_df['protein_id'] == key]
+        rows_of_emini_protein = emini_df.loc[emini_df['protein_id'] == key]
+        rows_of_choufasman_protein = choufasman_df.loc[choufasman_df['protein_id'] == key]
+        rows_of_karplusschulz_protein = karplusschulz_df.loc[karplusschulz_df['protein_id'] == key]
+        rows_of_kolaskartongaonkar_protein = kolaskartongaonkar_df.loc[kolaskartongaonkar_df['protein_id'] == key]
+        rows_of_parker_protein = parker_df.loc[parker_df['protein_id'] == key]
+
+        # rows_of_ellipro_linear_protein = ellipro_linear_df.loc[ellipro_linear_df['protein_id'] == key]
+        # rows_of_ellipro_discontinous_protein = ellipro_discontinous_df.loc[ellipro_discontinous_df['protein_id'] == key]
+        # rows_of_discotope_protein = discotope_df.loc[discotope_df['protein_id'] == key]
+        
+        get_start_end_in_dict(rows_of_mhci_protein, mhci_dict, key, value[0])
+        get_start_end_in_dict(rows_of_mhci_proc_protein, mhci_proc_dict, key, value[0])
+        get_start_end_in_dict(rows_of_mhcii_protein, mhcii_dict, key, value[0])
+        get_start_end_in_dict(rows_of_bepipred2_protein, bepipred2_dict, key, value[0])
+        get_start_end_in_dict(rows_of_bepipred1_protein, bepipred1_dict, key, value[0])
+        get_start_end_in_dict(rows_of_emini_protein, emini_dict, key, value[0])
+        get_start_end_in_dict(rows_of_choufasman_protein, choufasman_dict, key, value[0])
+        get_start_end_in_dict(rows_of_karplusschulz_protein, karplusschulz_dict, key, value[0])
+        get_start_end_in_dict(rows_of_kolaskartongaonkar_protein, kolaskartongaonkar_dict, key, value[0])
+        get_start_end_in_dict(rows_of_parker_protein, parker_dict, key, value[0])
+    
+    epitopes_dict["mhci"] = mhci_dict
+    epitopes_dict["mhci_proc"] = mhci_proc_dict
+    epitopes_dict["mhcii"] = mhcii_dict
+    epitopes_dict["bepipred2"] = bepipred2_dict
+    epitopes_dict["bepipred1"] = bepipred1_dict
+    epitopes_dict["emini"] = emini_dict
+    epitopes_dict["choufasman"] = choufasman_dict
+    epitopes_dict["karplusschulz"] = karplusschulz_dict
+    epitopes_dict["kolaskartongaonkar"] = kolaskartongaonkar_dict
+    epitopes_dict["parker"] = parker_dict
+    
+    for k, v in epitopes_dict.items():
+        print(k, v)
+
+    if choice == '1':
+        for index, swissprot_id in enumerate(list_of_swissprot_ids):
+            print(index, swissprot_id)
+            for method, epitope_positions_dict in epitopes_dict.items():
+                print(method)
+                for protein_id, list_of_start_end in epitope_positions_dict.items():
+                    if protein_id == swissprot_id:
+                        print(protein_id, swissprot_id, list_of_start_end[:5])
+        print("Epitope distribution analysis done.")
+    
+    elif choice == '2':
+        
+        t_cell_dict = defaultdict(list)
+        for d in (mhci_dict, mhci_proc_dict, mhcii_dict):
+            for key, value in d.items():
+                t_cell_dict[key].append(value)
+        for k, v in t_cell_dict.items():
+            new_val = list(itertools.chain.from_iterable(v))
+            t_cell_dict[k] = new_val
+    
+        b_cell_dict = defaultdict(list)
+        for d in (bepipred2_dict, bepipred1_dict, emini_dict, choufasman_dict, karplusschulz_dict, kolaskartongaonkar_dict, parker_dict):
+            for key, value in d.items():
+                b_cell_dict[key].append(value)
+        for k, v in b_cell_dict.items():
+            new_val = list(itertools.chain.from_iterable(v))
+            b_cell_dict[k] = new_val
+        
+        # for index, swissprot_id in enumerate(list_of_swissprot_ids):
+            # for key, value in t_cell_dict.items():
+            #     if key == swissprot_id:
+            #         print(key, value)
+            # for key, value in b_cell_dict.items():
+            #     if key == swissprot_id:
+            #         print(key, value)
+        print("Epitope distribution analysis done.")
+
+    elif choice == '3':
+
+        all_dict = defaultdict(list)
+        for d in (mhci_dict, mhci_proc_dict, mhcii_dict, bepipred2_dict, bepipred1_dict, emini_dict, choufasman_dict, karplusschulz_dict, kolaskartongaonkar_dict, parker_dict):
+            for key, value in d.items():
+                all_dict[key].append(value)
+        for k, v in all_dict.items():
+            new_val = list(itertools.chain.from_iterable(v))
+            all_dict[k] = new_val
+
+        # for index, swissprot_id in enumerate(list_of_swissprot_ids):
+        #     for key, value in all_dict.items():
+        #         if key == swissprot_id:
+        #             print(key, value)
+        print("Epitope distribution analysis done.")
+    
+    else:
+        print("Please choose one of the options mentioned")
+        epitope_distribution_plots(list_of_swissprot_ids)
+    
+        
+
+list_of_swissprot_ids = ['P59594', 'P0DTC2', 'K9N5Q8', 'P36334', 'Q0ZME7', 'P15423', 'Q6Q1S2', 'Q5MQD0', 'Q14EB0']
+protein_dict = swissprotIDSequenceLength(list_of_swissprot_ids)
+epitope_distribution_plots(protein_dict)
 
 

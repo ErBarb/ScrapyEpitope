@@ -1,11 +1,26 @@
 import os
 import re
+import requests
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.firefox.options import Options
 
+def prediction_choice():
+
+    """"""
+
+    prediction_choice = input("""The following options are available for epitope prediction:\n
+        1. Analyse and predict epitopes from the whole protein sequences\n
+        2. Perform multiple sequence analysis and predict epitopes only from the conserved sequences\n
+    Please enter 1 or 2\n""")
+
+    if prediction_choice != "1" or prediction_choice != "2":
+        print("Please enter either 1 or 2")
+        prediction_choice()
+
+    return prediction_choice
 
 
 def alignment(seq_list, matrix=None, gapopen=None, gapext=None, order=None, nbtree=None, treeout=None, maxiterate=None, ffts=None):
@@ -105,3 +120,23 @@ def get_conserved_sequences(path_to_file, min_seq_conserved_pos = None, min_seq_
     driver.close()
 
     return conserved_sequences_dictionary
+
+
+def get_protein_sequences(list_of_swissprot_ids):
+    
+    """"""
+    
+    protein_dict = {}
+
+    for id in list_of_swissprot_ids:
+        baseUrl="http://www.uniprot.org/uniprot/"
+        currentUrl=baseUrl+id+".fasta"
+        response = requests.post(currentUrl)
+        response_lines = response.text.split("\n")[1:]
+        cData=''.join(response_lines)
+        protein_dict[id] = (cData)
+
+    return protein_dict
+
+list_of_swissprot_ids = ['P59594', 'P0DTC2', 'K9N5Q8', 'P36334', 'Q0ZME7', 'P15423', 'Q6Q1S2', 'Q5MQD0', 'Q14EB0']
+get_protein_sequences(list_of_swissprot_ids)
