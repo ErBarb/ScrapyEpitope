@@ -1,5 +1,5 @@
 <execution>
-  <commandLine>singularity exec -B $PWD:/output /nfs/public/ro/es_codon/appbin/linux-x86_64/singularity/muscle:3.8.425 /muscle/bin/muscle -in muscle-R20220517-155725-0632-2794168-p2m.sequence -verbose -log muscle-R20220517-155725-0632-2794168-p2m.output -quiet -fasta -out muscle-R20220517-155725-0632-2794168-p2m.fasta</commandLine>
+  <commandLine>singularity exec -B $PWD:/output /nfs/public/ro/es_codon/appbin/linux-x86_64/singularity/muscle:3.8.425 /muscle/bin/muscle -in muscle-R20220713-135613-0984-66060093-p2m.sequence -verbose -log muscle-R20220713-135613-0984-66060093-p2m.output -quiet -fasta -out muscle-R20220713-135613-0984-66060093-p2m.fasta</commandLine>
   <userParameters class="linked-hash-map">
     <entry>
       <string>program</string>
@@ -15,13 +15,13 @@
     </entry>
     <entry>
       <string>sequence</string>
-      <string>/nfs/public/rw/es/projects/wp-jdispatcher/sources/prod/jobs/muscle/rest/20220517/1556/muscle-R20220517-155725-0632-2794168-p2m.sequence</string>
+      <string>/nfs/public/rw/es/projects/wp-jdispatcher/sources/prod/jobs/muscle/rest/20220713/1356/muscle-R20220713-135613-0984-66060093-p2m.sequence</string>
     </entry>
   </userParameters>
-  <outputLocation>file:/nfs/public/rw/es/projects/wp-jdispatcher/sources/prod/jobs/muscle/rest/20220517/1556//muscle-R20220517-155725-0632-2794168-p2m.output</outputLocation>
-  <errorLocation>file:/nfs/public/rw/es/projects/wp-jdispatcher/sources/prod/jobs/muscle/rest/20220517/1556//muscle-R20220517-155725-0632-2794168-p2m.error</errorLocation>
+  <outputLocation>file:/nfs/public/rw/es/projects/wp-jdispatcher/sources/prod/jobs/muscle/rest/20220713/1356//muscle-R20220713-135613-0984-66060093-p2m.output</outputLocation>
+  <errorLocation>file:/nfs/public/rw/es/projects/wp-jdispatcher/sources/prod/jobs/muscle/rest/20220713/1356//muscle-R20220713-135613-0984-66060093-p2m.error</errorLocation>
   <toolId>muscle</toolId>
-  <jobId>muscle-R20220517-155725-0632-2794168-p2m</jobId>
+  <jobId>muscle-R20220713-135613-0984-66060093-p2m</jobId>
   <email>erald.bb@gmail.com</email>
   <emailNotification>false</emailNotification>
   <clientId>138.246.3.8</clientId>

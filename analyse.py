@@ -18,87 +18,10 @@ from selenium.webdriver.common.keys import Keys
 
 
 
-def dssp_analysis(list_of_pdb_ids):
-    
-    """"""
-
-    options = Options()
-    options.headless = True
-
-    for id in list_of_pdb_ids:
-        try:
-            dssp_url = 'https://www3.cmbi.umcn.nl/xssp/'
-            dssp = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
-            dssp.get(dssp_url)
-            #wait_dssp = WebDriverWait(dssp, 60)
-
-            dssp.find_element(By.ID, "pdb_id").send_keys(id)
-            time.sleep(3)
-            dssp.find_element(By.XPATH, "/html/body/div/form/div[3]/button[2]").click()
-            time.sleep(5)
-            dssp_results = dssp.find_element(By.XPATH, '/html/body/div/div/div/textarea').text.splitlines()
-            dssp.close()
-            dssp_only_table = dssp_results[28:]
-
-            acc_results = []
-            for row in dssp_only_table:
-                newrow = row.split()[:-9]
-                try:
-                    acc_results.append(int(newrow[13]))
-                except:
-                    try:
-                        acc_results.append(int(newrow[12]))
-                    except:
-                        try:
-                            acc_results.append(int(newrow[11]))
-                        except:
-                            try:
-                                acc_results.append(int(newrow[10]))
-                            except:
-                                try:
-                                    acc_results.append(int(newrow[9]))
-                                except:
-                                    try:
-                                        acc_results.append(int(newrow[8]))
-                                    except:
-                                        try:
-                                            acc_results.append(int(newrow[7]))
-                                        except:
-                                            try:
-                                                acc_results.append(int(newrow[6]))
-                                            except:
-                                                try:
-                                                    if newrow[1] == '!' or newrow[1] == '!*':
-                                                        acc_results.append(0)
-                                                except:
-                                                    print("Failed to fetch DSSP output for: " + id)
-                                                    break
-
-            current_directory = os.getcwd()
-            final_directory = os.path.join(current_directory, r'acc_results')
-            if not os.path.exists(final_directory):
-                os.makedirs(final_directory)
-
-            lst = list(range(1,len(dssp_only_table)+1))
-            plt.plot(lst, acc_results)
-            plt.ylabel('ACC')
-            plt.xlabel('Residue #')
-            plt.savefig('acc_results/' + id + '.png')
-            plt.clf()
-
-        except:
-            print("Failed to fetch DSSP output for: " + id)
-            dssp.close()
-    print("DSSP analysis done")
-
-
-
-def read_prediction_results(list_of_swissprot_ids):
+def read_prediction_results():
 
     """This function will read all the results from the csv files created by the prediction methods in prediction.py, remove the duplicate peptides,
     then return them in a tuple of lists"""
-
-    data_for_distribution = []
 
     df = pd.read_csv('epitope_prediction_results/mhci_epitopes.csv')
     df.drop_duplicates(subset=['peptide'], keep=False, inplace=True)
@@ -877,8 +800,8 @@ def make_csv_from_results(results_from_prediction, results_from_analysis):
         writer.writerows(results_lists[i])
         f.close()
 
-list_of_swissprot_ids = ['P59594', 'P0DTC2', 'K9N5Q8', 'P36334', 'Q0ZME7', 'P15423', 'Q6Q1S2', 'Q5MQD0', 'Q14EB0']
-prediction_results = read_prediction_results(list_of_swissprot_ids)
+# list_of_swissprot_ids = ['P59594', 'P0DTC2', 'K9N5Q8', 'P36334', 'Q0ZME7', 'P15423', 'Q6Q1S2', 'Q5MQD0', 'Q14EB0']
+# prediction_results = read_prediction_results(list_of_swissprot_ids)
 # analysis_input = make_inputs_for_analysis(prediction_results, list_of_swissprot_ids)
 # analysis_results = analyse_all(analysis_input)
 # make_csv_from_results(prediction_results, analysis_results)

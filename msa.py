@@ -7,30 +7,40 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.firefox.options import Options
 
-def prediction_choice():
+def prediction_choice(list_of_swissprot_ids, counter = 10):
 
     """"""
 
-    prediction_choice = input("""The following options are available for epitope prediction:\n
+    if counter == 0:
+        print("Failed after 10 tries")
+        return
+
+    choice = input("""The following options are available for epitope prediction:\n
         1. Analyse and predict epitopes from the whole protein sequences\n
         2. Perform multiple sequence analysis and predict epitopes only from the conserved sequences\n
     Please enter 1 or 2\n""")
 
-    if prediction_choice != "1" or prediction_choice != "2":
-        print("Please enter either 1 or 2")
-        prediction_choice()
+    if choice == "1":
+        sequences = get_protein_sequences(list_of_swissprot_ids)
+        return sequences
+    elif choice == "2":
+        alignment(list_of_swissprot_ids, matrix='bl62', gapopen=1.53, gapext=0.123, order='aligned', nbtree=2, treeout='true', maxiterate=2, ffts='none')
+        #path_to_alignment = input("Enter the path to your alignment file (either MAFFT or MUSCLE): ")
+        sequences = get_conserved_sequences(min_seq_conserved_pos='default', min_seq_flank_pos='default', max_contigous_nonconserved_pos = 8, min_length_block= 10, allowed_gap_pos='None')
+        return sequences
+    else:
+        print("Please enter either 1 or 2...")
+        prediction_choice(list_of_swissprot_ids, counter-1)
 
-    return prediction_choice
 
-
-def alignment(seq_list, matrix=None, gapopen=None, gapext=None, order=None, nbtree=None, treeout=None, maxiterate=None, ffts=None):
+def alignment(list_of_swissprot_ids, matrix=None, gapopen=None, gapext=None, order=None, nbtree=None, treeout=None, maxiterate=None, ffts=None):
 
     """This function uses REST API services from https://www.ebi.ac.uk/ to output alignment files using the multiple
     sequence alignment methods "MAFFT" and "MUSCLE". The argument is a list of swissprot protein IDs. The files are
     saved in their respective folders in msa_results"""
 
     seq_string = ''
-    for i in seq_list:
+    for i in list_of_swissprot_ids:
         seq_string = seq_string + 'sp:' + i + ','
     seq_string = seq_string[:-1]
 
@@ -39,20 +49,45 @@ def alignment(seq_list, matrix=None, gapopen=None, gapext=None, order=None, nbtr
     os.system(
         'python msa_algos/muscle.py --email erald.bb@gmail.com --sequence ' + seq_string + ' --outfile msa_results/muscle/muscle --format fasta')
 
+def msa_choice(counter=10):
 
+    if counter == 0:
+        print("Failed after 10 tries")
+        return
 
-def get_conserved_sequences(path_to_file, min_seq_conserved_pos = None, min_seq_flank_pos = None, max_contigous_nonconserved_pos = None, min_length_block = None, allowed_gap_pos = None):
+    msa_choice = input("""Please enter whether you want the conserved sequences from MUSCLE or MAFFT alignment:\n
+    1. MUSCLE\n
+    2. MAFFT\n""")
+
+    current_dir = os.getcwd()
+
+    if msa_choice == "1":
+        path_to_file = current_dir + "/msa_results/muscle/muscle.aln-fasta.fasta"
+        return path_to_file
+    elif msa_choice == "2":
+        path_to_file = current_dir + "/msa_results/mafft/mafft.aln-fasta.fasta"
+        return path_to_file
+    else:
+        print("Please enter either 1 or 2...")
+        msa_choice(counter-1)
+    
+    
+
+def get_conserved_sequences(min_seq_conserved_pos = None, min_seq_flank_pos = None, max_contigous_nonconserved_pos = None, min_length_block = None, allowed_gap_pos = None):
 
     """This function uploads the alignment file and sends the parameters to the Gblocks NGPhylogeny website,
     then returns a dictionary with the conserved regions of each protein"""
 
-    options = Options()
-    options.headless = True
+    #options = Options()
+    #options.headless = True
 
     gblocks_url = 'https://ngphylogeny.fr/tools/tool/276/form'
-    driver = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
+    #driver = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
+    driver = webdriver.Firefox(executable_path = '../ScrapyEpitope/geckodriver')
     driver.maximize_window()
     driver.get(gblocks_url)
+
+    path_to_file = msa_choice()
 
     upload_file = driver.find_element(By.XPATH, "/html/body/div/div[1]/div[1]/div/div/form/fieldset/div/div/div[1]/div/input")
     upload_file.send_keys(path_to_file)
@@ -119,6 +154,7 @@ def get_conserved_sequences(path_to_file, min_seq_conserved_pos = None, min_seq_
         conserved_sequences_dictionary[protein_id] = list_of_fasta
     driver.close()
 
+    print(conserved_sequences_dictionary)
     return conserved_sequences_dictionary
 
 
@@ -126,17 +162,18 @@ def get_protein_sequences(list_of_swissprot_ids):
     
     """"""
     
-    protein_dict = {}
+    protein_seq_dict = {}
 
-    for id in list_of_swissprot_ids:
+    for swissprot_id in list_of_swissprot_ids:
         baseUrl="http://www.uniprot.org/uniprot/"
-        currentUrl=baseUrl+id+".fasta"
+        currentUrl=baseUrl + swissprot_id + ".fasta"
         response = requests.post(currentUrl)
         response_lines = response.text.split("\n")[1:]
-        cData=''.join(response_lines)
-        protein_dict[id] = (cData)
+        protein_seq = ''.join(response_lines)
+        protein_seq_dict[swissprot_id] = [protein_seq]
 
-    return protein_dict
+    return protein_seq_dict
 
 list_of_swissprot_ids = ['P59594', 'P0DTC2', 'K9N5Q8', 'P36334', 'Q0ZME7', 'P15423', 'Q6Q1S2', 'Q5MQD0', 'Q14EB0']
-get_protein_sequences(list_of_swissprot_ids)
+prediction_choice(list_of_swissprot_ids)
+# get_protein_sequences(list_of_swissprot_ids)

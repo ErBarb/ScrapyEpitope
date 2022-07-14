@@ -7,13 +7,14 @@ from selenium.webdriver.firefox.options import Options
 import time
 import os
 import pandas as pd
-from msa import alignment
-from msa import get_conserved_sequences
+# from msa import alignment
+# from msa import get_conserved_sequences
 import requests
 import csv
 import re
 from collections import defaultdict
 import itertools
+import matplotlib.pyplot as plt
 
 
 def get_pdb_from_swissprot(list_of_swissprot_ids):
@@ -971,7 +972,8 @@ def predict_all(dictionary_conserved_sequences, alleles_for_mhci, lengths_for_mh
 
 def get_start_end_in_dict(rows_of_method_protein, method_dict, swissprot_id, protein_seq):
 
-    start_end_list = []
+    start_list = []
+    end_list = []
     for index, row in rows_of_method_protein.iterrows():
         
         start_end_cell = []
@@ -979,32 +981,64 @@ def get_start_end_in_dict(rows_of_method_protein, method_dict, swissprot_id, pro
             # print(row['peptide'], row['start'], row['end'])
             row['start'] = getStartEndPositions(row['peptide'], protein_seq)[0]
             row['end'] = getStartEndPositions(row['peptide'], protein_seq)[1]
-            start_end_cell.append(row['start'])
-            start_end_cell.append(row['end'])
-            start_end_list.append(start_end_cell)
+            # start_end_cell.append(row['start'])
+            # start_end_cell.append(row['end'])
+            start_list.append(row['start'])
+            end_list.append(row['end'])
         except:
             try:
                 # print(row['predicted_epitope'], row['start_position'], row['end_position'])
                 row['start_position'] = getStartEndPositions(row['predicted_epitope'], protein_seq)[0]
                 row['end_position'] = getStartEndPositions(row['predicted_epitope'], protein_seq)[1]
-                start_end_cell.append(row['start_position'])
-                start_end_cell.append(row['end_position'])
-                start_end_list.append(start_end_cell)
+                # start_end_cell.append(row['start_position'])
+                # start_end_cell.append(row['end_position'])
+                start_list.append(row['start_position'])
+                end_list.append(row['end_position'])
             except Exception as E:
                 print(E)   
 
-    method_dict[swissprot_id] = start_end_list
+    method_dict[swissprot_id] = [start_list, end_list]
 
 
-def epitope_distribution_plots(protein_dict):
+def epitope_distribution_plots(protein_dict, list_of_swissprot_ids):
 
     """"""
 
     choice = input("""The following options are available for the epitope distribution anaysis:\n
-    1. Plot the linear epitopes from a single method against the protein length for each protein (ex. 9 proteins x 10 methods (linear) --> 90 plots)\n
+    1. Plot the linear epitopes from a single method against the protein length of a protein  of your choice\n
     2. Plot the linear T-Cell and B-Cell epitopes against the protein length for each protein (ex. 9 proteins x 2 cell types --> 18 plots)\n
     3. Plot all linear epitopes against the protein length for each protein (ex. 9 proteins --> 9 plots)\n
 Please enter 1, 2 or 3...\n""")
+
+    def choose_method(counter = 10):
+        
+        if counter == 0:
+            print("Failed after 10 tries")
+            return
+
+        method_list = ["mhci", "mhci_proc", "mhcii", "bepipred2", "bepipred1", "emini", "choufasman", "karplusschulz", "kolaskartongaonkar", "parker"]
+        print(*method_list, sep = ", ")
+        method_choice = input("""Please write of the following methods to be analysed for epitope distribution:\n""")
+        if method_choice in method_list:
+            return method_choice
+        else:
+            print("Please enter one of the methods mentioned...\n")
+            return choose_method(counter - 1)
+            
+
+    def choose_protein(list_of_swissprot_ids, counter = 10):
+        
+        if counter == 0:
+            print("Failed after 10 tries")
+            return
+
+        print(*list_of_swissprot_ids, sep = ", ")
+        protein_choice = input("Please enter the swissprot id to be analysed for epitope distribution:\n")
+        if protein_choice in list_of_swissprot_ids:
+            return protein_choice
+        else:
+            print("Please enter one of the proteins mentioned...\n")
+            return choose_protein(list_of_swissprot_ids, counter - 1)
 
     epitopes_dict = {}
 
@@ -1079,17 +1113,39 @@ Please enter 1, 2 or 3...\n""")
     epitopes_dict["kolaskartongaonkar"] = kolaskartongaonkar_dict
     epitopes_dict["parker"] = parker_dict
     
-    for k, v in epitopes_dict.items():
-        print(k, v)
+    # for k, v in epitopes_dict.items():
+    #     print(k, v)
 
     if choice == '1':
-        for index, swissprot_id in enumerate(list_of_swissprot_ids):
-            print(index, swissprot_id)
-            for method, epitope_positions_dict in epitopes_dict.items():
-                print(method)
-                for protein_id, list_of_start_end in epitope_positions_dict.items():
-                    if protein_id == swissprot_id:
-                        print(protein_id, swissprot_id, list_of_start_end[:5])
+
+        method = choose_method()
+        protein = choose_protein(list_of_swissprot_ids)
+        print(method, protein)
+
+        for swissprot_id, seq_length in protein_dict.items():
+            if swissprot_id == protein:
+                length = seq_length[1]
+                
+        count = [0]*length
+        for key, value in epitopes_dict.items():
+            if key == method:
+                for k, v in value.items():
+                    if k == protein:
+                        start_pos = v[0]
+                        end_pos = v[1]
+                        for i in range(0,len(start_pos)):
+                            for j in range(start_pos[i],end_pos[i]):
+                                count[j] = count[j]+1
+                        
+                        x_axis = list(range(1,length+1))
+
+                        plt.plot(x_axis,count)
+                        plt.title(method + ' ' + protein)
+                        plt.xlabel('Spike protein (' + protein + ') residues')
+                        plt.ylabel('#Epitopes')
+                        plt.savefig('epitope_distribution_plots/' + method + '_' + protein + '.png')
+                        plt.clf()
+
         print("Epitope distribution analysis done.")
     
     elif choice == '2':
@@ -1109,14 +1165,73 @@ Please enter 1, 2 or 3...\n""")
         for k, v in b_cell_dict.items():
             new_val = list(itertools.chain.from_iterable(v))
             b_cell_dict[k] = new_val
-        
-        # for index, swissprot_id in enumerate(list_of_swissprot_ids):
-            # for key, value in t_cell_dict.items():
-            #     if key == swissprot_id:
-            #         print(key, value)
-            # for key, value in b_cell_dict.items():
-            #     if key == swissprot_id:
-            #         print(key, value)
+
+        for key, value in t_cell_dict.items():
+            start_pos = []
+            end_pos = []
+            for list_index, alist in enumerate(value):
+                if list_index % 2 == 0:
+                    for a_position in alist:
+                        start_pos.append(a_position)
+                else:
+                    for a_position in alist:
+                        end_pos.append(a_position)
+
+            for swissprot_id, seq_length in protein_dict.items():
+                if swissprot_id == key:
+                    length = seq_length[1]
+                
+            count = [0]*length
+
+            if len(start_pos) == len(end_pos):
+                for i in range(0,len(start_pos)):
+                    for j in range(start_pos[i],end_pos[i]):
+                        count[j] = count[j]+1
+                        
+                x_axis = list(range(1,length+1))
+
+                plt.plot(x_axis,count)
+                plt.title("T-Cell " + key)
+                plt.xlabel('Spike protein (' + key + ') residues')
+                plt.ylabel('#Epitopes')
+                plt.savefig('epitope_distribution_plots/' + "T-Cell" + '_' + key + '.png')
+                plt.clf()
+            else:
+                print("Something went wrong")
+
+        for key, value in b_cell_dict.items():
+            start_pos = []
+            end_pos = []
+            for list_index, alist in enumerate(value):
+                if list_index % 2 == 0:
+                    for a_position in alist:
+                        start_pos.append(a_position)
+                else:
+                    for a_position in alist:
+                        end_pos.append(a_position)
+
+            for swissprot_id, seq_length in protein_dict.items():
+                if swissprot_id == key:
+                    length = seq_length[1]
+                
+            count = [0]*length
+
+            if len(start_pos) == len(end_pos):
+                for i in range(0,len(start_pos)):
+                    for j in range(start_pos[i],end_pos[i]):
+                        count[j] = count[j]+1
+                        
+                x_axis = list(range(1,length+1))
+
+                plt.plot(x_axis,count)
+                plt.title("B-Cell " + key)
+                plt.xlabel('Spike protein (' + key + ') residues')
+                plt.ylabel('#Epitopes')
+                plt.savefig('epitope_distribution_plots/' + "B-Cell" + '_' + key + '.png')
+                plt.clf()
+            else:
+                print("Something went wrong")
+            
         print("Epitope distribution analysis done.")
 
     elif choice == '3':
@@ -1129,20 +1244,143 @@ Please enter 1, 2 or 3...\n""")
             new_val = list(itertools.chain.from_iterable(v))
             all_dict[k] = new_val
 
-        # for index, swissprot_id in enumerate(list_of_swissprot_ids):
-        #     for key, value in all_dict.items():
-        #         if key == swissprot_id:
-        #             print(key, value)
+        for key, value in all_dict.items():
+            start_pos = []
+            end_pos = []
+            for list_index, alist in enumerate(value):
+                if list_index % 2 == 0:
+                    for a_position in alist:
+                        start_pos.append(a_position)
+                else:
+                    for a_position in alist:
+                        end_pos.append(a_position)
+
+            for swissprot_id, seq_length in protein_dict.items():
+                if swissprot_id == key:
+                    length = seq_length[1]
+                
+            count = [0]*length
+        
+            if len(start_pos) == len(end_pos):
+                for i in range(0,len(start_pos)):
+                    for j in range(start_pos[i],end_pos[i]):
+                        count[j] = count[j]+1
+                        
+                x_axis = list(range(1,length+1))
+
+                plt.plot(x_axis,count)
+                plt.title("All of " + key)
+                plt.xlabel('Spike protein (' + key + ') residues')
+                plt.ylabel('#Epitopes')
+                plt.savefig('epitope_distribution_plots/' + "all" + '_' + key + '.png')
+                plt.clf()
+            else:
+                print("Something went wrong")
+
         print("Epitope distribution analysis done.")
     
     else:
         print("Please choose one of the options mentioned")
         epitope_distribution_plots(list_of_swissprot_ids)
-    
-        
 
-list_of_swissprot_ids = ['P59594', 'P0DTC2', 'K9N5Q8', 'P36334', 'Q0ZME7', 'P15423', 'Q6Q1S2', 'Q5MQD0', 'Q14EB0']
-protein_dict = swissprotIDSequenceLength(list_of_swissprot_ids)
-epitope_distribution_plots(protein_dict)
+
+
+def dssp_analysis(list_of_pdb_ids):
+    
+    """"""
+
+    options = Options()
+    options.headless = True
+
+    for id in list_of_pdb_ids:
+        try:
+            dssp_url = 'https://www3.cmbi.umcn.nl/xssp/'
+            dssp = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
+            dssp.get(dssp_url)
+            #wait_dssp = WebDriverWait(dssp, 60)
+
+            dssp.find_element(By.ID, "pdb_id").send_keys(id)
+            time.sleep(3)
+            dssp.find_element(By.XPATH, "/html/body/div/form/div[3]/button[2]").click()
+            time.sleep(5)
+            dssp_results = dssp.find_element(By.XPATH, '/html/body/div/div/div/textarea').text.splitlines()
+            dssp.close()
+            dssp_only_table = dssp_results[28:]
+
+            acc_results = []
+            for row in dssp_only_table:
+                newrow = row.split()[:-9]
+                try:
+                    acc_results.append(int(newrow[13]))
+                except:
+                    try:
+                        acc_results.append(int(newrow[12]))
+                    except:
+                        try:
+                            acc_results.append(int(newrow[11]))
+                        except:
+                            try:
+                                acc_results.append(int(newrow[10]))
+                            except:
+                                try:
+                                    acc_results.append(int(newrow[9]))
+                                except:
+                                    try:
+                                        acc_results.append(int(newrow[8]))
+                                    except:
+                                        try:
+                                            acc_results.append(int(newrow[7]))
+                                        except:
+                                            try:
+                                                acc_results.append(int(newrow[6]))
+                                            except:
+                                                try:
+                                                    if newrow[1] == '!' or newrow[1] == '!*':
+                                                        acc_results.append(0)
+                                                except:
+                                                    print("Failed to fetch DSSP output for: " + id)
+                                                    break
+
+            current_directory = os.getcwd()
+            final_directory = os.path.join(current_directory, r'acc_results')
+            if not os.path.exists(final_directory):
+                os.makedirs(final_directory)
+
+            lst = list(range(1,len(dssp_only_table)+1))
+            plt.plot(lst, acc_results)
+            plt.ylabel('ACC')
+            plt.xlabel('Residue #')
+            plt.savefig('acc_results/' + id + '.png')
+            plt.clf()
+
+        except:
+            print("Failed to fetch DSSP output for: " + id)
+            dssp.close()
+    print("DSSP analysis done")
+
+def analysis_choice(list_of_swissprot_ids, list_of_pdb_ids, counter = 10):
+
+    """"""
+
+    if counter == 0:
+        print("Failed after 10 tries")
+        return
+
+    choice = input("Do you want DSSP analysis and epitope distribution analysis?")
+
+    if choice == 'y' or choice == 'Y' or choice == 'yes' or choice == 'Yes':
+        protein_dict = swissprotIDSequenceLength(list_of_swissprot_ids)
+        epitope_distribution_plots(protein_dict, list_of_swissprot_ids)
+        dssp_analysis(list_of_pdb_ids)
+    elif analysis_choice == 'n' or analysis_choice == 'N' or analysis_choice == 'no' or analysis_choice == 'No':
+        pass
+    else:
+        print("Please enter either yes or no")
+        analysis_choice(list_of_swissprot_ids, list_of_pdb_ids, counter - 1)
+
+
+# list_of_swissprot_ids = ['P59594', 'P0DTC2', 'K9N5Q8', 'P36334', 'Q0ZME7', 'P15423', 'Q6Q1S2', 'Q5MQD0', 'Q14EB0']
+# protein_dict = swissprotIDSequenceLength(list_of_swissprot_ids)
+# epitope_distribution_plots(protein_dict, list_of_swissprot_ids)
 
 
