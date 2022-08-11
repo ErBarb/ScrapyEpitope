@@ -19,7 +19,9 @@ import matplotlib.pyplot as plt
 
 def get_pdb_from_swissprot(list_of_swissprot_ids):
 
-    """"""
+    """This function gets a PDB ID for each of the Swissprot IDs by looking for EM and X-Ray data on the Swissprot page of the ID and gets only
+    PDB IDs that start with 1 or with 10 to 19. Ex: 1-2000 or 13-2000. An ID with 21-2000 is not accepted. The function outputs a list of the PDB
+    IDs."""
 
     options = Options()
     options.headless = True
@@ -60,6 +62,9 @@ def getStartEndPositions(pattern, seq):
     return (all_instances[0] + 1, all_instances[0] + 1 + len(pattern))
 
 def swissprotIDSequenceLength(list_of_swissprot_ids):
+
+    """This function outputs a dictionary with the sequences and length of the sequence (values) of Swissprot ID (key)"""
+
     protein_dict = {}
     for id in list_of_swissprot_ids:
         baseUrl="http://www.uniprot.org/uniprot/"
@@ -848,8 +853,8 @@ def ellipro(list_of_pdb_ids):
 
 def discotope(list_of_pdb_ids):
     
-    """This function uses Selenium to access the Discotope 2.0 tool from IEDB. It requires a list of PDB IDs and returns 
-    ..."""
+    """This function uses Selenium to access the Discotope 2.0 tool from IEDB. It takes a list of PDB IDs, inputs them into the server,
+    processes the data and saves it into a csv file. Discotope is used to predict non-linear B-Cell epitopes from PDB IDs."""
     
     options = Options()
     options.headless = True
@@ -946,8 +951,8 @@ def discotope(list_of_pdb_ids):
 
 def predict_all(dictionary_conserved_sequences, alleles_for_mhci, lengths_for_mhci, alleles_for_mhcii, lengths_for_mhcii, list_of_pdb_ids):
     
-    """This function runs all the prediction methods above and returns a tuple with the lists of lists. It also \
-        creates a folder where all the results are stored as csv files"""
+    """This function runs all the prediction methods above and returns a tuple with the lists of lists. It also creates 
+    a folder where all the results are stored as csv files"""
     
     current_directory = os.getcwd()
     final_directory = os.path.join(current_directory, r'epitope_prediction_results')
@@ -972,11 +977,14 @@ def predict_all(dictionary_conserved_sequences, alleles_for_mhci, lengths_for_mh
 
 def get_start_end_in_dict(rows_of_method_protein, method_dict, swissprot_id, protein_seq):
 
+    """This function corrects the error of start and end positions when predicting epitopes of conserved sequences of proteins, since the tools
+    output the start and end positions of the epitopes within the conserved sequence and not the whole protein sequence."""
+
     start_list = []
     end_list = []
     for index, row in rows_of_method_protein.iterrows():
         
-        start_end_cell = []
+        #start_end_cell = []
         try:
             # print(row['peptide'], row['start'], row['end'])
             row['start'] = getStartEndPositions(row['peptide'], protein_seq)[0]
@@ -1002,7 +1010,7 @@ def get_start_end_in_dict(rows_of_method_protein, method_dict, swissprot_id, pro
 
 def epitope_distribution_plots(protein_dict, list_of_swissprot_ids):
 
-    """"""
+    """This function creates epitope distribution plots based on the prediction data and the choice given by the user."""
 
     choice = input("""The following options are available for the epitope distribution anaysis:\n
     1. Plot the linear epitopes from a single method against the protein length of a protein  of your choice\n
@@ -1287,7 +1295,8 @@ Please enter 1, 2 or 3...\n""")
 
 def dssp_analysis(list_of_pdb_ids):
     
-    """"""
+    """This function carries out DSSP analysis on a list of PDB IDs and returns plots that show the distribution of ACC values
+    within the sequence of each of the PDB IDs."""
 
     options = Options()
     options.headless = True
@@ -1360,7 +1369,7 @@ def dssp_analysis(list_of_pdb_ids):
 
 def analysis_choice(list_of_swissprot_ids, list_of_pdb_ids, counter = 10):
 
-    """"""
+    """This function gives a choice to the user, whether DSSP analysis and epitope distribution analysis should be carried out."""
 
     if counter == 0:
         print("Failed after 10 tries")
