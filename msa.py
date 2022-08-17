@@ -174,6 +174,6 @@ def get_protein_sequences(list_of_swissprot_ids):
 
     return protein_seq_dict
 
-list_of_swissprot_ids = ['P59594', 'P0DTC2', 'K9N5Q8', 'P36334', 'Q0ZME7', 'P15423', 'Q6Q1S2', 'Q5MQD0', 'Q14EB0']
-prediction_choice(list_of_swissprot_ids)
+# list_of_swissprot_ids = ['P59594', 'P0DTC2', 'K9N5Q8', 'P36334', 'Q0ZME7', 'P15423', 'Q6Q1S2', 'Q5MQD0', 'Q14EB0']
+# prediction_choice(list_of_swissprot_ids)
 # get_protein_sequences(list_of_swissprot_ids)

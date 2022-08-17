@@ -7,8 +7,6 @@ from selenium.webdriver.firefox.options import Options
 import time
 import os
 import pandas as pd
-# from msa import alignment
-# from msa import get_conserved_sequences
 import requests
 import csv
 import re
@@ -40,9 +38,11 @@ def get_pdb_from_swissprot(list_of_swissprot_ids):
                 newrow = row.split()
                 if (newrow[2] == 'EM' or newrow[2] == 'X-ray') and (newrow[6].startswith('1-') == True):
                     pdb_ids.append(newrow[1])
+                    print("The following PDB ID was found for " + id + ": " + newrow[1])
                     break
             else:
                 if (newrow[2] == 'EM' or newrow[2] == 'X-ray') and re.search("^1.-", newrow[6]):
+                    print("The following PDB ID was found for " + id + ": " + newrow[1])
                     pdb_ids.append(newrow[1])
             uniprot.close()
         except:
