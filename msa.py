@@ -1,6 +1,7 @@
 import os
 import re
 import requests
+import json
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -10,6 +11,11 @@ from selenium.webdriver.firefox.options import Options
 def prediction_choice(list_of_swissprot_ids, counter = 10):
 
     """"""
+
+    current_directory = os.getcwd()
+    final_directory = os.path.join(current_directory, r'temporary_files')
+    if not os.path.exists(final_directory):
+        os.makedirs(final_directory)
 
     if counter == 0:
         print("Failed after 10 tries")
@@ -78,12 +84,12 @@ def get_conserved_sequences(min_seq_conserved_pos = None, min_seq_flank_pos = No
     """This function uploads the alignment file and sends the parameters to the Gblocks NGPhylogeny website,
     then returns a dictionary with the conserved regions of each protein"""
 
-    #options = Options()
-    #options.headless = True
+    options = Options()
+    options.headless = True
 
     gblocks_url = 'https://ngphylogeny.fr/tools/tool/276/form'
-    #driver = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
-    driver = webdriver.Firefox(executable_path = '../ScrapyEpitope/geckodriver')
+    driver = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
+    #driver = webdriver.Firefox(executable_path = '../ScrapyEpitope/geckodriver')
     driver.maximize_window()
     driver.get(gblocks_url)
 
@@ -154,7 +160,9 @@ def get_conserved_sequences(min_seq_conserved_pos = None, min_seq_flank_pos = No
         conserved_sequences_dictionary[protein_id] = list_of_fasta
     driver.close()
 
-    print(conserved_sequences_dictionary)
+    with open('temporary_files/protein_sequences_dict', 'w', encoding='utf-8') as f:
+        json.dump(conserved_sequences_dictionary, f, ensure_ascii=False, indent=4)
+
     return conserved_sequences_dictionary
 
 
@@ -171,6 +179,9 @@ def get_protein_sequences(list_of_swissprot_ids):
         response_lines = response.text.split("\n")[1:]
         protein_seq = ''.join(response_lines)
         protein_seq_dict[swissprot_id] = [protein_seq]
+
+    with open('temporary_files/protein_sequences_dict', 'w', encoding='utf-8') as f:
+        json.dump(protein_seq_dict, f, ensure_ascii=False, indent=4)
 
     return protein_seq_dict
 

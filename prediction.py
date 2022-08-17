@@ -8,6 +8,7 @@ import time
 import os
 import pandas as pd
 import requests
+import json
 import csv
 import re
 from collections import defaultdict
@@ -111,6 +112,7 @@ def mhci(conserved_sequences_dict, list_of_alleles, list_of_lengths):
 
                 try:
                     df = pd.DataFrame(response_body[1:], columns=response_body[0])
+                    
 
                 except:
 
@@ -131,7 +133,7 @@ def mhci(conserved_sequences_dict, list_of_alleles, list_of_lengths):
 
                         df = pd.DataFrame(response_body[1:], columns=response_body[0])
                         df["percentile_rank"] = pd.to_numeric(df["percentile_rank"], errors='coerce')
-                        df = df.loc[df['percentile_rank'] <= 10]
+                        df = df.loc[df['percentile_rank'] <= 1]
 
                         if df.empty == True:
                             continue
@@ -441,6 +443,7 @@ def emini(conserved_sequences_dict):
             for line in response_data_split_by_line:
                 split_line = line.split("\t")
                 response_body.append(split_line)
+            
 
             df = pd.DataFrame(response_body[1:], columns=response_body[0])
 
@@ -949,7 +952,7 @@ def discotope(list_of_pdb_ids):
     print("Discotope prediction done\n")
 
 
-def predict_all(dictionary_conserved_sequences, alleles_for_mhci, lengths_for_mhci, alleles_for_mhcii, lengths_for_mhcii, list_of_pdb_ids):
+def predict_all(alleles_for_mhci, lengths_for_mhci, alleles_for_mhcii, lengths_for_mhcii, list_of_pdb_ids):
     
     """This function runs all the prediction methods above and returns a tuple with the lists of lists. It also creates 
     a folder where all the results are stored as csv files"""
@@ -959,9 +962,12 @@ def predict_all(dictionary_conserved_sequences, alleles_for_mhci, lengths_for_mh
     if not os.path.exists(final_directory):
         os.makedirs(final_directory)
 
-    mhci(dictionary_conserved_sequences, alleles_for_mhci, lengths_for_mhci)
-    mhci_proc(dictionary_conserved_sequences, alleles_for_mhci, lengths_for_mhci)
-    mhcii(dictionary_conserved_sequences, alleles_for_mhcii, lengths_for_mhcii)
+    with open('temporary_files/protein_sequences_dict', 'r') as f:
+        dictionary_conserved_sequences = json.load(f)
+
+    #mhci(dictionary_conserved_sequences, alleles_for_mhci, lengths_for_mhci)
+    #mhci_proc(dictionary_conserved_sequences, alleles_for_mhci, lengths_for_mhci)
+
     
     bepipred2(dictionary_conserved_sequences)
     bepipred(dictionary_conserved_sequences)
@@ -970,9 +976,10 @@ def predict_all(dictionary_conserved_sequences, alleles_for_mhci, lengths_for_mh
     karplusschulz(dictionary_conserved_sequences)
     kolaskartongaonkar(dictionary_conserved_sequences)
     parker(dictionary_conserved_sequences)
+    mhcii(dictionary_conserved_sequences, alleles_for_mhcii, lengths_for_mhcii)
 
-    ellipro(list_of_pdb_ids)
-    discotope(list_of_pdb_ids)
+    #ellipro(list_of_pdb_ids)
+    #discotope(list_of_pdb_ids)
 
 
 def get_start_end_in_dict(rows_of_method_protein, method_dict, swissprot_id, protein_seq):

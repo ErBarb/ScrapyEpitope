@@ -24,13 +24,14 @@ list_of_swissprot_ids = ['P0DTC2', 'P59594', 'H9EJ24', 'A0A0P0KH29', 'H9EJA2', '
                         'Q3LZX7', 'Q3LZX3', 'Q4VID0', 'Q7TFA1', 'K9N638', 'P0C6U7', 'P0C6U8', 'P0DTC1', 'K9N7C7', 'P0C6W2', 'P0C6X6', 'P0C6X7', 'P0DTD1', 'A0A0P0G321', 'A0A0P0K6L9', 
                         'A0A140H1H1', 'A3EX94', 'F1DB20', 'K9N5Q8', 'P07946',  'P36334',  'Q3LZX1', 'Q7TLC7']
 
-mhci_alleles = ['HLA-A*01:01', 'HLA-A*02:01', 'HLA-A*02:06', 'HLA-A*03:01', 'HLA-A*11:01', 'HLA-A*23:01', 'HLA-A*24:02', 'HLA-A*25:01', 'HLA-A*26:01', 'HLA-A*29:02', 'HLA-A*30:01',
-                'HLA-A*30:02', 'HLA-A*31:01', 'HLA-A*32:01', 'HLA-A*33:03', 'HLA-A*68:01', 'HLA-A*68:02', 'HLA-A*74:01', 'HLA-B*07:02', 'HLA-B*08:01', 'HLA-B*13:01', 'HLA-B*13:02',
-                'HLA-B*14:02', 'HLA-B*15:01', 'HLA-B*15:02', 'HLA-B*15:25', 'HLA-B*18:01', 'HLA-B*27:02', 'HLA-B*27:05', 'HLA-B*35:01', 'HLA-B*35:03', 'HLA-B*37:01', 'HLA-B*38:01',
-                'HLA-B*39:01', 'HLA-B*40:01', 'HLA-B*40:02', 'HLA-B*44:02', 'HLA-B*44:03', 'HLA-B*46:01', 'HLA-B*48:01', 'HLA-B*49:01', 'HLA-B*50:01', 'HLA-B*51:01', 'HLA-B*52:01',
-                'HLA-B*53:01', 'HLA-B*55:01', 'HLA-B*56:01', 'HLA-B*57:01', 'HLA-B*58:01', 'HLA-B*58:02', 'HLA-C*01:02', 'HLA-C*02:02', 'HLA-C*02:09', 'HLA-C*03:02', 'HLA-C*03:03',
-                'HLA-C*03:04', 'HLA-C*04:01', 'HLA-C*05:01', 'HLA-C*06:02', 'HLA-C*07:01', 'HLA-C*07:02', 'HLA-C*07:04', 'HLA-C*08:01', 'HLA-C*08:02', 'HLA-C*12:02', 'HLA-C*12:03',
-                'HLA-C*14:02', 'HLA-C*15:02', 'HLA-C*16:01', 'HLA-C*17:01', 'HLA-E*01:01', 'HLA-E*01:03', 'HLA-G*01:01', 'HLA-G*01:02', 'HLA-G*01:03', 'HLA-G*01:04', 'HLA-G*01:06']
+# mhci_alleles = ['HLA-A*01:01', 'HLA-A*02:01', 'HLA-A*02:06', 'HLA-A*03:01', 'HLA-A*11:01', 'HLA-A*23:01', 'HLA-A*24:02', 'HLA-A*25:01', 'HLA-A*26:01', 'HLA-A*29:02', 'HLA-A*30:01',
+#                 'HLA-A*30:02', 'HLA-A*31:01', 'HLA-A*32:01', 'HLA-A*33:03', 'HLA-A*68:01', 'HLA-A*68:02', 'HLA-A*74:01', 'HLA-B*07:02', 'HLA-B*08:01', 'HLA-B*13:01', 'HLA-B*13:02',
+#                 'HLA-B*14:02', 'HLA-B*15:01', 'HLA-B*15:02', 'HLA-B*15:25', 'HLA-B*18:01', 'HLA-B*27:02', 'HLA-B*27:05', 'HLA-B*35:01', 'HLA-B*35:03', 'HLA-B*37:01', 'HLA-B*38:01',
+#                 'HLA-B*39:01', 'HLA-B*40:01', 'HLA-B*40:02', 'HLA-B*44:02', 'HLA-B*44:03', 'HLA-B*46:01', 'HLA-B*48:01', 'HLA-B*49:01', 'HLA-B*50:01', 'HLA-B*51:01', 'HLA-B*52:01',
+#                 'HLA-B*53:01', 'HLA-B*55:01', 'HLA-B*56:01', 'HLA-B*57:01', 'HLA-B*58:01', 'HLA-B*58:02', 'HLA-C*01:02', 'HLA-C*02:02', 'HLA-C*02:09', 'HLA-C*03:02', 'HLA-C*03:03',
+#                 'HLA-C*03:04', 'HLA-C*04:01', 'HLA-C*05:01', 'HLA-C*06:02', 'HLA-C*07:01', 'HLA-C*07:02', 'HLA-C*07:04', 'HLA-C*08:01', 'HLA-C*08:02', 'HLA-C*12:02', 'HLA-C*12:03',
+#                 'HLA-C*14:02', 'HLA-C*15:02', 'HLA-C*16:01', 'HLA-C*17:01', 'HLA-E*01:01', 'HLA-E*01:03', 'HLA-G*01:01', 'HLA-G*01:02', 'HLA-G*01:03', 'HLA-G*01:04', 'HLA-G*01:06']
+mhci_alleles = ['HLA-A*01:01', 'HLA-A*02:01', 'HLA-A*02:06', 'HLA-A*03:01', 'HLA-A*11:01', 'HLA-A*23:01', 'HLA-A*24:02']
 mhci_lengths = [8, 9, 10, 11, 12, 13, 14]
 
 mhcii_alleles = ['HLA-DRB1*01:01', 'HLA-DRB1*07:01', 'HLA-DRB1*03:01', 'HLA-DRB1*04:01', 'HLA-DRB1*04:05', 'HLA-DRB1*08:02', 'HLA-DRB1*09:01', 'HLA-DRB1*11:01',
@@ -40,12 +41,13 @@ mhcii_alleles = ['HLA-DRB1*01:01', 'HLA-DRB1*07:01', 'HLA-DRB1*03:01', 'HLA-DRB1
 mhcii_lengths = [12, 13, 14, 15, 16, 17, 18]
 
 
-sequences = prediction_choice(list_of_swissprot_ids)
+#sequences = prediction_choice(list_of_swissprot_ids)
 print("Protein sequences collected")
 print("Trying to get PDB IDs...")
-list_of_pdb_ids = get_pdb_from_swissprot(list_of_swissprot_ids)
+#list_of_pdb_ids = get_pdb_from_swissprot(list_of_swissprot_ids)
+list_of_pdb_ids = ['6vxx']
 print("PDB IDs collected")
-predict_all(sequences, mhci_alleles, mhci_lengths, mhcii_alleles, mhcii_lengths, list_of_pdb_ids)
+predict_all(mhci_alleles, mhci_lengths, mhcii_alleles, mhcii_lengths, list_of_pdb_ids)
 print("Epitope prediction done")
 # analysis_choice(list_of_swissprot_ids, list_of_pdb_ids)
 
