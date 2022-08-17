@@ -1,0 +1,12 @@
+Epitope #,Epitope name,Epitope sequence,Epitope length,Percent of protein sequence matches at identity <= 100%,Minimum identity,Maximum identity,View details
+1,seq1,KNKDGFLYVY,10,11.11%,(1/9),40.00%,100.00%
+2,seq2,YLKPTTFML,9,11.11%,(1/9),44.44%,100.00%
+3,seq3,FMLKYDENGTITD,13,11.11%,(1/9),30.77%,100.00%
+4,seq4,DENGTIT,7,11.11%,(1/9),42.86%,100.00%
+5,seq5,ENGTITD,7,22.22%,(2/9),42.86%,100.00%
+6,seq6,GIYQTSN,7,22.22%,(2/9),57.14%,100.00%
+7,seq7,YDENGTI,7,11.11%,(1/9),42.86%,100.00%
+8,seq8,YDENGTIT,8,11.11%,(1/9),50.00%,100.00%
+9,seq9,ELKCSVKS,8,11.11%,(1/9),50.00%,100.00%
+10,seq10,YDENGTITDA,10,11.11%,(1/9),40.00%,100.00%
+11,seq11,QEKNFTTAPAICHDGKAHFPREGVFVSNGTHWFVTQRNFYEPQIITTDNTFVSGNCDVVIGIVNNTVYDPLQPELDS,77,11.11%,(1/9),15.58%,100.00%

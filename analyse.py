@@ -1,3 +1,4 @@
+from multiprocessing.sharedctypes import Value
 import re
 import os
 from xmlrpc.client import ProtocolError
@@ -72,16 +73,18 @@ def read_prediction_results():
     df = pd.read_csv('epitope_prediction_results/ellipro_discontinous_epitopes.csv')
     df.drop_duplicates(subset=['peptide'], keep=False, inplace=True)
     ellipro_discontinous_prediction_list = [df.columns.tolist()] + df.values.tolist()
+    #print(ellipro_discontinous_prediction_list)
 
     df = pd.read_csv('epitope_prediction_results/discotope_epitopes.csv')
     df.drop_duplicates(subset=['peptide'], keep=False, inplace=True)
     discotope_prediction_list = [df.columns.tolist()] + df.values.tolist()
+    #print(discotope_prediction_list)
+
 
     return mhci_prediction_list, mhci_proc_prediction_list, mhcii_prediction_list, bepipred2_prediction_list, \
         bepipred_prediction_list, emini_prediction_list, choufasman_prediction_list, karplusschulz_prediction_list, \
             kolaskartongaonkar_prediction_list, parker_prediction_list, ellipro_linear_prediction_list, ellipro_discontinous_prediction_list, \
                 discotope_prediction_list
-
 
 
 def make_inputs_for_analysis(results_from_prediction, list_of_swissprot_ids):
@@ -124,6 +127,7 @@ def make_inputs_for_analysis(results_from_prediction, list_of_swissprot_ids):
                 x.insert(0, peptide)
 
 
+
     list_of_all_linear_epitopes = []
     immunogenicity_input = ''
     immunogenicity_indexes = len(results_from_prediction[0][1:]) + len(results_from_prediction[1][1:])
@@ -133,6 +137,31 @@ def make_inputs_for_analysis(results_from_prediction, list_of_swissprot_ids):
         if i == 0 or i == 1:
             for x in results_from_prediction[i][1:]:
                 immunogenicity_input = immunogenicity_input + x[0] + '\n'
+
+
+    list_of_all_nonlinear_epitopes = []
+    for index, value in enumerate(results_from_prediction[-2]):
+        if index > 0:
+            list_of_aa_with_pos = value[0].split(',')
+            list_of_aa_without_pos = []
+            for i in list_of_aa_with_pos:
+                new_aa = i[0]
+                list_of_aa_without_pos.append(new_aa)
+            nonlinear_epitope = ''.join(list_of_aa_without_pos)
+            list_of_all_nonlinear_epitopes.append(nonlinear_epitope)
+
+    for index, value in enumerate(results_from_prediction[-1]):
+        if index > 0:
+            list_of_aa_with_pos = value[0].split(',')
+            list_of_aa_without_pos = []
+            for i in list_of_aa_with_pos:
+                new_aa = i[0]
+                list_of_aa_without_pos.append(new_aa)
+            nonlinear_epitope = ''.join(list_of_aa_without_pos)
+            list_of_all_nonlinear_epitopes.append(nonlinear_epitope)
+    # print(list_of_all_nonlinear_epitopes)
+
+
 
     input_string = ''
     for i in range(len(list_of_all_linear_epitopes)):
@@ -201,7 +230,7 @@ def make_inputs_for_analysis(results_from_prediction, list_of_swissprot_ids):
     if not os.path.exists(final_directory):
         os.makedirs(final_directory)
 
-    return list_of_all_linear_epitopes, toxinpred_chunks, toxinpred_excluded_indexes, immunogenicity_indexes, algpred_chunks
+    return list_of_all_linear_epitopes, toxinpred_chunks, toxinpred_excluded_indexes, immunogenicity_indexes, algpred_chunks, list_of_all_nonlinear_epitopes
 
 def protparam(list_of_linear_epitopes):
 
@@ -233,8 +262,7 @@ def protparam(list_of_linear_epitopes):
         chpH = round(chpH, 3)
         #row.extend((mol_weight, isoel_point, aromaticity, insta_index, helix_2_struc, turn_2_struc, sheet_2_struc, reduCys, disulfBridge, hydropathicity, flexibility, chpH))
         row.extend((mol_weight, isoel_point, aromaticity, insta_index, helix_2_struc, turn_2_struc, sheet_2_struc, reduCys, disulfBridge, hydropathicity, chpH))
-        for parameter in row:
-            output_list[index].append(parameter)
+        output_list.insert(index, row)
     
     return output_list
 
@@ -412,7 +440,6 @@ def population_coverage(counter=10):
         pop_cov_results.write(result_in_text)
         pop_cov_results.close()
 
-
 def algpred(algpred_chunks):
 
     def algpred_try_until_it_works(chunk_of_400, counter = 10):
@@ -537,22 +564,24 @@ def toxinpred(toxinpred_chunks, toxinpred_excluded_indexes):
                 toxinpred_result_row = row.split(' ')
                 toxinpred_row_included_indexes = [2,3,4,5,6,8,9,10]
                 toxinpred_new_result_row = [toxinpred_result_row[x] for x in toxinpred_row_included_indexes]
-                for parameter in toxinpred_new_result_row:
-                    toxinpred_results[400*index + results_index].append(parameter)
+                toxinpred_results.append(toxinpred_new_result_row)
+                # for parameter in toxinpred_new_result_row:
+                #     toxinpred_results[400*index + results_index].append(parameter)
         elif toxinpred_results_table is None:
-            empty_list = [None] * 9
-            for empty_index in range(400):
-                toxinpred_results[400*index + empty_index].append(empty_list)
+            empty_list = [None] * 8
+            for i in range(400):
+                #toxinpred_results[400*index + empty_index].append(empty_list)
+                toxinpred_results.append(empty_list)
     
     print("Toxinpred done")
 
-    none_list = [None] * 9
+    none_list = [None] * 8
     for index in toxinpred_excluded_indexes:
         toxinpred_results.insert(index, none_list)
     
     return toxinpred_results
 
-def expasy_and_solubility(list_of_linear_epitopes, ):
+def expasy_and_solubility(list_of_epitopes, linear = 'Yes'):
 
     expasy_results = []
     protein_sol_results = []
@@ -563,9 +592,9 @@ def expasy_and_solubility(list_of_linear_epitopes, ):
     options = Options()
     options.headless = True
     expasy_url = 'https://web.expasy.org/protparam/'
-    protein_sol_url = 'https://protein-sol.manchester.ac.uk/'
+    # protein_sol_url = 'https://protein-sol.manchester.ac.uk/'
 
-    for index, seq in enumerate(list_of_linear_epitopes):
+    for index, seq in enumerate(list_of_epitopes):
         try:
             expasy = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
             wait_expasy = WebDriverWait(expasy, 600)
@@ -573,17 +602,17 @@ def expasy_and_solubility(list_of_linear_epitopes, ):
             expasy.find_element(By.XPATH, "/html/body/div[2]/div[2]/form/textarea").send_keys(seq)
             expasy.find_element(By.XPATH, "/html/body/div[2]/div[2]/form/p[1]/input[2]").click()
 
-            if len(seq) >= 21:
-                protein_sol = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
-                protein_sol.get(protein_sol_url)
-                protein_sol.find_element(By.NAME, "sequence-input").send_keys(seq)
-                protein_sol.find_element(By.NAME, "singleprediction").click()
-                time.sleep(3)
-                protein_sol_result = protein_sol.find_element(By.XPATH, '/html/body/div[3]/div/div[1]/p[2]').text
-                protein_sol_results.append(protein_sol_result)
-                protein_sol.close()
-            else:
-                protein_sol_results.append(None)
+            # if len(seq) >= 21:
+            #     protein_sol = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
+            #     protein_sol.get(protein_sol_url)
+            #     protein_sol.find_element(By.NAME, "sequence-input").send_keys(seq)
+            #     protein_sol.find_element(By.NAME, "singleprediction").click()
+            #     time.sleep(3)
+            #     protein_sol_result = protein_sol.find_element(By.XPATH, '/html/body/div[3]/div/div[1]/p[2]').text
+            #     protein_sol_results.append(protein_sol_result)
+            #     protein_sol.close()
+            # else:
+            #     protein_sol_results.append(None)
             
             wait_expasy.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div[2]/div[2]/pre[2]/form/input[1]")))
             expasy_text = expasy.find_element(By.XPATH, '/html/body/div[2]/div[2]/pre[2]').text.splitlines()
@@ -609,6 +638,7 @@ def expasy_and_solubility(list_of_linear_epitopes, ):
         elif len(expasy_text) == 76:
             half_life = expasy_text[57:65]
 
+
         aa_row = [seq]
         for i in range(len(aa_composition)):
             cell = aa_composition[i].split()
@@ -628,18 +658,30 @@ def expasy_and_solubility(list_of_linear_epitopes, ):
         expasy_row.append(float(aliphatic_index.split()[2]))
         expasy_results.append(expasy_row)
 
-    print("Expasy analysis done")
-    print("Protein solubility analysis done")
+    # print("Expasy analysis done")
+    # print("Protein solubility analysis done")
 
-    with open('results/aa_composition.csv', 'w') as f:
-        writer = csv.writer(f)
-        writer.writerows(aa_composition_results)
+    if linear == 'Yes':
+        print("Expasy analysis done")
+        with open('results/aa_composition.csv', 'w') as f:
+            writer = csv.writer(f)
+            writer.writerows(aa_composition_results)
 
-    with open('results/atomic_composition.csv', 'w') as f:
-        writer = csv.writer(f)
-        writer.writerows(atomic_composition_results)
+        with open('results/atomic_composition.csv', 'w') as f:
+            writer = csv.writer(f)
+            writer.writerows(atomic_composition_results)
+
+    elif linear == 'No':
+        with open('results/nonlinear_aa_composition.csv', 'w') as f:
+            writer = csv.writer(f)
+            writer.writerows(aa_composition_results)
+
+        with open('results/nonlinear_atomic_composition.csv', 'w') as f:
+            writer = csv.writer(f)
+            writer.writerows(atomic_composition_results)
 
     return expasy_results, protein_sol_results
+
 
 def pepstats(list_of_sequences):
         
@@ -647,7 +689,7 @@ def pepstats(list_of_sequences):
     for seq in list_of_sequences:
         os.system(
             'python embosspepstats.py --email erald.bb@gmail.com --sequence ' + seq + ' --outfile pepstats_results --quiet')
-
+        # python embosspepstats.py --email erald.bb@gmail.com --sequence SVDCNMYICGDSTEC --outfile pepstats_results --quiet
         results_row = []
 
         with open('pepstats_results.out.txt') as f:
@@ -697,6 +739,7 @@ def analyse_all(tuple_inputs):
     toxinpred_excluded_indexes = tuple_inputs[2]
     immunogenicity_indexes = tuple_inputs[3]
     algpred_chunks = tuple_inputs[4]
+    list_of_all_nonlinear_epitopes = tuple_inputs[5]
 
     # toxinpred_url = 'https://webs.iiitd.edu.in/raghava/toxinpred/multi_submit.php'
     # algpred2_url = 'https://webs.iiitd.edu.in/raghava/algpred2/batch.html'
@@ -714,41 +757,16 @@ def analyse_all(tuple_inputs):
         row.insert(0,list_of_linear_epitopes[index])
         analysis_results.append(row)
 
-    # Protparam
-    # for index, epitope in enumerate(list_of_linear_epitopes):
-    #     row = []
-    #     x = ProteinAnalysis(epitope)
-    #     mol_weight = x.molecular_weight()
-    #     mol_weight = round(mol_weight, 3)
-    #     isoel_point = x.isoelectric_point()
-    #     isoel_point = round(isoel_point, 3)
-    #     aromaticity = x.aromaticity()
-    #     aromaticity = round(aromaticity, 3)
-    #     insta_index = x.instability_index()
-    #     insta_index = round(insta_index, 3)
-    #     sec_struc = x.secondary_structure_fraction()
-    #     sec_struc = [round(num, 3) for num in sec_struc]
-    #     helix_2_struc = sec_struc[0]
-    #     turn_2_struc = sec_struc[1]
-    #     sheet_2_struc = sec_struc[2]
-    #     epsilon_prot = x.molar_extinction_coefficient()
-    #     reduCys = epsilon_prot[0]
-    #     disulfBridge = epsilon_prot[1]
-    #     hydropathicity = x.gravy()
-    #     hydropathicity = round(hydropathicity, 3)
-    #     #flex_list = [str(round(num, 2)) for num in x.flexibility()]
-    #     #flexibility = ': '.join(flex_list)
-    #     chpH = x.charge_at_pH(7)
-    #     chpH = round(chpH, 3)
-    #     #row.extend((mol_weight, isoel_point, aromaticity, insta_index, helix_2_struc, turn_2_struc, sheet_2_struc, reduCys, disulfBridge, hydropathicity, flexibility, chpH))
-    #     row.extend((mol_weight, isoel_point, aromaticity, insta_index, helix_2_struc, turn_2_struc, sheet_2_struc, reduCys, disulfBridge, hydropathicity, chpH))
-    #     for parameter in row:
-    #         analysis_results[index].append(parameter)
 
     protparam_results = protparam(list_of_linear_epitopes)
     for i in range(len(analysis_results)):
         for n in range(len(protparam_results[i])):
             analysis_results[i].append(protparam_results[i][n])
+
+    vaxijen_results = vaxijen()
+    for i in range(len(vaxijen_results)):
+       analysis_results[i].append(vaxijen_results[i][0])
+       analysis_results[i].append(vaxijen_results[i][1])
 
     immunogenicity_mhci_results_table = immunogenicity()
     for row in immunogenicity_mhci_results_table:
@@ -758,30 +776,30 @@ def analyse_all(tuple_inputs):
                 immunogenicity_score = round(float(immunogenicity_mhci_result_row[2]), 3)
                 analysis_results[i].append(immunogenicity_score)
 
-    vaxijen_results = vaxijen()
-    for i in range(len(vaxijen_results)):
-       analysis_results[i].append(vaxijen_results[i][0])
-       analysis_results[i].append(vaxijen_results[i][1])
 
     cluster(list_of_linear_epitopes)
     conservancy()
     population_coverage()
 
+
     algpred_results = algpred(algpred_chunks)
     for i in range(len(analysis_results)):
         analysis_results[i].append(algpred_results[i])
+
 
     toxinpred_results = toxinpred(toxinpred_chunks, toxinpred_excluded_indexes)
     for i in range(len(analysis_results)):
         for n in range(len(toxinpred_results[i])):
             analysis_results[i].append(toxinpred_results[i][n])
 
-    expasy_and_solubility_results = expasy_and_solubility(list_of_linear_epitopes)
+    discontinous_expasy = expasy_and_solubility(list_of_all_nonlinear_epitopes, linear = 'No')
+    expasy_linear_results = expasy_and_solubility(list_of_linear_epitopes)
     for i in range(len(analysis_results)):
-        for n in range(len(expasy_and_solubility_results[0][i])):
-            analysis_results[i].append(expasy_and_solubility_results[0][i][n])
-    for i in range(len(analysis_results)):
-        analysis_results[i].append(expasy_and_solubility_results[1][i])
+        for n in range(len(expasy_linear_results[0][i])):
+            analysis_results[i].append(expasy_linear_results[0][i][n])
+    # for i in range(len(analysis_results)):
+    #     analysis_results[i].append(expasy_and_solubility_results[1][i])
+
 
     pepstats_results = pepstats(list_of_linear_epitopes)
     if len(pepstats_results) == len(analysis_results):
@@ -791,6 +809,11 @@ def analyse_all(tuple_inputs):
         print("Pepstats analysis done")
     else:
         print("Not all epitopes analysed with Pepstats")
+    #print(analysis_results)
+
+
+
+
 
     # Go to immunogenicity url, upload immunogenicity file and click submit:
     # immunogenicity_mhci = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
@@ -1241,14 +1264,14 @@ def analyse_all(tuple_inputs):
 
     #     return pepstats_results
 
-    pepstats_results = pepstats(list_of_linear_epitopes)
-    if len(pepstats_results) == len(analysis_results):
-        for i in range(len(analysis_results)):
-            for n in range(len(pepstats_results[i])):
-                analysis_results[i].append(pepstats_results[i][n])
-        print("Pepstats analysis done")
-    else:
-        print("Not all epitopes analysed with Pepstats")
+    # pepstats_results = pepstats(list_of_linear_epitopes)
+    # if len(pepstats_results) == len(analysis_results):
+    #     for i in range(len(analysis_results)):
+    #         for n in range(len(pepstats_results[i])):
+    #             analysis_results[i].append(pepstats_results[i][n])
+    #     print("Pepstats analysis done")
+    # else:
+    #     print("Not all epitopes analysed with Pepstats")
 
 
 
@@ -1270,8 +1293,14 @@ def make_csv_from_results(results_from_prediction, results_from_analysis):
     columns_to_add = ['peptide', 'mol_weight', 'isoelectric_point', 'aromaticity','instability_index','helix_2_struc', 'turn_2_struc', 'sheet_2_struc', 'reduces_cys', 'disulfide_bridge',
     'hydropathicity', 'charge_at_pH7', 'antigenicity_score', 'antigen_prediction', 'allergen_prediction','toxinpred_svm_score', 'toxicity_prediction', 'hydrophobicity', 'steric_hinderance',
     'sidebulk', 'amphipathicity', 'hydrophilicity', 'net_hydrogen','(-)_charged_residues (asp+glu)','(+)_charged_residues (arg+lys)', 'half_life_hours (mammalian reticulocytes, in vitro)', 
-    'aliphatic_index', 'solubility', 'tiny_aa_percentage', 'small_aa_percentage', 'aliphatic_aa_percentage', 'aromatic_aa_percentage', 'non_polar_aa_percentage', 'polar_aa_percentage', 
+    'aliphatic_index', 'tiny_aa_percentage', 'small_aa_percentage', 'aliphatic_aa_percentage', 'aromatic_aa_percentage', 'non_polar_aa_percentage', 'polar_aa_percentage', 
     'charged_aa_percentage', 'basic_aa_percentage', 'acidic_aa_percentage', 'improbability_of_expression_in_inclusion_bodies']
+
+    # columns_to_add = ['peptide', 'mol_weight', 'isoelectric_point', 'aromaticity','instability_index','helix_2_struc', 'turn_2_struc', 'sheet_2_struc', 'reduces_cys', 'disulfide_bridge',
+    # 'hydropathicity', 'charge_at_pH7', 'antigenicity_score', 'antigen_prediction', 'allergen_prediction','toxinpred_svm_score', 'toxicity_prediction', 'hydrophobicity', 'steric_hinderance',
+    # 'sidebulk', 'amphipathicity', 'hydrophilicity', 'net_hydrogen','(-)_charged_residues (asp+glu)','(+)_charged_residues (arg+lys)', 'half_life_hours (mammalian reticulocytes, in vitro)', 
+    # 'aliphatic_index', 'solubility', 'tiny_aa_percentage', 'small_aa_percentage', 'aliphatic_aa_percentage', 'aromatic_aa_percentage', 'non_polar_aa_percentage', 'polar_aa_percentage', 
+    # 'charged_aa_percentage', 'basic_aa_percentage', 'acidic_aa_percentage', 'improbability_of_expression_in_inclusion_bodies']
 
     # Divide results_from_analysis into 11 lists
     results_lists = []
@@ -1324,7 +1353,7 @@ def make_csv_from_results(results_from_prediction, results_from_analysis):
         f.close()
 
 # list_of_swissprot_ids = ['P59594', 'P0DTC2', 'K9N5Q8', 'P36334', 'Q0ZME7', 'P15423', 'Q6Q1S2', 'Q5MQD0', 'Q14EB0']
-# prediction_results = read_prediction_results(list_of_swissprot_ids)
+# prediction_results = read_prediction_results()
 # analysis_input = make_inputs_for_analysis(prediction_results, list_of_swissprot_ids)
 # analysis_results = analyse_all(analysis_input)
 # make_csv_from_results(prediction_results, analysis_results)
