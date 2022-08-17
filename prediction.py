@@ -969,7 +969,7 @@ def predict_all(alleles_for_mhci, lengths_for_mhci, alleles_for_mhcii, lengths_f
     #mhci_proc(dictionary_conserved_sequences, alleles_for_mhci, lengths_for_mhci)
 
     
-    bepipred2(dictionary_conserved_sequences)
+    # bepipred2(dictionary_conserved_sequences)
     bepipred(dictionary_conserved_sequences)
     emini(dictionary_conserved_sequences)
     choufasman(dictionary_conserved_sequences)
