@@ -1,2 +1,1 @@
 protein_id,conserved_sequence,allele,#,start,end,peptide_length,peptide,proteasome_score,tap_score,mhci_score,processing_score,total_score,mhci_ic50
-P59594,YFVGYLKPTTFMLKYDENGTITDAVDC,HLA-A*02:01,1,5,13,9,YLKPTTFML,1.4931,0.4025,-0.9685,1.8956,0.9271,9.3

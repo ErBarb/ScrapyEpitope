@@ -1141,11 +1141,11 @@ def predict_all(alleles_for_mhci, lengths_for_mhci, alleles_for_mhcii, lengths_f
     #     print(key)
     #     print(len(value[0]))
 
-    mhci(dictionary_conserved_sequences, alleles_for_mhci, lengths_for_mhci)
-    mhci_proc(dictionary_conserved_sequences, alleles_for_mhci, lengths_for_mhci)
+    # mhci(dictionary_conserved_sequences, alleles_for_mhci, lengths_for_mhci)
+    # mhci_proc(dictionary_conserved_sequences, alleles_for_mhci, lengths_for_mhci)
 
     # mhcii(dictionary_conserved_sequences, alleles_for_mhcii, lengths_for_mhcii)
-    # bepipred2(dictionary_conserved_sequences)
+    bepipred2(dictionary_conserved_sequences)
     # bepipred(dictionary_conserved_sequences)
     # emini(dictionary_conserved_sequences)
     # choufasman(dictionary_conserved_sequences)

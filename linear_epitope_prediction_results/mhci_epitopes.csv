@@ -1,2 +1,1 @@
 protein_id,conserved_sequence,allele,seq_num,start,end,length,peptide,core,icore,score,percentile_rank
-P59594,FVFKNKDGFLYVY,HLA-A*03:01,1,4,13,10,KNKDGFLYVY,KNKDGFLYY,KNKDGFLYVY,0.0215,3.3

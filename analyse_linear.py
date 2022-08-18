@@ -24,63 +24,63 @@ def read_prediction_results():
     """This function will read all the results from the csv files created by the prediction methods in prediction.py, remove the duplicate peptides,
     then return them in a tuple of lists"""
 
-    df = pd.read_csv('epitope_prediction_results/mhci_epitopes.csv')
+    df = pd.read_csv('linear_epitope_prediction_results/mhci_epitopes.csv')
     df.drop_duplicates(subset=['peptide'], keep=False, inplace=True)
     mhci_prediction_list = [df.columns.tolist()] + df.values.tolist()
     #protein_ids = df['protein_id'].tolist()
     #print(protein_ids)
 
-    df = pd.read_csv('epitope_prediction_results/mhci_proc_epitopes.csv')
+    df = pd.read_csv('linear_epitope_prediction_results/mhci_proc_epitopes.csv')
     df.drop_duplicates(subset=['peptide'], keep=False, inplace=True)
     mhci_proc_prediction_list = [df.columns.tolist()] + df.values.tolist()
 
-    df = pd.read_csv('epitope_prediction_results/mhcii_epitopes.csv')
+    df = pd.read_csv('linear_epitope_prediction_results/mhcii_epitopes.csv')
     df.drop_duplicates(subset=['peptide'], keep=False, inplace=True)
     mhcii_prediction_list = [df.columns.tolist()] + df.values.tolist()
 
-    df = pd.read_csv('epitope_prediction_results/bepipred2.0_epitopes.csv')
+    df = pd.read_csv('linear_epitope_prediction_results/bepipred2.0_epitopes.csv')
     df.drop_duplicates(subset=['predicted_epitope'], keep=False, inplace=True)
     bepipred2_prediction_list = [df.columns.tolist()] + df.values.tolist()
 
-    df = pd.read_csv('epitope_prediction_results/bepipred1.0_epitopes.csv')
+    df = pd.read_csv('linear_epitope_prediction_results/bepipred1.0_epitopes.csv')
     df.drop_duplicates(subset=['predicted_epitope'], keep=False, inplace=True)
     bepipred_prediction_list = [df.columns.tolist()] + df.values.tolist()
 
-    df = pd.read_csv('epitope_prediction_results/emini_epitopes.csv')
+    df = pd.read_csv('linear_epitope_prediction_results/emini_epitopes.csv')
     df.drop_duplicates(subset=['predicted_epitope'], keep=False, inplace=True)
     emini_prediction_list = [df.columns.tolist()] + df.values.tolist()
 
-    df = pd.read_csv('epitope_prediction_results/choufasman_epitopes.csv')
+    df = pd.read_csv('linear_epitope_prediction_results/choufasman_epitopes.csv')
     df.drop_duplicates(subset=['predicted_epitope'], keep=False, inplace=True)
     choufasman_prediction_list = [df.columns.tolist()] + df.values.tolist()
 
-    df = pd.read_csv('epitope_prediction_results/karplusschulz_epitopes.csv')
+    df = pd.read_csv('linear_epitope_prediction_results/karplusschulz_epitopes.csv')
     df.drop_duplicates(subset=['predicted_epitope'], keep=False, inplace=True)
     karplusschulz_prediction_list = [df.columns.tolist()] + df.values.tolist()
 
-    df = pd.read_csv('epitope_prediction_results/kolaskartongaonkar_epitopes.csv')
+    df = pd.read_csv('linear_epitope_prediction_results/kolaskartongaonkar_epitopes.csv')
     df.drop_duplicates(subset=['predicted_epitope'], keep=False, inplace=True)
     kolaskartongaonkar_prediction_list = [df.columns.tolist()] + df.values.tolist()
 
-    df = pd.read_csv('epitope_prediction_results/parker_epitopes.csv')
+    df = pd.read_csv('linear_epitope_prediction_results/parker_epitopes.csv')
     df.drop_duplicates(subset=['predicted_epitope'], keep=False, inplace=True)
     parker_prediction_list = [df.columns.tolist()] + df.values.tolist()
 
-    df = pd.read_csv('epitope_prediction_results/ellipro_linear_epitopes.csv')
+    df = pd.read_csv('linear_epitope_prediction_results/ellipro_linear_epitopes.csv')
     df.drop_duplicates(subset=['peptide'], keep=False, inplace=True)
     ellipro_linear_prediction_list = [df.columns.tolist()] + df.values.tolist()
 
-    df = pd.read_csv('epitope_prediction_results/ellipro_discontinous_epitopes.csv')
+    df = pd.read_csv('linear_epitope_prediction_results/ellipro_discontinous_epitopes.csv')
     df.drop_duplicates(subset=['peptide'], keep=False, inplace=True)
     ellipro_discontinous_prediction_list = [df.columns.tolist()] + df.values.tolist()
     #print(ellipro_discontinous_prediction_list)
 
-    df = pd.read_csv('epitope_prediction_results/discotope_epitopes.csv')
+    df = pd.read_csv('linear_epitope_prediction_results/discotope_epitopes.csv')
     df.drop_duplicates(subset=['peptide'], keep=False, inplace=True)
     discotope_prediction_list = [df.columns.tolist()] + df.values.tolist()
     #print(discotope_prediction_list)
 
-
+    print("Prediction files read")
     return mhci_prediction_list, mhci_proc_prediction_list, mhcii_prediction_list, bepipred2_prediction_list, \
         bepipred_prediction_list, emini_prediction_list, choufasman_prediction_list, karplusschulz_prediction_list, \
             kolaskartongaonkar_prediction_list, parker_prediction_list, ellipro_linear_prediction_list, ellipro_discontinous_prediction_list, \
@@ -229,6 +229,8 @@ def make_inputs_for_analysis(results_from_prediction, list_of_swissprot_ids):
     final_directory = os.path.join(current_directory, r'analysis_results')
     if not os.path.exists(final_directory):
         os.makedirs(final_directory)
+
+    print("Inputs finished")
 
     return list_of_all_linear_epitopes, toxinpred_chunks, toxinpred_excluded_indexes, immunogenicity_indexes, algpred_chunks, list_of_all_nonlinear_epitopes
 

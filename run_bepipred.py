@@ -1,14 +1,12 @@
 from msa import prediction_choice
-from prediction import predict_all
-from prediction import get_pdb_from_swissprot
-from prediction import analysis_choice
-from prediction import swissprotIDSequenceLength
-from prediction import epitope_distribution_plots
-from prediction import dssp_analysis
+from prediction_bepipred import predict_all
+from prediction_bepipred import get_pdb_from_swissprot
+from prediction_bepipred import analysis_choice
 from analyse import make_inputs_for_analysis
 from analyse import analyse_all
 from analyse import make_csv_from_results
 from analyse import read_prediction_results
+
 
 
 

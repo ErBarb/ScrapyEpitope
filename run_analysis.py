@@ -5,10 +5,10 @@ from prediction import analysis_choice
 from prediction import swissprotIDSequenceLength
 from prediction import epitope_distribution_plots
 from prediction import dssp_analysis
-from analyse import make_inputs_for_analysis
-from analyse import analyse_all
-from analyse import make_csv_from_results
-from analyse import read_prediction_results
+from analyse_linear import make_inputs_for_analysis
+from analyse_linear import analyse_all
+from analyse_linear import make_csv_from_results
+from analyse_linear import read_prediction_results
 
 
 
@@ -42,21 +42,21 @@ list_of_pdb_ids = ['7K3G', '5X29', '3I6G', '6KL2', '6WJI', '4J3K', '2CJR', '6XDC
 '5R7Y', '4QZW', '4WUR', '4L72', '6VSB', '7M51', '5WRG']
 
 
-#sequences = prediction_choice(list_of_swissprot_ids)
-print("Protein sequences collected")
-print("Trying to get PDB IDs...")
-#list_of_pdb_ids = get_pdb_from_swissprot(list_of_swissprot_ids)
-print("PDB IDs collected")
-predict_all(mhci_alleles, mhci_lengths, mhcii_alleles, mhcii_lengths, list_of_pdb_ids)
-print("Epitope prediction done")
+# sequences = prediction_choice(list_of_swissprot_ids)
+# print("Protein sequences collected")
+# print("Trying to get PDB IDs...")
+# list_of_pdb_ids = get_pdb_from_swissprot(list_of_swissprot_ids)
+# print("PDB IDs collected")
+# predict_all(mhci_alleles, mhci_lengths, mhcii_alleles, mhcii_lengths, list_of_pdb_ids)
+# print("Epitope prediction done")
 # analysis_choice(list_of_swissprot_ids, list_of_pdb_ids)
 
-# prediction_results = read_prediction_results()
-# analysis_input = make_inputs_for_analysis(prediction_results, list_of_swissprot_ids)
-# print("Analysing sequences...")
-# analysis_results = analyse_all(analysis_input)
-# make_csv_from_results(prediction_results, analysis_results)
-# print("Analysis finished. Sequences saved in 'results' folder in csv format")
+prediction_results = read_prediction_results()
+analysis_input = make_inputs_for_analysis(prediction_results, list_of_swissprot_ids)
+print("Analysing sequences...")
+analysis_results = analyse_all(analysis_input)
+make_csv_from_results(prediction_results, analysis_results)
+print("Analysis finished. Sequences saved in 'results' folder in csv format")
 
 
 
