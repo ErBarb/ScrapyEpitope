@@ -90,7 +90,7 @@ def mhci(conserved_sequences_dict, list_of_alleles, list_of_lengths):
     columns = ["protein_id"] + ["conserved_sequence"] + ["allele"] + ["seq_num"] + ["start"] + ["end"] + ["length"] + \
         ["peptide"] + ["core"] + ["icore"] + ["score"] + ["percentile_rank"]
     mhci_results.append(columns)
-
+    #print(conserved_sequences_dict)
     for key, value in conserved_sequences_dict.items():
         print("Predicting linear epitopes of protein " + key + " with MHCI")
         time.sleep(10)
@@ -526,59 +526,127 @@ def bepipred(conserved_sequences_dict):
     for key, sequences in conserved_sequences_dict.items():
         print("Predicting linear epitopes of protein " + key + " with Bepipred 1.0")
         for conserved_sequence in sequences:
-            
-            time.sleep(1)
-            headers = {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                }
-            
-            data = {
-                'method': 'Bepipred',
-                'sequence_text': conserved_sequence,
-                'window_size': '7',
-                }
-            
-            response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/bcell/', headers=headers, data=data)
-            response_data_split_by_line = response.content.decode('utf-8').splitlines()
-            
-            response_body = []
-            for line in response_data_split_by_line:
-                split_line = line.split("\t")
-                response_body.append(split_line)
-            
-            df = pd.DataFrame(response_body[1:], columns=response_body[0])
+            try:
+                time.sleep(1)
+                headers = {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    }
+                
+                data = {
+                    'method': 'Bepipred',
+                    'sequence_text': conserved_sequence,
+                    'window_size': '7',
+                    }
+                
+                response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/bcell/', headers=headers, data=data)
+                response_data_split_by_line = response.content.decode('utf-8').splitlines()
+                
+                response_body = []
+                for line in response_data_split_by_line:
+                    split_line = line.split("\t")
+                    response_body.append(split_line)
+                
+                df = pd.DataFrame(response_body[1:], columns=response_body[0])
 
-            df["Score"] = pd.to_numeric(df["Score"])
-            df = df.loc[df['Score'] >= 0.35]
-            positions = df.iloc[:, 0].to_list()
-            residues = df.iloc[:, 1].to_list()
+                df["Score"] = pd.to_numeric(df["Score"])
+                df = df.loc[df['Score'] >= 0.35]
+                if df.empty == True:
+                    print("No epitopes predicted for protein " + key + " with sequence length " + str(len(conserved_sequence)))
+                    continue
+                else:
+                    positions = df.iloc[:, 0].to_list()
+                    residues = df.iloc[:, 1].to_list()
 
-            predicted = []
-            epitope = ''
-            
-            for index, value in enumerate(positions):
-                if (index != len(positions) - 1 and int(value) + 1 == int(positions[index + 1])):
-                    epitope = epitope + residues[index]
-                elif (index != len(positions) - 1 and int(value) + 1 != int(positions[index + 1])):
-                    epitope = epitope + residues[index]
-                    if len(epitope) >= 7:
-                        predicted.append(epitope)
-                        predicted.append(int(value) - len(epitope) + 1)
-                        predicted.append(int(value))
-                        predicted = [key] + [conserved_sequence] + predicted
-                        bepipred_results.append(predicted)
-                    epitope = ''
                     predicted = []
-                elif index == len(positions) - 1:
-                    epitope = epitope + residues[index]
-                    if len(epitope) >= 7:
-                        predicted.append(epitope)
-                        predicted.append(int(value) - len(epitope) + 1)
-                        predicted.append(int(value))
-                        predicted = [key] + [conserved_sequence] + predicted
-                        bepipred_results.append(predicted)
                     epitope = ''
-                    predicted = []
+                    
+                    for index, value in enumerate(positions):
+                        if (index != len(positions) - 1 and int(value) + 1 == int(positions[index + 1])):
+                            epitope = epitope + residues[index]
+                        elif (index != len(positions) - 1 and int(value) + 1 != int(positions[index + 1])):
+                            epitope = epitope + residues[index]
+                            if len(epitope) >= 7:
+                                predicted.append(epitope)
+                                predicted.append(int(value) - len(epitope) + 1)
+                                predicted.append(int(value))
+                                predicted = [key] + [conserved_sequence] + predicted
+                                bepipred_results.append(predicted)
+                            epitope = ''
+                            predicted = []
+                        elif index == len(positions) - 1:
+                            epitope = epitope + residues[index]
+                            if len(epitope) >= 7:
+                                predicted.append(epitope)
+                                predicted.append(int(value) - len(epitope) + 1)
+                                predicted.append(int(value))
+                                predicted = [key] + [conserved_sequence] + predicted
+                                bepipred_results.append(predicted)
+                            epitope = ''
+                            predicted = []
+            except:
+
+                print("Retrying prediction of linear epitopes of protein " + key + " with Bepipred 1.0")
+
+                try:
+                    time.sleep(1)
+                    headers = {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        }
+                    
+                    data = {
+                        'method': 'Bepipred',
+                        'sequence_text': conserved_sequence,
+                        'window_size': '7',
+                        }
+                    
+                    response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/bcell/', headers=headers, data=data)
+                    response_data_split_by_line = response.content.decode('utf-8').splitlines()
+                    
+                    response_body = []
+                    for line in response_data_split_by_line:
+                        split_line = line.split("\t")
+                        response_body.append(split_line)
+                    
+                    df = pd.DataFrame(response_body[1:], columns=response_body[0])
+
+                    df["Score"] = pd.to_numeric(df["Score"])
+                    df = df.loc[df['Score'] >= 0.35]
+                    if df.empty == True:
+                        print("No epitopes predicted for protein " + key + " with sequence length " + str(len(conserved_sequence)))
+                        continue
+                    else:
+                        positions = df.iloc[:, 0].to_list()
+                        residues = df.iloc[:, 1].to_list()
+
+                        predicted = []
+                        epitope = ''
+                        
+                        for index, value in enumerate(positions):
+                            if (index != len(positions) - 1 and int(value) + 1 == int(positions[index + 1])):
+                                epitope = epitope + residues[index]
+                            elif (index != len(positions) - 1 and int(value) + 1 != int(positions[index + 1])):
+                                epitope = epitope + residues[index]
+                                if len(epitope) >= 7:
+                                    predicted.append(epitope)
+                                    predicted.append(int(value) - len(epitope) + 1)
+                                    predicted.append(int(value))
+                                    predicted = [key] + [conserved_sequence] + predicted
+                                    bepipred_results.append(predicted)
+                                epitope = ''
+                                predicted = []
+                            elif index == len(positions) - 1:
+                                epitope = epitope + residues[index]
+                                if len(epitope) >= 7:
+                                    predicted.append(epitope)
+                                    predicted.append(int(value) - len(epitope) + 1)
+                                    predicted.append(int(value))
+                                    predicted = [key] + [conserved_sequence] + predicted
+                                    bepipred_results.append(predicted)
+                                epitope = ''
+                                predicted = []
+                except:
+                    print("Epitope prediction for protein " + key + " and sequence length " + str(len(conserved_sequence)) + " failed")
+                    continue
     with open('epitope_prediction_results/bepipred1.0_epitopes.csv', 'w', newline="") as f:
         writer = csv.writer(f)
         writer.writerows(bepipred_results) 
@@ -596,60 +664,129 @@ def emini(conserved_sequences_dict):
     for key, sequences in conserved_sequences_dict.items():
         print("Predicting linear epitopes of protein " + key + " with Emini")
         for conserved_sequence in sequences:
-            
-            time.sleep(1)
-            headers = {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                }
-            
-            data = {
-                'method': 'Emini',
-                'sequence_text': conserved_sequence,
-                'window_size': '6',
-                }
-            
-            response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/bcell/', headers=headers, data=data)
-            response_data_split_by_line = response.content.decode('utf-8').splitlines()
-            
-            response_body = []
-            for line in response_data_split_by_line:
-                split_line = line.split("\t")
-                response_body.append(split_line)
-            
+            try:
+                time.sleep(1)
+                headers = {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    }
+                
+                data = {
+                    'method': 'Emini',
+                    'sequence_text': conserved_sequence,
+                    'window_size': '6',
+                    }
+                
+                response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/bcell/', headers=headers, data=data)
+                response_data_split_by_line = response.content.decode('utf-8').splitlines()
+                
+                response_body = []
+                for line in response_data_split_by_line:
+                    split_line = line.split("\t")
+                    response_body.append(split_line)
+                
 
-            df = pd.DataFrame(response_body[1:], columns=response_body[0])
+                df = pd.DataFrame(response_body[1:], columns=response_body[0])
 
-            df["Score"] = pd.to_numeric(df["Score"])
-            df = df.loc[df['Score'] >= 1]
-            positions = df.iloc[:, 0].to_list()
-            residues = df.iloc[:, 1].to_list()
+                df["Score"] = pd.to_numeric(df["Score"])
+                df = df.loc[df['Score'] >= 1]
+                if df.empty == True:
+                    print("No epitopes predicted for protein " + key + " with sequence length " + str(len(conserved_sequence)))
+                    continue
+                else:
+                    positions = df.iloc[:, 0].to_list()
+                    residues = df.iloc[:, 1].to_list()
 
-            predicted = []
-            epitope = ''
-            
-            for index, value in enumerate(positions):
-                if (index != len(positions) - 1 and int(value) + 1 == int(positions[index + 1])):
-                    epitope = epitope + residues[index]
-                elif (index != len(positions) - 1 and int(value) + 1 != int(positions[index + 1])):
-                    epitope = epitope + residues[index]
-                    if len(epitope) >= 7:
-                        predicted.append(epitope)
-                        predicted.append(int(value) - len(epitope) + 1)
-                        predicted.append(int(value))
-                        predicted = [key] + [conserved_sequence] + predicted
-                        emini_results.append(predicted)
-                    epitope = ''
                     predicted = []
-                elif index == len(positions) - 1:
-                    epitope = epitope + residues[index]
-                    if len(epitope) >= 7:
-                        predicted.append(epitope)
-                        predicted.append(int(value) - len(epitope) + 1)
-                        predicted.append(int(value))
-                        predicted = [key] + [conserved_sequence] + predicted
-                        emini_results.append(predicted)
                     epitope = ''
-                    predicted = []
+                    
+                    for index, value in enumerate(positions):
+                        if (index != len(positions) - 1 and int(value) + 1 == int(positions[index + 1])):
+                            epitope = epitope + residues[index]
+                        elif (index != len(positions) - 1 and int(value) + 1 != int(positions[index + 1])):
+                            epitope = epitope + residues[index]
+                            if len(epitope) >= 7:
+                                predicted.append(epitope)
+                                predicted.append(int(value) - len(epitope) + 1)
+                                predicted.append(int(value))
+                                predicted = [key] + [conserved_sequence] + predicted
+                                emini_results.append(predicted)
+                            epitope = ''
+                            predicted = []
+                        elif index == len(positions) - 1:
+                            epitope = epitope + residues[index]
+                            if len(epitope) >= 7:
+                                predicted.append(epitope)
+                                predicted.append(int(value) - len(epitope) + 1)
+                                predicted.append(int(value))
+                                predicted = [key] + [conserved_sequence] + predicted
+                                emini_results.append(predicted)
+                            epitope = ''
+                            predicted = []
+            except:
+
+                print("Retrying prediction of linear epitopes of protein " + key + " with Emini")
+
+                try:
+                    time.sleep(1)
+                    headers = {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        }
+                    
+                    data = {
+                        'method': 'Emini',
+                        'sequence_text': conserved_sequence,
+                        'window_size': '6',
+                        }
+                    
+                    response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/bcell/', headers=headers, data=data)
+                    response_data_split_by_line = response.content.decode('utf-8').splitlines()
+                    
+                    response_body = []
+                    for line in response_data_split_by_line:
+                        split_line = line.split("\t")
+                        response_body.append(split_line)
+                    
+
+                    df = pd.DataFrame(response_body[1:], columns=response_body[0])
+
+                    df["Score"] = pd.to_numeric(df["Score"])
+                    df = df.loc[df['Score'] >= 1]
+                    if df.empty == True:
+                        print("No epitopes predicted for protein " + key + " with sequence length " + str(len(conserved_sequence)))
+                        continue
+                    else:
+                        positions = df.iloc[:, 0].to_list()
+                        residues = df.iloc[:, 1].to_list()
+
+                        predicted = []
+                        epitope = ''
+                        
+                        for index, value in enumerate(positions):
+                            if (index != len(positions) - 1 and int(value) + 1 == int(positions[index + 1])):
+                                epitope = epitope + residues[index]
+                            elif (index != len(positions) - 1 and int(value) + 1 != int(positions[index + 1])):
+                                epitope = epitope + residues[index]
+                                if len(epitope) >= 7:
+                                    predicted.append(epitope)
+                                    predicted.append(int(value) - len(epitope) + 1)
+                                    predicted.append(int(value))
+                                    predicted = [key] + [conserved_sequence] + predicted
+                                    emini_results.append(predicted)
+                                epitope = ''
+                                predicted = []
+                            elif index == len(positions) - 1:
+                                epitope = epitope + residues[index]
+                                if len(epitope) >= 7:
+                                    predicted.append(epitope)
+                                    predicted.append(int(value) - len(epitope) + 1)
+                                    predicted.append(int(value))
+                                    predicted = [key] + [conserved_sequence] + predicted
+                                    emini_results.append(predicted)
+                                epitope = ''
+                                predicted = []
+                except:
+                    print("Epitope prediction for protein " + key + " and sequence length " + str(len(conserved_sequence)) + " failed")
+                    continue
     with open('epitope_prediction_results/emini_epitopes.csv', 'w', newline="") as f:
         writer = csv.writer(f)
         writer.writerows(emini_results) 
@@ -667,60 +804,130 @@ def choufasman(conserved_sequences_dict):
     for key, sequences in conserved_sequences_dict.items():
         print("Predicting linear epitopes of protein " + key + " with Chou-Fasman")
         for conserved_sequence in sequences:
-            
-            time.sleep(1)
-            headers = {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                }
-            
-            data = {
-                'method': 'Chou-Fasman',
-                'sequence_text': conserved_sequence,
-                'window_size': '7',
-                }
-            
-            response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/bcell/', headers=headers, data=data)
-            response_data_split_by_line = response.content.decode('utf-8').splitlines()
-            
-            response_body = []
-            for line in response_data_split_by_line:
-                split_line = line.split("\t")
-                response_body.append(split_line)
-            
-            df = pd.DataFrame(response_body[1:], columns=response_body[0])
-            df["Score"] = pd.to_numeric(df["Score"])
-            average_of_scores = df["Score"].mean()
-            df = df.loc[df['Score'] >= average_of_scores]
+            try:
+                time.sleep(1)
+                headers = {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    }
+                
+                data = {
+                    'method': 'Chou-Fasman',
+                    'sequence_text': conserved_sequence,
+                    'window_size': '7',
+                    }
+                
+                response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/bcell/', headers=headers, data=data)
+                response_data_split_by_line = response.content.decode('utf-8').splitlines()
+                
+                response_body = []
+                for line in response_data_split_by_line:
+                    split_line = line.split("\t")
+                    response_body.append(split_line)
+                
+                df = pd.DataFrame(response_body[1:], columns=response_body[0])
+                df["Score"] = pd.to_numeric(df["Score"])
+                average_of_scores = df["Score"].mean()
+                df = df.loc[df['Score'] >= average_of_scores]
+                
+                if df.empty == True:
+                    print("No epitopes predicted for protein " + key + " with sequence length " + str(len(conserved_sequence)))
+                    continue
+                else:
+                    positions = df.iloc[:, 0].to_list()
+                    residues = df.iloc[:, 1].to_list()
 
-            positions = df.iloc[:, 0].to_list()
-            residues = df.iloc[:, 1].to_list()
+                    predicted = []
+                    epitope = ''
+                    
+                    for index, value in enumerate(positions):
+                        if (index != len(positions) - 1 and int(value) + 1 == int(positions[index + 1])):
+                            epitope = epitope + residues[index]
+                        elif (index != len(positions) - 1 and int(value) + 1 != int(positions[index + 1])):
+                            epitope = epitope + residues[index]
+                            if len(epitope) >= 7:
+                                predicted.append(epitope)
+                                predicted.append(int(value) - len(epitope) + 1)
+                                predicted.append(int(value))
+                                predicted = [key] + [conserved_sequence] + predicted
+                                choufasman_results.append(predicted)
+                            epitope = ''
+                            predicted = []
+                        elif index == len(positions) - 1:
+                            epitope = epitope + residues[index]
+                            if len(epitope) >= 7:
+                                predicted.append(epitope)
+                                predicted.append(int(value) - len(epitope) + 1)
+                                predicted.append(int(value))
+                                predicted = [key] + [conserved_sequence] + predicted
+                                choufasman_results.append(predicted)
+                            epitope = ''
+                            predicted = []
+            except:
 
-            predicted = []
-            epitope = ''
-            
-            for index, value in enumerate(positions):
-                if (index != len(positions) - 1 and int(value) + 1 == int(positions[index + 1])):
-                    epitope = epitope + residues[index]
-                elif (index != len(positions) - 1 and int(value) + 1 != int(positions[index + 1])):
-                    epitope = epitope + residues[index]
-                    if len(epitope) >= 7:
-                        predicted.append(epitope)
-                        predicted.append(int(value) - len(epitope) + 1)
-                        predicted.append(int(value))
-                        predicted = [key] + [conserved_sequence] + predicted
-                        choufasman_results.append(predicted)
-                    epitope = ''
-                    predicted = []
-                elif index == len(positions) - 1:
-                    epitope = epitope + residues[index]
-                    if len(epitope) >= 7:
-                        predicted.append(epitope)
-                        predicted.append(int(value) - len(epitope) + 1)
-                        predicted.append(int(value))
-                        predicted = [key] + [conserved_sequence] + predicted
-                        choufasman_results.append(predicted)
-                    epitope = ''
-                    predicted = []
+                print("Retrying prediction of linear epitopes of protein " + key + " with Chou-Fasman")
+
+                try:
+                    time.sleep(1)
+                    headers = {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        }
+                    
+                    data = {
+                        'method': 'Chou-Fasman',
+                        'sequence_text': conserved_sequence,
+                        'window_size': '7',
+                        }
+                    
+                    response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/bcell/', headers=headers, data=data)
+                    response_data_split_by_line = response.content.decode('utf-8').splitlines()
+                    
+                    response_body = []
+                    for line in response_data_split_by_line:
+                        split_line = line.split("\t")
+                        response_body.append(split_line)
+                    
+                    df = pd.DataFrame(response_body[1:], columns=response_body[0])
+                    df["Score"] = pd.to_numeric(df["Score"])
+                    average_of_scores = df["Score"].mean()
+                    df = df.loc[df['Score'] >= average_of_scores]
+                    
+                    if df.empty == True:
+                        print("No epitopes predicted for protein " + key + " with sequence length " + str(len(conserved_sequence)))
+                        continue
+                    else:
+                        positions = df.iloc[:, 0].to_list()
+                        residues = df.iloc[:, 1].to_list()
+
+                        predicted = []
+                        epitope = ''
+                        
+                        for index, value in enumerate(positions):
+                            if (index != len(positions) - 1 and int(value) + 1 == int(positions[index + 1])):
+                                epitope = epitope + residues[index]
+                            elif (index != len(positions) - 1 and int(value) + 1 != int(positions[index + 1])):
+                                epitope = epitope + residues[index]
+                                if len(epitope) >= 7:
+                                    predicted.append(epitope)
+                                    predicted.append(int(value) - len(epitope) + 1)
+                                    predicted.append(int(value))
+                                    predicted = [key] + [conserved_sequence] + predicted
+                                    choufasman_results.append(predicted)
+                                epitope = ''
+                                predicted = []
+                            elif index == len(positions) - 1:
+                                epitope = epitope + residues[index]
+                                if len(epitope) >= 7:
+                                    predicted.append(epitope)
+                                    predicted.append(int(value) - len(epitope) + 1)
+                                    predicted.append(int(value))
+                                    predicted = [key] + [conserved_sequence] + predicted
+                                    choufasman_results.append(predicted)
+                                epitope = ''
+                                predicted = []
+                except:
+                    print("Epitope prediction for protein " + key + " and sequence length " + str(len(conserved_sequence)) + " failed")
+                    continue
+
     with open('epitope_prediction_results/choufasman_epitopes.csv', 'w', newline="") as f:
         writer = csv.writer(f)
         writer.writerows(choufasman_results) 
@@ -739,61 +946,129 @@ def karplusschulz(conserved_sequences_dict):
     for key, sequences in conserved_sequences_dict.items():
         print("Predicting linear epitopes of protein " + key + " with Karplus-Schulz")
         for conserved_sequence in sequences:
-            
-            time.sleep(1)
-            headers = {
-                   'User-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.80 Safari/537.36',
-                   'Content-Type': 'application/x-www-form-urlencoded'
-                }
-            
-            data = {
-                'method': 'Karplus-Schulz',
-                'sequence_text': conserved_sequence,
-                'window_size': '7',
-                }
-            
-            response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/bcell/', headers=headers, data=data)
-            response_data_split_by_line = response.content.decode('utf-8').splitlines()
-            
-            response_body = []
-            for line in response_data_split_by_line:
-                split_line = line.split("\t")
-                response_body.append(split_line)
+            try:
+                time.sleep(1)
+                headers = {
+                    'User-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.80 Safari/537.36',
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                
+                data = {
+                    'method': 'Karplus-Schulz',
+                    'sequence_text': conserved_sequence,
+                    'window_size': '7',
+                    }
+                
+                response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/bcell/', headers=headers, data=data)
+                response_data_split_by_line = response.content.decode('utf-8').splitlines()
+                
+                response_body = []
+                for line in response_data_split_by_line:
+                    split_line = line.split("\t")
+                    response_body.append(split_line)
 
-            df = pd.DataFrame(response_body[1:], columns=response_body[0])
-            df["Score"] = pd.to_numeric(df["Score"])
-            average_of_scores = df["Score"].mean()
-            df = df.loc[df['Score'] >= average_of_scores]
+                df = pd.DataFrame(response_body[1:], columns=response_body[0])
+                df["Score"] = pd.to_numeric(df["Score"])
+                average_of_scores = df["Score"].mean()
+                df = df.loc[df['Score'] >= average_of_scores]
+                if df.empty == True:
+                    print("No epitopes predicted for protein " + key + " with sequence length " + str(len(conserved_sequence)))
+                    continue
+                else:
+                    positions = df.iloc[:, 0].to_list()
+                    residues = df.iloc[:, 1].to_list()
 
-            positions = df.iloc[:, 0].to_list()
-            residues = df.iloc[:, 1].to_list()
-
-            predicted = []
-            epitope = ''
-            
-            for index, value in enumerate(positions):
-                if (index != len(positions) - 1 and int(value) + 1 == int(positions[index + 1])):
-                    epitope = epitope + residues[index]
-                elif (index != len(positions) - 1 and int(value) + 1 != int(positions[index + 1])):
-                    epitope = epitope + residues[index]
-                    if len(epitope) >= 7:
-                        predicted.append(epitope)
-                        predicted.append(int(value) - len(epitope) + 1)
-                        predicted.append(int(value))
-                        predicted = [key] + [conserved_sequence] + predicted
-                        karplusschulz_results.append(predicted)
-                    epitope = ''
                     predicted = []
-                elif index == len(positions) - 1:
-                    epitope = epitope + residues[index]
-                    if len(epitope) >= 7:
-                        predicted.append(epitope)
-                        predicted.append(int(value) - len(epitope) + 1)
-                        predicted.append(int(value))
-                        predicted = [key] + [conserved_sequence] + predicted
-                        karplusschulz_results.append(predicted)
                     epitope = ''
-                    predicted = []
+                    
+                    for index, value in enumerate(positions):
+                        if (index != len(positions) - 1 and int(value) + 1 == int(positions[index + 1])):
+                            epitope = epitope + residues[index]
+                        elif (index != len(positions) - 1 and int(value) + 1 != int(positions[index + 1])):
+                            epitope = epitope + residues[index]
+                            if len(epitope) >= 7:
+                                predicted.append(epitope)
+                                predicted.append(int(value) - len(epitope) + 1)
+                                predicted.append(int(value))
+                                predicted = [key] + [conserved_sequence] + predicted
+                                karplusschulz_results.append(predicted)
+                            epitope = ''
+                            predicted = []
+                        elif index == len(positions) - 1:
+                            epitope = epitope + residues[index]
+                            if len(epitope) >= 7:
+                                predicted.append(epitope)
+                                predicted.append(int(value) - len(epitope) + 1)
+                                predicted.append(int(value))
+                                predicted = [key] + [conserved_sequence] + predicted
+                                karplusschulz_results.append(predicted)
+                            epitope = ''
+                            predicted = []
+            except:
+
+                print("Retrying prediction of linear epitopes of protein " + key + " with Karplus-Schulz")
+
+                try:
+                    time.sleep(1)
+                    headers = {
+                        'User-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.80 Safari/537.36',
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                        }
+                    
+                    data = {
+                        'method': 'Karplus-Schulz',
+                        'sequence_text': conserved_sequence,
+                        'window_size': '7',
+                        }
+                    
+                    response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/bcell/', headers=headers, data=data)
+                    response_data_split_by_line = response.content.decode('utf-8').splitlines()
+                    
+                    response_body = []
+                    for line in response_data_split_by_line:
+                        split_line = line.split("\t")
+                        response_body.append(split_line)
+
+                    df = pd.DataFrame(response_body[1:], columns=response_body[0])
+                    df["Score"] = pd.to_numeric(df["Score"])
+                    average_of_scores = df["Score"].mean()
+                    df = df.loc[df['Score'] >= average_of_scores]
+                    if df.empty == True:
+                        print("No epitopes predicted for protein " + key + " with sequence length " + str(len(conserved_sequence)))
+                        continue
+                    else:
+                        positions = df.iloc[:, 0].to_list()
+                        residues = df.iloc[:, 1].to_list()
+
+                        predicted = []
+                        epitope = ''
+                        
+                        for index, value in enumerate(positions):
+                            if (index != len(positions) - 1 and int(value) + 1 == int(positions[index + 1])):
+                                epitope = epitope + residues[index]
+                            elif (index != len(positions) - 1 and int(value) + 1 != int(positions[index + 1])):
+                                epitope = epitope + residues[index]
+                                if len(epitope) >= 7:
+                                    predicted.append(epitope)
+                                    predicted.append(int(value) - len(epitope) + 1)
+                                    predicted.append(int(value))
+                                    predicted = [key] + [conserved_sequence] + predicted
+                                    karplusschulz_results.append(predicted)
+                                epitope = ''
+                                predicted = []
+                            elif index == len(positions) - 1:
+                                epitope = epitope + residues[index]
+                                if len(epitope) >= 7:
+                                    predicted.append(epitope)
+                                    predicted.append(int(value) - len(epitope) + 1)
+                                    predicted.append(int(value))
+                                    predicted = [key] + [conserved_sequence] + predicted
+                                    karplusschulz_results.append(predicted)
+                                epitope = ''
+                                predicted = []
+                except:
+                    print("Epitope prediction for protein " + key + " and sequence length " + str(len(conserved_sequence)) + " failed")
+                    continue
     with open('epitope_prediction_results/karplusschulz_epitopes.csv', 'w', newline="") as f:
         writer = csv.writer(f)
         writer.writerows(karplusschulz_results) 
@@ -812,60 +1087,130 @@ def kolaskartongaonkar(conserved_sequences_dict):
     for key, sequences in conserved_sequences_dict.items():
         print("Predicting linear epitopes of protein " + key + " with Kolaskar-Tongaonkar")
         for conserved_sequence in sequences:
-            
-            time.sleep(1)
-            headers = {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                }
-            
-            data = {
-                'method': 'Kolaskar-Tongaonkar',
-                'sequence_text': conserved_sequence,
-                'window_size': '7',
-                }
-            
-            response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/bcell/', headers=headers, data=data)
-            response_data_split_by_line = response.content.decode('utf-8').splitlines()
+            try:
+                time.sleep(1)
+                headers = {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    }
+                
+                data = {
+                    'method': 'Kolaskar-Tongaonkar',
+                    'sequence_text': conserved_sequence,
+                    'window_size': '7',
+                    }
+                
+                response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/bcell/', headers=headers, data=data)
+                response_data_split_by_line = response.content.decode('utf-8').splitlines()
 
-            response_body = []
-            for line in response_data_split_by_line:
-                split_line = line.split("\t")
-                response_body.append(split_line)
+                response_body = []
+                for line in response_data_split_by_line:
+                    split_line = line.split("\t")
+                    response_body.append(split_line)
 
-            df = pd.DataFrame(response_body[1:], columns=response_body[0])
-            df["Score"] = pd.to_numeric(df["Score"])
-            average_of_scores = df["Score"].mean()
-            df = df.loc[df['Score'] >= average_of_scores]
+                df = pd.DataFrame(response_body[1:], columns=response_body[0])
+                df["Score"] = pd.to_numeric(df["Score"])
+                average_of_scores = df["Score"].mean()
+                df = df.loc[df['Score'] >= average_of_scores]
+                
+                if df.empty == True:
+                    print("No epitopes predicted for protein " + key + " with sequence length " + str(len(conserved_sequence)))
+                    continue
+                else:
+                    positions = df.iloc[:, 0].to_list()
+                    residues = df.iloc[:, 1].to_list()
 
-            positions = df.iloc[:, 0].to_list()
-            residues = df.iloc[:, 1].to_list()
-
-            predicted = []
-            epitope = ''
-            
-            for index, value in enumerate(positions):
-                if (index != len(positions) - 1 and int(value) + 1 == int(positions[index + 1])):
-                    epitope = epitope + residues[index]
-                elif (index != len(positions) - 1 and int(value) + 1 != int(positions[index + 1])):
-                    epitope = epitope + residues[index]
-                    if len(epitope) >= 7:
-                        predicted.append(epitope)
-                        predicted.append(int(value) - len(epitope) + 1)
-                        predicted.append(int(value))
-                        predicted = [key] + [conserved_sequence] + predicted
-                        kolaskartongaonkar_results.append(predicted)
-                    epitope = ''
                     predicted = []
-                elif index == len(positions) - 1:
-                    epitope = epitope + residues[index]
-                    if len(epitope) >= 7:
-                        predicted.append(epitope)
-                        predicted.append(int(value) - len(epitope) + 1)
-                        predicted.append(int(value))
-                        predicted = [key] + [conserved_sequence] + predicted
-                        kolaskartongaonkar_results.append(predicted)
                     epitope = ''
-                    predicted = []
+                    
+                    for index, value in enumerate(positions):
+                        if (index != len(positions) - 1 and int(value) + 1 == int(positions[index + 1])):
+                            epitope = epitope + residues[index]
+                        elif (index != len(positions) - 1 and int(value) + 1 != int(positions[index + 1])):
+                            epitope = epitope + residues[index]
+                            if len(epitope) >= 7:
+                                predicted.append(epitope)
+                                predicted.append(int(value) - len(epitope) + 1)
+                                predicted.append(int(value))
+                                predicted = [key] + [conserved_sequence] + predicted
+                                kolaskartongaonkar_results.append(predicted)
+                            epitope = ''
+                            predicted = []
+                        elif index == len(positions) - 1:
+                            epitope = epitope + residues[index]
+                            if len(epitope) >= 7:
+                                predicted.append(epitope)
+                                predicted.append(int(value) - len(epitope) + 1)
+                                predicted.append(int(value))
+                                predicted = [key] + [conserved_sequence] + predicted
+                                kolaskartongaonkar_results.append(predicted)
+                            epitope = ''
+                            predicted = []
+            except:
+
+                print("Retrying prediction of linear epitopes of protein " + key + " with Kolaskar-Tongaonkar")
+
+                try:
+                    time.sleep(1)
+                    headers = {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        }
+                    
+                    data = {
+                        'method': 'Kolaskar-Tongaonkar',
+                        'sequence_text': conserved_sequence,
+                        'window_size': '7',
+                        }
+                    
+                    response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/bcell/', headers=headers, data=data)
+                    response_data_split_by_line = response.content.decode('utf-8').splitlines()
+
+                    response_body = []
+                    for line in response_data_split_by_line:
+                        split_line = line.split("\t")
+                        response_body.append(split_line)
+
+                    df = pd.DataFrame(response_body[1:], columns=response_body[0])
+                    df["Score"] = pd.to_numeric(df["Score"])
+                    average_of_scores = df["Score"].mean()
+                    df = df.loc[df['Score'] >= average_of_scores]
+                    
+                    if df.empty == True:
+                        print("No epitopes predicted for protein " + key + " with sequence length " + str(len(conserved_sequence)))
+                        continue
+                    else:
+                        positions = df.iloc[:, 0].to_list()
+                        residues = df.iloc[:, 1].to_list()
+
+                        predicted = []
+                        epitope = ''
+                        
+                        for index, value in enumerate(positions):
+                            if (index != len(positions) - 1 and int(value) + 1 == int(positions[index + 1])):
+                                epitope = epitope + residues[index]
+                            elif (index != len(positions) - 1 and int(value) + 1 != int(positions[index + 1])):
+                                epitope = epitope + residues[index]
+                                if len(epitope) >= 7:
+                                    predicted.append(epitope)
+                                    predicted.append(int(value) - len(epitope) + 1)
+                                    predicted.append(int(value))
+                                    predicted = [key] + [conserved_sequence] + predicted
+                                    kolaskartongaonkar_results.append(predicted)
+                                epitope = ''
+                                predicted = []
+                            elif index == len(positions) - 1:
+                                epitope = epitope + residues[index]
+                                if len(epitope) >= 7:
+                                    predicted.append(epitope)
+                                    predicted.append(int(value) - len(epitope) + 1)
+                                    predicted.append(int(value))
+                                    predicted = [key] + [conserved_sequence] + predicted
+                                    kolaskartongaonkar_results.append(predicted)
+                                epitope = ''
+                                predicted = []
+                except:
+                    print("Epitope prediction for protein " + key + " and sequence length " + str(len(conserved_sequence)) + " failed")
+                    continue
+
     with open('epitope_prediction_results/kolaskartongaonkar_epitopes.csv', 'w', newline="") as f:
         writer = csv.writer(f)
         writer.writerows(kolaskartongaonkar_results) 
@@ -884,60 +1229,130 @@ def parker(conserved_sequences_dict):
     for key, sequences in conserved_sequences_dict.items():
         print("Predicting linear epitopes of protein " + key + " with Parker")
         for conserved_sequence in sequences:
-            
-            time.sleep(1)
-            headers = {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                }
-            
-            data = {
-                'method': 'Parker',
-                'sequence_text': conserved_sequence,
-                'window_size': '7',
-                }
-            
-            response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/bcell/', headers=headers, data=data)
-            response_data_split_by_line = response.content.decode('utf-8').splitlines()
-            
-            response_body = []
-            for line in response_data_split_by_line:
-                split_line = line.split("\t")
-                response_body.append(split_line)
+            try:
+                time.sleep(1)
+                headers = {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    }
+                
+                data = {
+                    'method': 'Parker',
+                    'sequence_text': conserved_sequence,
+                    'window_size': '7',
+                    }
+                
+                response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/bcell/', headers=headers, data=data)
+                response_data_split_by_line = response.content.decode('utf-8').splitlines()
+                
+                response_body = []
+                for line in response_data_split_by_line:
+                    split_line = line.split("\t")
+                    response_body.append(split_line)
 
-            df = pd.DataFrame(response_body[1:], columns=response_body[0])
-            df["Score"] = pd.to_numeric(df["Score"])
-            average_of_scores = df["Score"].mean()
-            df = df.loc[df['Score'] >= average_of_scores]
+                df = pd.DataFrame(response_body[1:], columns=response_body[0])
+                df["Score"] = pd.to_numeric(df["Score"])
+                average_of_scores = df["Score"].mean()
+                df = df.loc[df['Score'] >= average_of_scores]
 
-            positions = df.iloc[:, 0].to_list()
-            residues = df.iloc[:, 1].to_list()
+                if df.empty == True:
+                    print("No epitopes predicted for protein " + key + " with sequence length " + str(len(conserved_sequence)))
+                    continue
+                else:
+                    positions = df.iloc[:, 0].to_list()
+                    residues = df.iloc[:, 1].to_list()
 
-            predicted = []
-            epitope = ''
-            
-            for index, value in enumerate(positions):
-                if (index != len(positions) - 1 and int(value) + 1 == int(positions[index + 1])):
-                    epitope = epitope + residues[index]
-                elif (index != len(positions) - 1 and int(value) + 1 != int(positions[index + 1])):
-                    epitope = epitope + residues[index]
-                    if len(epitope) >= 7:
-                        predicted.append(epitope)
-                        predicted.append(int(value) - len(epitope) + 1)
-                        predicted.append(int(value))
-                        predicted = [key] + [conserved_sequence] + predicted
-                        parker_results.append(predicted)
-                    epitope = ''
                     predicted = []
-                elif index == len(positions) - 1:
-                    epitope = epitope + residues[index]
-                    if len(epitope) >= 7:
-                        predicted.append(epitope)
-                        predicted.append(int(value) - len(epitope) + 1)
-                        predicted.append(int(value))
-                        predicted = [key] + [conserved_sequence] + predicted
-                        parker_results.append(predicted)
                     epitope = ''
-                    predicted = []
+                    
+                    for index, value in enumerate(positions):
+                        if (index != len(positions) - 1 and int(value) + 1 == int(positions[index + 1])):
+                            epitope = epitope + residues[index]
+                        elif (index != len(positions) - 1 and int(value) + 1 != int(positions[index + 1])):
+                            epitope = epitope + residues[index]
+                            if len(epitope) >= 7:
+                                predicted.append(epitope)
+                                predicted.append(int(value) - len(epitope) + 1)
+                                predicted.append(int(value))
+                                predicted = [key] + [conserved_sequence] + predicted
+                                parker_results.append(predicted)
+                            epitope = ''
+                            predicted = []
+                        elif index == len(positions) - 1:
+                            epitope = epitope + residues[index]
+                            if len(epitope) >= 7:
+                                predicted.append(epitope)
+                                predicted.append(int(value) - len(epitope) + 1)
+                                predicted.append(int(value))
+                                predicted = [key] + [conserved_sequence] + predicted
+                                parker_results.append(predicted)
+                            epitope = ''
+                            predicted = []
+            except:
+
+                print("Retrying prediction of linear epitopes of protein " + key + " with Parker")
+
+                try:
+                    time.sleep(1)
+                    headers = {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        }
+                    
+                    data = {
+                        'method': 'Parker',
+                        'sequence_text': conserved_sequence,
+                        'window_size': '7',
+                        }
+                    
+                    response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/bcell/', headers=headers, data=data)
+                    response_data_split_by_line = response.content.decode('utf-8').splitlines()
+                    
+                    response_body = []
+                    for line in response_data_split_by_line:
+                        split_line = line.split("\t")
+                        response_body.append(split_line)
+
+                    df = pd.DataFrame(response_body[1:], columns=response_body[0])
+                    df["Score"] = pd.to_numeric(df["Score"])
+                    average_of_scores = df["Score"].mean()
+                    df = df.loc[df['Score'] >= average_of_scores]
+
+                    if df.empty == True:
+                        print("No epitopes predicted for protein " + key + " with sequence length " + str(len(conserved_sequence)))
+                        continue
+                    else:
+                        positions = df.iloc[:, 0].to_list()
+                        residues = df.iloc[:, 1].to_list()
+
+                        predicted = []
+                        epitope = ''
+                        
+                        for index, value in enumerate(positions):
+                            if (index != len(positions) - 1 and int(value) + 1 == int(positions[index + 1])):
+                                epitope = epitope + residues[index]
+                            elif (index != len(positions) - 1 and int(value) + 1 != int(positions[index + 1])):
+                                epitope = epitope + residues[index]
+                                if len(epitope) >= 7:
+                                    predicted.append(epitope)
+                                    predicted.append(int(value) - len(epitope) + 1)
+                                    predicted.append(int(value))
+                                    predicted = [key] + [conserved_sequence] + predicted
+                                    parker_results.append(predicted)
+                                epitope = ''
+                                predicted = []
+                            elif index == len(positions) - 1:
+                                epitope = epitope + residues[index]
+                                if len(epitope) >= 7:
+                                    predicted.append(epitope)
+                                    predicted.append(int(value) - len(epitope) + 1)
+                                    predicted.append(int(value))
+                                    predicted = [key] + [conserved_sequence] + predicted
+                                    parker_results.append(predicted)
+                                epitope = ''
+                                predicted = []
+                except:
+                    print("Epitope prediction for protein " + key + " and sequence length " + str(len(conserved_sequence)) + " failed")
+                    continue
+                
     with open('epitope_prediction_results/parker_epitopes.csv', 'w', newline="") as f:
         writer = csv.writer(f)
         writer.writerows(parker_results) 
@@ -959,65 +1374,71 @@ def ellipro(list_of_pdb_ids):
     discontinous_epitopes = [discontinous_columns]
 
     for protein_id in list_of_pdb_ids:
-        print("Predicting linear and discontinous epitopes of protein " + protein_id + " with Ellipro")
-        driver = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
-        driver.get(ellipro_url)
-        driver.find_element(By.NAME, "pdb_id").send_keys(protein_id)
-        driver.find_element(By.NAME, "submit").click()
+        try:
+            print("Predicting linear and discontinous epitopes of protein " + protein_id + " with Ellipro")
+            driver = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
+            driver.get(ellipro_url)
+            driver.find_element(By.NAME, "pdb_id").send_keys(protein_id)
+            driver.find_element(By.NAME, "submit").click()
 
-        wait = WebDriverWait(driver, 180)
-        wait.until(ec.visibility_of_element_located((By.ID, "result_table")))
-        driver.find_element(By.NAME, "chain").click()
-        chain = driver.find_element(By.XPATH, "/html/body/div[3]/form/table/tbody/tr[1]/td[3]").text
-        driver.find_element(By.NAME, "submit").click()
+            wait = WebDriverWait(driver, 180)
+            wait.until(ec.visibility_of_element_located((By.ID, "result_table")))
+            driver.find_element(By.NAME, "chain").click()
+            chain = driver.find_element(By.XPATH, "/html/body/div[3]/form/table/tbody/tr[1]/td[3]").text
+            driver.find_element(By.NAME, "submit").click()
 
-        wait.until(ec.visibility_of_element_located((By.CLASS_NAME, "output_title")))
-        table_of_linear_epitopes = driver.find_element(By.XPATH, '/html/body/div[3]/table[2]/tbody').text.splitlines()
-        columns_of_linear_epitopes = driver.find_element(By.XPATH, '/html/body/div[3]/table[2]/thead').text.splitlines()
+            wait.until(ec.visibility_of_element_located((By.CLASS_NAME, "output_title")))
+            table_of_linear_epitopes = driver.find_element(By.XPATH, '/html/body/div[3]/table[2]/tbody').text.splitlines()
+            columns_of_linear_epitopes = driver.find_element(By.XPATH, '/html/body/div[3]/table[2]/thead').text.splitlines()
 
-        table_of_discontinous_epitopes = driver.find_element(By.XPATH, '/html/body/div[3]/table[3]/tbody').text.splitlines()
-        columns_of_discontinous_epitopes = driver.find_element(By.XPATH, '/html/body/div[3]/table[3]/thead').text.splitlines()
+            table_of_discontinous_epitopes = driver.find_element(By.XPATH, '/html/body/div[3]/table[3]/tbody').text.splitlines()
+            columns_of_discontinous_epitopes = driver.find_element(By.XPATH, '/html/body/div[3]/table[3]/thead').text.splitlines()
 
-        linear_epitopes_split_rows = []
-        for row in table_of_linear_epitopes:
-            split_row = row.split(" ")
-            linear_epitopes_split_rows.append(split_row)
+            linear_epitopes_split_rows = []
+            for row in table_of_linear_epitopes:
+                split_row = row.split(" ")
+                linear_epitopes_split_rows.append(split_row)
+            
+            df = pd.DataFrame(linear_epitopes_split_rows, columns=columns_of_linear_epitopes[:-1])
+            df["Score"] = pd.to_numeric(df["Score"])
+            df = df.loc[df['Score'] >= 0.7]
+
+            if df.empty == True:
+                print("No epitopes predicted for PDB ID " + protein_id)
+                continue
+            else:
+                rows = [[i for i in row[1:]] for row in df.itertuples()]
+                for i in rows:
+                    i = [protein_id] + i[1:]
+                    linear_epitopes.append(i)
+
+            rows = []
+            for i in range(len(table_of_discontinous_epitopes)):
+                row = []
+                for e in range(len(columns_of_discontinous_epitopes[:-1])):
+                    cell = driver.find_element(By.XPATH, '/html/body/div[3]/table[3]/tbody/tr[' + str(i+1) + ']/td[' + str(e+1) + ']').text
+                    row.append(cell)
+                rows.append(row)
+            driver.close()
+
+            for arow in rows:
+                if float(arow[3]) >= 0.7:
+                    unproc_aa_list = arow[1].split(', ')
+                    aa_list = []
+                    for position in unproc_aa_list:
+                        aa = position[2:]
+                        aa_list.append(aa)
+                    epitope = ','.join(aa_list)
+                    start_pos = unproc_aa_list[0][3:]
+                    end_pos = unproc_aa_list[-1][3:]
+                    nr_of_residues = len(aa_list)
+                    score = float(arow[3])
+                    row_to_append = [protein_id] + [chain] + [epitope] + [start_pos] + [end_pos] + [nr_of_residues] + [score]
+                    discontinous_epitopes.append(row_to_append)
         
-        df = pd.DataFrame(linear_epitopes_split_rows, columns=columns_of_linear_epitopes[:-1])
-        df["Score"] = pd.to_numeric(df["Score"])
-        df = df.loc[df['Score'] >= 0.7]
-
-        if df.empty == True:
+        except:
+            print("Epitope prediction for PDB ID " + protein_id + " failed")
             continue
-        else:
-            rows = [[i for i in row[1:]] for row in df.itertuples()]
-            for i in rows:
-                i = [protein_id] + i[1:]
-                linear_epitopes.append(i)
-
-        rows = []
-        for i in range(len(table_of_discontinous_epitopes)):
-            row = []
-            for e in range(len(columns_of_discontinous_epitopes[:-1])):
-                cell = driver.find_element(By.XPATH, '/html/body/div[3]/table[3]/tbody/tr[' + str(i+1) + ']/td[' + str(e+1) + ']').text
-                row.append(cell)
-            rows.append(row)
-        driver.close()
-
-        for arow in rows:
-            if float(arow[3]) >= 0.7:
-                unproc_aa_list = arow[1].split(', ')
-                aa_list = []
-                for position in unproc_aa_list:
-                    aa = position[2:]
-                    aa_list.append(aa)
-                epitope = ','.join(aa_list)
-                start_pos = unproc_aa_list[0][3:]
-                end_pos = unproc_aa_list[-1][3:]
-                nr_of_residues = len(aa_list)
-                score = float(arow[3])
-                row_to_append = [protein_id] + [chain] + [epitope] + [start_pos] + [end_pos] + [nr_of_residues] + [score]
-                discontinous_epitopes.append(row_to_append)
     with open('epitope_prediction_results/ellipro_linear_epitopes.csv', 'w', newline="") as f:
         writer = csv.writer(f)
         writer.writerows(linear_epitopes) 
@@ -1039,85 +1460,91 @@ def discotope(list_of_pdb_ids):
     discotope_epitopes = [discotope_columns]
 
     for protein_id in list_of_pdb_ids:
-        print("Predicting discontinous epitopes of protein " + protein_id + " with Discotope")
-        driver = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
-        driver.get(discotope_url)
-        driver.find_element(By.ID, "id_pdb").send_keys(protein_id)
-        chain = 'A'
-        driver.find_element(By.ID, "id_chain").send_keys(chain)
-        driver.find_element(By.XPATH, "/html/body/div[3]/form/table/tbody/tr[3]/td[2]/select/option[2]").click()
-        driver.find_element(By.NAME, "submit").click()
+        try:
+            print("Predicting discontinous epitopes of protein " + protein_id + " with Discotope")
+            driver = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
+            driver.get(discotope_url)
+            driver.find_element(By.ID, "id_pdb").send_keys(protein_id)
+            chain = 'A'
+            driver.find_element(By.ID, "id_chain").send_keys(chain)
+            driver.find_element(By.XPATH, "/html/body/div[3]/form/table/tbody/tr[3]/td[2]/select/option[2]").click()
+            driver.find_element(By.NAME, "submit").click()
 
-        wait = WebDriverWait(driver, 600)
-        wait.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div[3]/form")))
-        driver.find_element(By.XPATH, "/html/body/div[3]/form/a[1]/button").click()
-        wait.until(ec.visibility_of_element_located((By.ID, "result_table")))
-        discotope_table = driver.find_element(By.XPATH, '/html/body/div[3]/table/tbody').text.splitlines()
-        discotope_table_columns = driver.find_element(By.XPATH, '/html/body/div[3]/table/thead').text.splitlines()
-        driver.close()
+            wait = WebDriverWait(driver, 600)
+            wait.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div[3]/form")))
+            driver.find_element(By.XPATH, "/html/body/div[3]/form/a[1]/button").click()
+            wait.until(ec.visibility_of_element_located((By.ID, "result_table")))
+            discotope_table = driver.find_element(By.XPATH, '/html/body/div[3]/table/tbody').text.splitlines()
+            discotope_table_columns = driver.find_element(By.XPATH, '/html/body/div[3]/table/thead').text.splitlines()
+            driver.close()
 
-        discotope_epitopes_split_rows = []
-        for row in discotope_table:
-            split_row = row.split(" ")
-            discotope_epitopes_split_rows.append(split_row)
-        
-        df = pd.DataFrame(discotope_epitopes_split_rows, columns=discotope_table_columns)
-        df["Discotope Score"] = pd.to_numeric(df["Discotope Score"])
-        df = df.loc[df['Discotope Score'] >= -3.7]
+            discotope_epitopes_split_rows = []
+            for row in discotope_table:
+                split_row = row.split(" ")
+                discotope_epitopes_split_rows.append(split_row)
+            
+            df = pd.DataFrame(discotope_epitopes_split_rows, columns=discotope_table_columns)
+            df["Discotope Score"] = pd.to_numeric(df["Discotope Score"])
+            df = df.loc[df['Discotope Score'] >= -3.7]
 
-        if df.empty == True:
-            continue
-        else:
-            residue_id = df.iloc[:, 1].to_list()
-            residue_name = df.iloc[:, 2].to_list()
-
-        discontinous_epitope = []
-        for i in range(len(residue_name)):
-            if residue_name[i] == 'ARG':
-                ARG = 'R'
-                pos = ARG + str(residue_id[i])
-                discontinous_epitope.append(pos)
-            elif residue_name[i] == 'ASN':
-                ASN = 'N'
-                pos = ASN + str(residue_id[i])
-                discontinous_epitope.append(pos)
-            elif residue_name[i] == 'ASP':
-                ASP = 'D'
-                pos = ASP + str(residue_id[i])
-                discontinous_epitope.append(pos)
-            elif residue_name[i] == 'GLN':
-                GLN = 'Q'
-                pos = GLN + str(residue_id[i])
-                discontinous_epitope.append(pos)
-            elif residue_name[i] == 'GLU':
-                GLU = 'E'
-                pos = GLU + str(residue_id[i])
-                discontinous_epitope.append(pos)
-            elif residue_name[i] == 'LYS':
-                LYS = 'K'
-                pos = LYS + str(residue_id[i])
-                discontinous_epitope.append(pos)
-            elif residue_name[i] == 'PHE':
-                PHE = 'F'
-                pos = PHE + str(residue_id[i])
-                discontinous_epitope.append(pos)
-            elif residue_name[i] == 'TRP':
-                TRP = 'W'
-                pos = TRP + str(residue_id[i])
-                discontinous_epitope.append(pos)
-            elif residue_name[i] == 'TYR':
-                TYR = 'Y'
-                pos = TYR + str(residue_id[i])
-                discontinous_epitope.append(pos)
+            if df.empty == True:
+                print("No epitopes predicted for PDB ID " + protein_id)
+                continue
             else:
-                pos = residue_name[i][0] + str(residue_id[i])
-                discontinous_epitope.append(pos)
-        
-        epitope = ','.join(discontinous_epitope)
-        start_pos = residue_id[0]
-        end_pos = residue_id[-1]
-        row_to_append = [protein_id] + [chain] + [epitope] + [start_pos] + [end_pos] + [len(residue_name)]
-        discotope_epitopes.append(row_to_append)
+                residue_id = df.iloc[:, 1].to_list()
+                residue_name = df.iloc[:, 2].to_list()
+
+            discontinous_epitope = []
+            for i in range(len(residue_name)):
+                if residue_name[i] == 'ARG':
+                    ARG = 'R'
+                    pos = ARG + str(residue_id[i])
+                    discontinous_epitope.append(pos)
+                elif residue_name[i] == 'ASN':
+                    ASN = 'N'
+                    pos = ASN + str(residue_id[i])
+                    discontinous_epitope.append(pos)
+                elif residue_name[i] == 'ASP':
+                    ASP = 'D'
+                    pos = ASP + str(residue_id[i])
+                    discontinous_epitope.append(pos)
+                elif residue_name[i] == 'GLN':
+                    GLN = 'Q'
+                    pos = GLN + str(residue_id[i])
+                    discontinous_epitope.append(pos)
+                elif residue_name[i] == 'GLU':
+                    GLU = 'E'
+                    pos = GLU + str(residue_id[i])
+                    discontinous_epitope.append(pos)
+                elif residue_name[i] == 'LYS':
+                    LYS = 'K'
+                    pos = LYS + str(residue_id[i])
+                    discontinous_epitope.append(pos)
+                elif residue_name[i] == 'PHE':
+                    PHE = 'F'
+                    pos = PHE + str(residue_id[i])
+                    discontinous_epitope.append(pos)
+                elif residue_name[i] == 'TRP':
+                    TRP = 'W'
+                    pos = TRP + str(residue_id[i])
+                    discontinous_epitope.append(pos)
+                elif residue_name[i] == 'TYR':
+                    TYR = 'Y'
+                    pos = TYR + str(residue_id[i])
+                    discontinous_epitope.append(pos)
+                else:
+                    pos = residue_name[i][0] + str(residue_id[i])
+                    discontinous_epitope.append(pos)
+            
+            epitope = ','.join(discontinous_epitope)
+            start_pos = residue_id[0]
+            end_pos = residue_id[-1]
+            row_to_append = [protein_id] + [chain] + [epitope] + [start_pos] + [end_pos] + [len(residue_name)]
+            discotope_epitopes.append(row_to_append)
+
+        except:
+            print("Epitope prediction for PDB ID " + protein_id + " failed")
+            continue
     with open('epitope_prediction_results/discotope_epitopes.csv', 'w', newline="") as f:
         writer = csv.writer(f)
         writer.writerows(discotope_epitopes)  

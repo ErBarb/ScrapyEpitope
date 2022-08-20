@@ -1374,65 +1374,71 @@ def ellipro(list_of_pdb_ids):
     discontinous_epitopes = [discontinous_columns]
 
     for protein_id in list_of_pdb_ids:
-        print("Predicting linear and discontinous epitopes of protein " + protein_id + " with Ellipro")
-        driver = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
-        driver.get(ellipro_url)
-        driver.find_element(By.NAME, "pdb_id").send_keys(protein_id)
-        driver.find_element(By.NAME, "submit").click()
+        try:
+            print("Predicting linear and discontinous epitopes of protein " + protein_id + " with Ellipro")
+            driver = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
+            driver.get(ellipro_url)
+            driver.find_element(By.NAME, "pdb_id").send_keys(protein_id)
+            driver.find_element(By.NAME, "submit").click()
 
-        wait = WebDriverWait(driver, 180)
-        wait.until(ec.visibility_of_element_located((By.ID, "result_table")))
-        driver.find_element(By.NAME, "chain").click()
-        chain = driver.find_element(By.XPATH, "/html/body/div[3]/form/table/tbody/tr[1]/td[3]").text
-        driver.find_element(By.NAME, "submit").click()
+            wait = WebDriverWait(driver, 180)
+            wait.until(ec.visibility_of_element_located((By.ID, "result_table")))
+            driver.find_element(By.NAME, "chain").click()
+            chain = driver.find_element(By.XPATH, "/html/body/div[3]/form/table/tbody/tr[1]/td[3]").text
+            driver.find_element(By.NAME, "submit").click()
 
-        wait.until(ec.visibility_of_element_located((By.CLASS_NAME, "output_title")))
-        table_of_linear_epitopes = driver.find_element(By.XPATH, '/html/body/div[3]/table[2]/tbody').text.splitlines()
-        columns_of_linear_epitopes = driver.find_element(By.XPATH, '/html/body/div[3]/table[2]/thead').text.splitlines()
+            wait.until(ec.visibility_of_element_located((By.CLASS_NAME, "output_title")))
+            table_of_linear_epitopes = driver.find_element(By.XPATH, '/html/body/div[3]/table[2]/tbody').text.splitlines()
+            columns_of_linear_epitopes = driver.find_element(By.XPATH, '/html/body/div[3]/table[2]/thead').text.splitlines()
 
-        table_of_discontinous_epitopes = driver.find_element(By.XPATH, '/html/body/div[3]/table[3]/tbody').text.splitlines()
-        columns_of_discontinous_epitopes = driver.find_element(By.XPATH, '/html/body/div[3]/table[3]/thead').text.splitlines()
+            table_of_discontinous_epitopes = driver.find_element(By.XPATH, '/html/body/div[3]/table[3]/tbody').text.splitlines()
+            columns_of_discontinous_epitopes = driver.find_element(By.XPATH, '/html/body/div[3]/table[3]/thead').text.splitlines()
 
-        linear_epitopes_split_rows = []
-        for row in table_of_linear_epitopes:
-            split_row = row.split(" ")
-            linear_epitopes_split_rows.append(split_row)
+            linear_epitopes_split_rows = []
+            for row in table_of_linear_epitopes:
+                split_row = row.split(" ")
+                linear_epitopes_split_rows.append(split_row)
+            
+            df = pd.DataFrame(linear_epitopes_split_rows, columns=columns_of_linear_epitopes[:-1])
+            df["Score"] = pd.to_numeric(df["Score"])
+            df = df.loc[df['Score'] >= 0.7]
+
+            if df.empty == True:
+                print("No epitopes predicted for PDB ID " + protein_id)
+                continue
+            else:
+                rows = [[i for i in row[1:]] for row in df.itertuples()]
+                for i in rows:
+                    i = [protein_id] + i[1:]
+                    linear_epitopes.append(i)
+
+            rows = []
+            for i in range(len(table_of_discontinous_epitopes)):
+                row = []
+                for e in range(len(columns_of_discontinous_epitopes[:-1])):
+                    cell = driver.find_element(By.XPATH, '/html/body/div[3]/table[3]/tbody/tr[' + str(i+1) + ']/td[' + str(e+1) + ']').text
+                    row.append(cell)
+                rows.append(row)
+            driver.close()
+
+            for arow in rows:
+                if float(arow[3]) >= 0.7:
+                    unproc_aa_list = arow[1].split(', ')
+                    aa_list = []
+                    for position in unproc_aa_list:
+                        aa = position[2:]
+                        aa_list.append(aa)
+                    epitope = ','.join(aa_list)
+                    start_pos = unproc_aa_list[0][3:]
+                    end_pos = unproc_aa_list[-1][3:]
+                    nr_of_residues = len(aa_list)
+                    score = float(arow[3])
+                    row_to_append = [protein_id] + [chain] + [epitope] + [start_pos] + [end_pos] + [nr_of_residues] + [score]
+                    discontinous_epitopes.append(row_to_append)
         
-        df = pd.DataFrame(linear_epitopes_split_rows, columns=columns_of_linear_epitopes[:-1])
-        df["Score"] = pd.to_numeric(df["Score"])
-        df = df.loc[df['Score'] >= 0.7]
-
-        if df.empty == True:
+        except:
+            print("Epitope prediction for PDB ID " + protein_id + " failed")
             continue
-        else:
-            rows = [[i for i in row[1:]] for row in df.itertuples()]
-            for i in rows:
-                i = [protein_id] + i[1:]
-                linear_epitopes.append(i)
-
-        rows = []
-        for i in range(len(table_of_discontinous_epitopes)):
-            row = []
-            for e in range(len(columns_of_discontinous_epitopes[:-1])):
-                cell = driver.find_element(By.XPATH, '/html/body/div[3]/table[3]/tbody/tr[' + str(i+1) + ']/td[' + str(e+1) + ']').text
-                row.append(cell)
-            rows.append(row)
-        driver.close()
-
-        for arow in rows:
-            if float(arow[3]) >= 0.7:
-                unproc_aa_list = arow[1].split(', ')
-                aa_list = []
-                for position in unproc_aa_list:
-                    aa = position[2:]
-                    aa_list.append(aa)
-                epitope = ','.join(aa_list)
-                start_pos = unproc_aa_list[0][3:]
-                end_pos = unproc_aa_list[-1][3:]
-                nr_of_residues = len(aa_list)
-                score = float(arow[3])
-                row_to_append = [protein_id] + [chain] + [epitope] + [start_pos] + [end_pos] + [nr_of_residues] + [score]
-                discontinous_epitopes.append(row_to_append)
     with open('epitope_prediction_results/ellipro_linear_epitopes.csv', 'w', newline="") as f:
         writer = csv.writer(f)
         writer.writerows(linear_epitopes) 
@@ -1454,85 +1460,91 @@ def discotope(list_of_pdb_ids):
     discotope_epitopes = [discotope_columns]
 
     for protein_id in list_of_pdb_ids:
-        print("Predicting discontinous epitopes of protein " + protein_id + " with Discotope")
-        driver = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
-        driver.get(discotope_url)
-        driver.find_element(By.ID, "id_pdb").send_keys(protein_id)
-        chain = 'A'
-        driver.find_element(By.ID, "id_chain").send_keys(chain)
-        driver.find_element(By.XPATH, "/html/body/div[3]/form/table/tbody/tr[3]/td[2]/select/option[2]").click()
-        driver.find_element(By.NAME, "submit").click()
+        try:
+            print("Predicting discontinous epitopes of protein " + protein_id + " with Discotope")
+            driver = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
+            driver.get(discotope_url)
+            driver.find_element(By.ID, "id_pdb").send_keys(protein_id)
+            chain = 'A'
+            driver.find_element(By.ID, "id_chain").send_keys(chain)
+            driver.find_element(By.XPATH, "/html/body/div[3]/form/table/tbody/tr[3]/td[2]/select/option[2]").click()
+            driver.find_element(By.NAME, "submit").click()
 
-        wait = WebDriverWait(driver, 600)
-        wait.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div[3]/form")))
-        driver.find_element(By.XPATH, "/html/body/div[3]/form/a[1]/button").click()
-        wait.until(ec.visibility_of_element_located((By.ID, "result_table")))
-        discotope_table = driver.find_element(By.XPATH, '/html/body/div[3]/table/tbody').text.splitlines()
-        discotope_table_columns = driver.find_element(By.XPATH, '/html/body/div[3]/table/thead').text.splitlines()
-        driver.close()
+            wait = WebDriverWait(driver, 600)
+            wait.until(ec.visibility_of_element_located((By.XPATH, "/html/body/div[3]/form")))
+            driver.find_element(By.XPATH, "/html/body/div[3]/form/a[1]/button").click()
+            wait.until(ec.visibility_of_element_located((By.ID, "result_table")))
+            discotope_table = driver.find_element(By.XPATH, '/html/body/div[3]/table/tbody').text.splitlines()
+            discotope_table_columns = driver.find_element(By.XPATH, '/html/body/div[3]/table/thead').text.splitlines()
+            driver.close()
 
-        discotope_epitopes_split_rows = []
-        for row in discotope_table:
-            split_row = row.split(" ")
-            discotope_epitopes_split_rows.append(split_row)
-        
-        df = pd.DataFrame(discotope_epitopes_split_rows, columns=discotope_table_columns)
-        df["Discotope Score"] = pd.to_numeric(df["Discotope Score"])
-        df = df.loc[df['Discotope Score'] >= -3.7]
+            discotope_epitopes_split_rows = []
+            for row in discotope_table:
+                split_row = row.split(" ")
+                discotope_epitopes_split_rows.append(split_row)
+            
+            df = pd.DataFrame(discotope_epitopes_split_rows, columns=discotope_table_columns)
+            df["Discotope Score"] = pd.to_numeric(df["Discotope Score"])
+            df = df.loc[df['Discotope Score'] >= -3.7]
 
-        if df.empty == True:
-            continue
-        else:
-            residue_id = df.iloc[:, 1].to_list()
-            residue_name = df.iloc[:, 2].to_list()
-
-        discontinous_epitope = []
-        for i in range(len(residue_name)):
-            if residue_name[i] == 'ARG':
-                ARG = 'R'
-                pos = ARG + str(residue_id[i])
-                discontinous_epitope.append(pos)
-            elif residue_name[i] == 'ASN':
-                ASN = 'N'
-                pos = ASN + str(residue_id[i])
-                discontinous_epitope.append(pos)
-            elif residue_name[i] == 'ASP':
-                ASP = 'D'
-                pos = ASP + str(residue_id[i])
-                discontinous_epitope.append(pos)
-            elif residue_name[i] == 'GLN':
-                GLN = 'Q'
-                pos = GLN + str(residue_id[i])
-                discontinous_epitope.append(pos)
-            elif residue_name[i] == 'GLU':
-                GLU = 'E'
-                pos = GLU + str(residue_id[i])
-                discontinous_epitope.append(pos)
-            elif residue_name[i] == 'LYS':
-                LYS = 'K'
-                pos = LYS + str(residue_id[i])
-                discontinous_epitope.append(pos)
-            elif residue_name[i] == 'PHE':
-                PHE = 'F'
-                pos = PHE + str(residue_id[i])
-                discontinous_epitope.append(pos)
-            elif residue_name[i] == 'TRP':
-                TRP = 'W'
-                pos = TRP + str(residue_id[i])
-                discontinous_epitope.append(pos)
-            elif residue_name[i] == 'TYR':
-                TYR = 'Y'
-                pos = TYR + str(residue_id[i])
-                discontinous_epitope.append(pos)
+            if df.empty == True:
+                print("No epitopes predicted for PDB ID " + protein_id)
+                continue
             else:
-                pos = residue_name[i][0] + str(residue_id[i])
-                discontinous_epitope.append(pos)
-        
-        epitope = ','.join(discontinous_epitope)
-        start_pos = residue_id[0]
-        end_pos = residue_id[-1]
-        row_to_append = [protein_id] + [chain] + [epitope] + [start_pos] + [end_pos] + [len(residue_name)]
-        discotope_epitopes.append(row_to_append)
+                residue_id = df.iloc[:, 1].to_list()
+                residue_name = df.iloc[:, 2].to_list()
+
+            discontinous_epitope = []
+            for i in range(len(residue_name)):
+                if residue_name[i] == 'ARG':
+                    ARG = 'R'
+                    pos = ARG + str(residue_id[i])
+                    discontinous_epitope.append(pos)
+                elif residue_name[i] == 'ASN':
+                    ASN = 'N'
+                    pos = ASN + str(residue_id[i])
+                    discontinous_epitope.append(pos)
+                elif residue_name[i] == 'ASP':
+                    ASP = 'D'
+                    pos = ASP + str(residue_id[i])
+                    discontinous_epitope.append(pos)
+                elif residue_name[i] == 'GLN':
+                    GLN = 'Q'
+                    pos = GLN + str(residue_id[i])
+                    discontinous_epitope.append(pos)
+                elif residue_name[i] == 'GLU':
+                    GLU = 'E'
+                    pos = GLU + str(residue_id[i])
+                    discontinous_epitope.append(pos)
+                elif residue_name[i] == 'LYS':
+                    LYS = 'K'
+                    pos = LYS + str(residue_id[i])
+                    discontinous_epitope.append(pos)
+                elif residue_name[i] == 'PHE':
+                    PHE = 'F'
+                    pos = PHE + str(residue_id[i])
+                    discontinous_epitope.append(pos)
+                elif residue_name[i] == 'TRP':
+                    TRP = 'W'
+                    pos = TRP + str(residue_id[i])
+                    discontinous_epitope.append(pos)
+                elif residue_name[i] == 'TYR':
+                    TYR = 'Y'
+                    pos = TYR + str(residue_id[i])
+                    discontinous_epitope.append(pos)
+                else:
+                    pos = residue_name[i][0] + str(residue_id[i])
+                    discontinous_epitope.append(pos)
+            
+            epitope = ','.join(discontinous_epitope)
+            start_pos = residue_id[0]
+            end_pos = residue_id[-1]
+            row_to_append = [protein_id] + [chain] + [epitope] + [start_pos] + [end_pos] + [len(residue_name)]
+            discotope_epitopes.append(row_to_append)
+
+        except:
+            print("Epitope prediction for PDB ID " + protein_id + " failed")
+            continue
     with open('epitope_prediction_results/discotope_epitopes.csv', 'w', newline="") as f:
         writer = csv.writer(f)
         writer.writerows(discotope_epitopes)  
