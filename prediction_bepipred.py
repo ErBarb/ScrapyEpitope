@@ -1145,13 +1145,13 @@ def predict_all(alleles_for_mhci, lengths_for_mhci, alleles_for_mhcii, lengths_f
     # mhci_proc(dictionary_conserved_sequences, alleles_for_mhci, lengths_for_mhci)
 
     # mhcii(dictionary_conserved_sequences, alleles_for_mhcii, lengths_for_mhcii)
+    bepipred(dictionary_conserved_sequences)
+    emini(dictionary_conserved_sequences)
+    choufasman(dictionary_conserved_sequences)
+    karplusschulz(dictionary_conserved_sequences)
+    kolaskartongaonkar(dictionary_conserved_sequences)
+    parker(dictionary_conserved_sequences)
     bepipred2(dictionary_conserved_sequences)
-    # bepipred(dictionary_conserved_sequences)
-    # emini(dictionary_conserved_sequences)
-    # choufasman(dictionary_conserved_sequences)
-    # karplusschulz(dictionary_conserved_sequences)
-    # kolaskartongaonkar(dictionary_conserved_sequences)
-    # parker(dictionary_conserved_sequences)
     
 
     #ellipro(list_of_pdb_ids)

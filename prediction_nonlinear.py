@@ -90,7 +90,7 @@ def mhci(conserved_sequences_dict, list_of_alleles, list_of_lengths):
     columns = ["protein_id"] + ["conserved_sequence"] + ["allele"] + ["seq_num"] + ["start"] + ["end"] + ["length"] + \
         ["peptide"] + ["core"] + ["icore"] + ["score"] + ["percentile_rank"]
     mhci_results.append(columns)
-    #print(conserved_sequences_dict)
+
     for key, value in conserved_sequences_dict.items():
         print("Predicting linear epitopes of protein " + key + " with MHCI")
         time.sleep(10)
@@ -1141,8 +1141,8 @@ def predict_all(alleles_for_mhci, lengths_for_mhci, alleles_for_mhcii, lengths_f
     #     print(key)
     #     print(len(value[0]))
 
-    mhci(dictionary_conserved_sequences, alleles_for_mhci, lengths_for_mhci)
-    mhci_proc(dictionary_conserved_sequences, alleles_for_mhci, lengths_for_mhci)
+    # mhci(dictionary_conserved_sequences, alleles_for_mhci, lengths_for_mhci)
+    # mhci_proc(dictionary_conserved_sequences, alleles_for_mhci, lengths_for_mhci)
 
     # mhcii(dictionary_conserved_sequences, alleles_for_mhcii, lengths_for_mhcii)
     # bepipred2(dictionary_conserved_sequences)
@@ -1154,8 +1154,8 @@ def predict_all(alleles_for_mhci, lengths_for_mhci, alleles_for_mhcii, lengths_f
     # parker(dictionary_conserved_sequences)
     
 
-    #ellipro(list_of_pdb_ids)
-    #discotope(list_of_pdb_ids)
+    ellipro(list_of_pdb_ids)
+    discotope(list_of_pdb_ids)
 
 
 def get_start_end_in_dict(rows_of_method_protein, method_dict, swissprot_id, protein_seq):

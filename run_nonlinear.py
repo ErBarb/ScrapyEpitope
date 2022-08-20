@@ -1,15 +1,14 @@
 from msa import prediction_choice
-from prediction_mhcii import predict_all
-from prediction_mhcii import get_pdb_from_swissprot
-from prediction_mhcii import analysis_choice
-from prediction_mhcii import swissprotIDSequenceLength
-from prediction_mhcii import epitope_distribution_plots
-from prediction_mhcii import dssp_analysis
+from prediction_nonlinear import predict_all
+from prediction_nonlinear import get_pdb_from_swissprot
+from prediction_nonlinear import analysis_choice
+from prediction_nonlinear import swissprotIDSequenceLength
+from prediction_nonlinear import epitope_distribution_plots
+from prediction_nonlinear import dssp_analysis
 from analyse import make_inputs_for_analysis
 from analyse import analyse_all
 from analyse import make_csv_from_results
 from analyse import read_prediction_results
-
 
 
 

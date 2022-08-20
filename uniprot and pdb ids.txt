@@ -1,0 +1,44 @@
+sars-cov2
+spike - P0DTC2 - 6VSB
+nucleoprotein - P0DTC9 - 6WJI
+membrane protein - P0DTC5 - None
+replicase polyprotein 1ab - P0DTD1 - 5R7Y
+orf3a protein - P0DTC3 - 6XDC
+
+sarscov1
+spike - P59594 - 5WRG
+nucleoprotein - P59595 - 2CJR
+replicase polyprotein 1ab - P0C6X7 - 1Q2W
+replicase polyprotein 1a - P0C6U8 - 1Q2W
+orf3a protein - P59632 - None
+
+hcov-oc43
+spike - P36334 - 7M51
+nucleoprotein - P33469 - 4J3K
+replicase polyprotein 1ab - P0C6X6 - 7NH7
+
+mers cov
+spike - K9N5Q8 - 4L72
+nucleoprotein - K9N4V7 - 6KL2
+replicase polyprotein 1ab - K9N7C7 - 4WUR
+
+HCoV-HKU1
+spike - U3N9S7 - None
+nucleoprotein - Q5MQC6 - None
+Replicase polyprotein 1ab - P0C6X2 - None
+
+HCoV-229E
+spike- P15423 - 7CYD
+nucleoprotein - P15130 - 7LGT
+replicase polyprotein 1ab - P0C6X1 - 4RS4
+
+HCoV-NL63
+spike - Q6Q1S2 - 7KIP
+nucleoprotein - Q6Q1R8 - 5EPW
+replicase polyprotein 1ab - P0C6X5 - 5NH0
+
+
+
+
+
+

@@ -16,12 +16,11 @@ from analyse_linear import read_prediction_results
 # path_to_muscle_alignment = '/home/erald/Desktop/ScrapyEpitope/msa_results/muscle/muscle.aln-fasta.fasta'
 # list_of_swissprot_ids = ['P59594', 'P0DTC2', 'K9N5Q8', 'P36334', 'Q0ZME7', 'P15423', 'Q6Q1S2', 'Q5MQD0', 'Q14EB0']
 
-list_of_swissprot_ids = ['H9EJ24', 'A0A0P0KH29', 'H9EJA2', 'K9N5R3', 'P0DTC4', 'P59637', 'Q04854', 'Q0ZJ83', 'Q3LZW9', 'P30215', 'A0A140H1H0', 'A0A0P0KXN3', 'K9N7A1', 'P0DTC5',
-                        'P59596', 'Q01455', 'Q0ZJ82', 'Q3LZX9', 'U3M6Q8', 'Q0ZJ80', 'Q80872', 'Q0ZJ84', 'Q3LZX6', 'Q3LZX5', 'Q04853', 'K9N796', 'K9N4V0', 'K9N643', 'K9N7D2', 
-                        'A0A0N7J131', 'H9EJ69', 'K9N4V7', 'P0DTC9', 'P33469', 'P59595', 'Q19U29', 'Q3LZX4', 'A0A663DJA2', 'A0A0P0ILY9', 'A0A0P0LKV0', 'A0A140H1G9', 'H9EJ42', 'P0DTC3', 
-                        'P59632', 'P59633', 'A0A0P0KWE8', 'P0DTC6', 'P59634', 'Q3LZX8', 'P0DTC7', 'P59635', 'P0DTD8', 'P0DTC8', 'Q7TFA0', 'Q80H93', 'P0DTD2', 'P59636', 'Q3LZX0', 
-                        'Q3LZX7', 'Q3LZX3', 'Q4VID0', 'Q7TFA1', 'K9N638', 'P0C6U7', 'P0C6U8', 'P0DTC1', 'K9N7C7', 'P0C6W2', 'P0C6X6', 'P0C6X7', 'P0DTD1', 'A0A0P0G321', 'A0A0P0K6L9', 
-                        'A0A140H1H1', 'A3EX94', 'F1DB20', 'K9N5Q8', 'P07946', 'P0DTC2', 'P36334', 'P59594', 'Q3LZX1', 'Q7TLC7']
+list_of_swissprot_ids = ['P0DTC2', 'P59594', 'P36334', 'K9N5Q8', 'U3N9S7', 'P15423', 'Q6Q1S2', 
+                        'P0DTC9', 'P59595', 'P33469', 'K9N4V7', 'Q5MQC6', 'P15130', 'Q6Q1R8',
+                        'P0DTC5', 
+                        'P0DTD1', 'P0C6X7', 'P0C6U8', 'P0C6X6', 'K9N7C7', 'P0C6X2', 'P0C6X1', 'P0C6X5', 
+                        'P0DTC3', 'P59632']
 
 mhci_alleles = ['HLA-A*01:01', 'HLA-A*02:01', 'HLA-A*02:06', 'HLA-A*03:01', 'HLA-A*11:01', 'HLA-A*23:01', 'HLA-A*24:02', 'HLA-A*25:01', 'HLA-A*26:01', 'HLA-A*29:02', 'HLA-A*30:01',
                 'HLA-A*30:02', 'HLA-A*31:01', 'HLA-A*32:01', 'HLA-A*33:03', 'HLA-A*68:01', 'HLA-A*68:02', 'HLA-A*74:01', 'HLA-B*07:02', 'HLA-B*08:01', 'HLA-B*13:01', 'HLA-B*13:02',
@@ -38,8 +37,10 @@ mhcii_alleles = ['HLA-DRB1*01:01', 'HLA-DRB1*07:01', 'HLA-DRB1*03:01', 'HLA-DRB1
                 'HLA-DPA1*01:03/DPB1*02:01', 'HLA-DPA1*01:03/DPB1*04:01', 'HLA-DPA1*03:01/DPB1*04:02', 'HLA-DPA1*02:01/DPB1*05:01', 'HLA-DPA1*02:01/DPB1*14:01']
 mhcii_lengths = [12, 13, 14, 15, 16, 17, 18]
 
-list_of_pdb_ids = ['7K3G', '5X29', '3I6G', '6KL2', '6WJI', '4J3K', '2CJR', '6XDC', '7VPH', '7VPG', '6W37', '1XAK', '7JTL', '6Z4U', '2CME', '4R3D', '7NH7', '1Q2W', '6Y2F', '4WUR', 
-'5R7Y', '4QZW', '4WUR', '4L72', '6VSB', '7M51', '5WRG']
+list_of_pdb_ids = ['6VSB', '5WRG', '7M51', '4L72', '7CYD', '7KIP', 
+                    '6WJI', '2CJR', '4J3K', '6KL2', '7LGT', '5EPW', 
+                    '5R7Y', '1Q2W', '7NH7', '4WUR', '4RS4', '5NH0', 
+                    '6XDC']
 
 
 # sequences = prediction_choice(list_of_swissprot_ids)
