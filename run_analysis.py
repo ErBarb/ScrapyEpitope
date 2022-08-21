@@ -56,7 +56,7 @@ prediction_results = read_prediction_results()
 analysis_input = make_inputs_for_analysis(prediction_results, list_of_swissprot_ids)
 print("Analysing sequences...")
 analysis_results = analyse_all(analysis_input)
-make_csv_from_results(prediction_results, analysis_results)
+#make_csv_from_results(prediction_results, analysis_results)
 print("Analysis finished. Sequences saved in 'results' folder in csv format")
 
 

@@ -569,3 +569,347 @@ console.warn: SearchSettings: "get: No settings file exists, new profile?" (new 
 Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
 Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
 DevTools listening on ws://localhost:43261/devtools/browser/ace1f637-1b7a-4077-96b1-12e09fc90305
+1661099384485	geckodriver	INFO	Listening on 127.0.0.1:38877
+1661099384970	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "50381" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileNFMQAg"
+*** You are running in headless mode.
+1661099385783	Marionette	INFO	Marionette enabled
+1661099385795	Marionette	INFO	Listening on port 38189
+WebDriver BiDi listening on ws://localhost:50381
+Read port: 38189
+1661099386022	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileNFMQAg/search.json.mozlz4", (void 0)))
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
+DevTools listening on ws://localhost:50381/devtools/browser/ddc28caa-8cd8-49d8-a036-86fdf6c14015
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "http://www.ddg-pharmfac.net"
+1661099442226	geckodriver	INFO	Listening on 127.0.0.1:36031
+1661099442734	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "37281" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofiles7303u"
+1661099443808	Marionette	INFO	Marionette enabled
+1661099443818	Marionette	INFO	Listening on port 41393
+WebDriver BiDi listening on ws://localhost:37281
+Read port: 41393
+1661099444040	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofiles7303u/search.json.mozlz4", (void 0)))
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
+DevTools listening on ws://localhost:37281/devtools/browser/8665daaa-a982-4ed6-8bb4-1eb4c0a16af8
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "http://www.ddg-pharmfac.net"
+1661099458485	geckodriver	INFO	Listening on 127.0.0.1:59301
+1661099458992	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "39139" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileQEBPkL"
+*** You are running in headless mode.
+1661099459821	Marionette	INFO	Marionette enabled
+1661099459831	Marionette	INFO	Listening on port 44363
+WebDriver BiDi listening on ws://localhost:39139
+Read port: 44363
+1661099460020	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileQEBPkL/search.json.mozlz4", (void 0)))
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
+DevTools listening on ws://localhost:39139/devtools/browser/b81542fa-340b-4319-b7dc-e2b89c5c62ae
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "http://tools.iedb.org"
+JavaScript error: http://tools.iedb.org/static/js/sequence_validation.js, line 89: TypeError: document.querySelector(...) is null
+1661099474118	Marionette	INFO	Stopped listening on port 44363
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
+console.error: "Error during quit-application-granted: [Exception... \"File error: Not found\"  nsresult: \"0x80520012 (NS_ERROR_FILE_NOT_FOUND)\"  location: \"JS frame :: resource:///modules/BrowserGlue.jsm :: _onQuitApplicationGranted/tasks< :: line 2006\"  data: no]"
+1661099474904	geckodriver	INFO	Listening on 127.0.0.1:37449
+1661099474915	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "50305" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileGKPn58"
+*** You are running in headless mode.
+1661099475927	Marionette	INFO	Marionette enabled
+1661099475941	Marionette	INFO	Listening on port 36889
+WebDriver BiDi listening on ws://localhost:50305
+Read port: 36889
+1661099476212	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileGKPn58/search.json.mozlz4", (void 0)))
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
+DevTools listening on ws://localhost:50305/devtools/browser/cb7dd996-9990-4132-9ecb-3af2c68c4d84
+JavaScript error: http://tools.iedb.org/conservancy/, line 33: SyntaxError: JSON.parse: unexpected end of data at line 1 column 1 of the JSON data
+JavaScript error: http://tools.iedb.org/static/js/sequence_validation.js, line 89: TypeError: document.querySelector(...) is null
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "http://tools.iedb.org"
+console.error: "Unable to find target with innerWindowId:4294967299"
+JavaScript error: resource://gre/modules/AsyncShutdown.jsm, line 577: NotFoundError: No such JSWindowActor 'DevToolsFrame'
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
+console.error: "Error during quit-application-granted: [Exception... \"File error: Not found\"  nsresult: \"0x80520012 (NS_ERROR_FILE_NOT_FOUND)\"  location: \"JS frame :: resource:///modules/BrowserGlue.jsm :: _onQuitApplicationGranted/tasks< :: line 2006\"  data: no]"
+1661099683738	Marionette	INFO	Stopped listening on port 41393
+1661099718979	geckodriver	INFO	Listening on 127.0.0.1:56579
+1661099719487	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "51141" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileNbd1PW"
+1661099720589	Marionette	INFO	Marionette enabled
+1661099720598	Marionette	INFO	Listening on port 36295
+WebDriver BiDi listening on ws://localhost:51141
+Read port: 36295
+1661099720800	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileNbd1PW/search.json.mozlz4", (void 0)))
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
+DevTools listening on ws://localhost:51141/devtools/browser/7bad1aee-9bce-49c0-9ed3-ccf3794ecc54
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "http://www.ddg-pharmfac.net"
+1661099734674	geckodriver	INFO	Listening on 127.0.0.1:59961
+1661099735182	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "33283" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileJxDo9a"
+*** You are running in headless mode.
+1661099735953	Marionette	INFO	Marionette enabled
+1661099735960	Marionette	INFO	Listening on port 43617
+WebDriver BiDi listening on ws://localhost:33283
+Read port: 43617
+1661099736154	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileJxDo9a/search.json.mozlz4", (void 0)))
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
+DevTools listening on ws://localhost:33283/devtools/browser/1d6fdecb-472e-4e98-906a-bd3072a1d7d3
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "http://tools.iedb.org"
+JavaScript error: http://tools.iedb.org/static/js/sequence_validation.js, line 89: TypeError: document.querySelector(...) is null
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
+console.error: "Error during quit-application-granted: [Exception... \"File error: Not found\"  nsresult: \"0x80520012 (NS_ERROR_FILE_NOT_FOUND)\"  location: \"JS frame :: resource:///modules/BrowserGlue.jsm :: _onQuitApplicationGranted/tasks< :: line 2006\"  data: no]"
+1661099758658	Marionette	INFO	Stopped listening on port 36295
+console.warn: TopSitesFeed: Failed to fetch data from Contile server: NetworkError when attempting to fetch resource.
+1661099758936	Marionette	INFO	Stopped listening on port 43617
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
+console.error: "Error during quit-application-granted: [Exception... \"File error: Not found\"  nsresult: \"0x80520012 (NS_ERROR_FILE_NOT_FOUND)\"  location: \"JS frame :: resource:///modules/BrowserGlue.jsm :: _onQuitApplicationGranted/tasks< :: line 2006\"  data: no]"
+1661099759754	geckodriver	INFO	Listening on 127.0.0.1:51883
+1661099759765	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "37555" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilenJGmWd"
+*** You are running in headless mode.
+1661099760530	Marionette	INFO	Marionette enabled
+1661099760540	Marionette	INFO	Listening on port 44589
+WebDriver BiDi listening on ws://localhost:37555
+Read port: 44589
+1661099760714	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilenJGmWd/search.json.mozlz4", (void 0)))
+1661099813789	geckodriver	INFO	Listening on 127.0.0.1:33791
+1661099813797	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "39713" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilepdqM3d"
+1661099814950	Marionette	INFO	Marionette enabled
+1661099814962	Marionette	INFO	Listening on port 38665
+WebDriver BiDi listening on ws://localhost:39713
+Read port: 38665
+1661099815172	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilepdqM3d/search.json.mozlz4", (void 0)))
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
+DevTools listening on ws://localhost:39713/devtools/browser/427b65e4-6aee-4141-abf5-833a446b6600
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "http://www.ddg-pharmfac.net"
+1661099859269	Marionette	INFO	Stopped listening on port 38665
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
+console.error: "Error during quit-application-granted: [Exception... \"File error: Not found\"  nsresult: \"0x80520012 (NS_ERROR_FILE_NOT_FOUND)\"  location: \"JS frame :: resource:///modules/BrowserGlue.jsm :: _onQuitApplicationGranted/tasks< :: line 2006\"  data: no]"
+1661099860579	geckodriver	INFO	Listening on 127.0.0.1:52851
+1661099860587	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "39559" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileqMsWEc"
+*** You are running in headless mode.
+1661099861348	Marionette	INFO	Marionette enabled
+1661099861356	Marionette	INFO	Listening on port 42867
+WebDriver BiDi listening on ws://localhost:39559
+Read port: 42867
+1661099861532	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileqMsWEc/search.json.mozlz4", (void 0)))
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
+DevTools listening on ws://localhost:39559/devtools/browser/282c436c-0d7a-4397-a11e-62ca6c7e326d
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "http://tools.iedb.org"
+JavaScript error: http://tools.iedb.org/static/js/sequence_validation.js, line 89: TypeError: document.querySelector(...) is null
+1661099878503	Marionette	INFO	Stopped listening on port 42867
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
+console.error: "Error during quit-application-granted: [Exception... \"File error: Not found\"  nsresult: \"0x80520012 (NS_ERROR_FILE_NOT_FOUND)\"  location: \"JS frame :: resource:///modules/BrowserGlue.jsm :: _onQuitApplicationGranted/tasks< :: line 2006\"  data: no]"
+1661099879461	geckodriver	INFO	Listening on 127.0.0.1:53339
+1661099879468	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "43117" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileNTo2Is"
+*** You are running in headless mode.
+1661099880246	Marionette	INFO	Marionette enabled
+1661099880258	Marionette	INFO	Listening on port 38495
+WebDriver BiDi listening on ws://localhost:43117
+Read port: 38495
+1661099880532	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileNTo2Is/search.json.mozlz4", (void 0)))
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
+DevTools listening on ws://localhost:43117/devtools/browser/3a56e4f8-c7df-4aab-8516-83f449873a41
+1661100018607	geckodriver	INFO	Listening on 127.0.0.1:43417
+1661100018618	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "48531" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileSlhJlb"
+1661100019771	Marionette	INFO	Marionette enabled
+1661100019782	Marionette	INFO	Listening on port 37967
+WebDriver BiDi listening on ws://localhost:48531
+Read port: 37967
+1661100019990	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileSlhJlb/search.json.mozlz4", (void 0)))
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
+DevTools listening on ws://localhost:48531/devtools/browser/2c68c6b3-7a6b-4dc3-9065-767110863c10
+JavaScript error: resource://gre/modules/URIFixup.jsm, line 278: NS_ERROR_FAILURE: Should pass a non-null uri
+JavaScript error: http://tools.iedb.org/conservancy/, line 33: SyntaxError: JSON.parse: unexpected end of data at line 1 column 1 of the JSON data
+JavaScript error: http://tools.iedb.org/static/js/sequence_validation.js, line 89: TypeError: document.querySelector(...) is null
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "http://tools.iedb.org"
+1661100204528	geckodriver	INFO	Listening on 127.0.0.1:60593
+1661100204539	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "50747" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileRkFTUv"
+1661100205696	Marionette	INFO	Marionette enabled
+1661100205706	Marionette	INFO	Listening on port 39901
+WebDriver BiDi listening on ws://localhost:50747
+Read port: 39901
+1661100205896	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileRkFTUv/search.json.mozlz4", (void 0)))
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
+DevTools listening on ws://localhost:50747/devtools/browser/6c359f7e-c10f-471d-a85f-a8217e979905
+JavaScript error: resource://gre/modules/URIFixup.jsm, line 278: NS_ERROR_FAILURE: Should pass a non-null uri
+JavaScript error: http://tools.iedb.org/population/, line 29: TypeError: sessionStorage.getItem(...) is null
+JavaScript error: http://tools.iedb.org/static/js/sequence_validation.js, line 89: TypeError: document.querySelector(...) is null
+1661100229220	Marionette	INFO	Stopped listening on port 39901
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
+console.error: "Error during quit-application-granted: [Exception... \"File error: Not found\"  nsresult: \"0x80520012 (NS_ERROR_FILE_NOT_FOUND)\"  location: \"JS frame :: resource:///modules/BrowserGlue.jsm :: _onQuitApplicationGranted/tasks< :: line 2006\"  data: no]"
+1661100453226	geckodriver	INFO	Listening on 127.0.0.1:54073
+1661100453233	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "48629" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofile6hCadf"
+1661100454358	Marionette	INFO	Marionette enabled
+1661100454370	Marionette	INFO	Listening on port 46571
+WebDriver BiDi listening on ws://localhost:48629
+Read port: 46571
+1661100454559	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofile6hCadf/search.json.mozlz4", (void 0)))
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
+DevTools listening on ws://localhost:48629/devtools/browser/57be609d-fa9d-489c-a04d-ceb7e4b98b9a
+JavaScript error: resource://gre/modules/URIFixup.jsm, line 278: NS_ERROR_FAILURE: Should pass a non-null uri
+JavaScript error: http://tools.iedb.org/population/, line 29: TypeError: sessionStorage.getItem(...) is null
+JavaScript error: http://tools.iedb.org/static/js/sequence_validation.js, line 89: TypeError: document.querySelector(...) is null
+1661100477954	Marionette	INFO	Stopped listening on port 46571
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
+console.error: "Error during quit-application-granted: [Exception... \"File error: Not found\"  nsresult: \"0x80520012 (NS_ERROR_FILE_NOT_FOUND)\"  location: \"JS frame :: resource:///modules/BrowserGlue.jsm :: _onQuitApplicationGranted/tasks< :: line 2006\"  data: no]"
+1661100478917	geckodriver	INFO	Listening on 127.0.0.1:34965
+1661100478924	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "53253" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileER9DR6"
+1661100480170	Marionette	INFO	Marionette enabled
+1661100480181	Marionette	INFO	Listening on port 35423
+WebDriver BiDi listening on ws://localhost:53253
+Read port: 35423
+1661100480412	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileER9DR6/search.json.mozlz4", (void 0)))
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
+DevTools listening on ws://localhost:53253/devtools/browser/baded2eb-1170-45c5-b67b-8b14c089e254
+JavaScript error: resource://gre/modules/URIFixup.jsm, line 278: NS_ERROR_FAILURE: Should pass a non-null uri
+JavaScript error: http://tools.iedb.org/population/, line 29: TypeError: sessionStorage.getItem(...) is null
+JavaScript error: http://tools.iedb.org/static/js/sequence_validation.js, line 89: TypeError: document.querySelector(...) is null
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "http://tools.iedb.org"
+JavaScript error: http://tools.iedb.org/static/js/sequence_validation.js, line 89: TypeError: document.querySelector(...) is null
+Marionette threw an error: [Exception... "Failure"  nsresult: "0x80004005 (NS_ERROR_FAILURE)"  location: "JS frame :: chrome://remote/content/marionette/capture.js :: capture.canvas :: line 144"  data: no]
+capture.canvas@chrome://remote/content/marionette/capture.js:144:62
+takeScreenshot@chrome://remote/content/marionette/actors/MarionetteCommandsParent.jsm:261:37
+
+1661100574693	Marionette	INFO	Stopped listening on port 35423
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
+console.error: "Error during quit-application-granted: [Exception... \"File error: Not found\"  nsresult: \"0x80520012 (NS_ERROR_FILE_NOT_FOUND)\"  location: \"JS frame :: resource:///modules/BrowserGlue.jsm :: _onQuitApplicationGranted/tasks< :: line 2006\"  data: no]"
+1661100575441	geckodriver	INFO	Listening on 127.0.0.1:51519
+1661100575451	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "49315" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofile3vVKJJ"
+1661100576653	Marionette	INFO	Marionette enabled
+1661100576663	Marionette	INFO	Listening on port 40477
+WebDriver BiDi listening on ws://localhost:49315
+Read port: 40477
+1661100576865	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofile3vVKJJ/search.json.mozlz4", (void 0)))
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
+DevTools listening on ws://localhost:49315/devtools/browser/4387a34d-dca5-4938-958e-12bbea3f395a
+JavaScript error: resource://gre/modules/URIFixup.jsm, line 278: NS_ERROR_FAILURE: Should pass a non-null uri
+JavaScript error: http://tools.iedb.org/population/, line 29: TypeError: sessionStorage.getItem(...) is null
+JavaScript error: http://tools.iedb.org/static/js/sequence_validation.js, line 89: TypeError: document.querySelector(...) is null
+1661100620392	Marionette	INFO	Stopped listening on port 40477
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
+console.error: "Error during quit-application-granted: [Exception... \"File error: Not found\"  nsresult: \"0x80520012 (NS_ERROR_FILE_NOT_FOUND)\"  location: \"JS frame :: resource:///modules/BrowserGlue.jsm :: _onQuitApplicationGranted/tasks< :: line 2006\"  data: no]"
+1661100621281	geckodriver	INFO	Listening on 127.0.0.1:37887
+1661100621287	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "45941" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileHCYpGo"
+1661100622500	Marionette	INFO	Marionette enabled
+1661100622507	Marionette	INFO	Listening on port 41359
+WebDriver BiDi listening on ws://localhost:45941
+Read port: 41359
+1661100622710	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileHCYpGo/search.json.mozlz4", (void 0)))
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
+DevTools listening on ws://localhost:45941/devtools/browser/edcfbc78-f5f7-490b-959e-932e09ae38e6
+JavaScript error: resource://gre/modules/URIFixup.jsm, line 278: NS_ERROR_FAILURE: Should pass a non-null uri
+JavaScript error: http://tools.iedb.org/population/, line 29: TypeError: sessionStorage.getItem(...) is null
+JavaScript error: http://tools.iedb.org/static/js/sequence_validation.js, line 89: TypeError: document.querySelector(...) is null
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "http://tools.iedb.org"
+JavaScript error: http://tools.iedb.org/static/js/sequence_validation.js, line 89: TypeError: document.querySelector(...) is null
+1661100687389	Marionette	INFO	Stopped listening on port 41359
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
+console.error: "Error during quit-application-granted: [Exception... \"File error: Not found\"  nsresult: \"0x80520012 (NS_ERROR_FILE_NOT_FOUND)\"  location: \"JS frame :: resource:///modules/BrowserGlue.jsm :: _onQuitApplicationGranted/tasks< :: line 2006\"  data: no]"
+1661100688235	geckodriver	INFO	Listening on 127.0.0.1:47191
+1661100688244	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "35667" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilel73DF2"
+*** You are running in headless mode.
+1661100688906	Marionette	INFO	Marionette enabled
+1661100688917	Marionette	INFO	Listening on port 46723
+WebDriver BiDi listening on ws://localhost:35667
+Read port: 46723
+1661100689090	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilel73DF2/search.json.mozlz4", (void 0)))
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
+DevTools listening on ws://localhost:35667/devtools/browser/0f3aa9ef-cfd7-4d4e-ad2d-635348709595
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 103: ReferenceError: $ is not defined
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 180: ReferenceError: $ is not defined
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://webs.iiitd.edu.in"
+JavaScript error: https://webs.iiitd.edu.in/raghava/algpred2/batch.html, line 120: TypeError: document.getElementById(...) is null
+1661101106473	geckodriver	INFO	Listening on 127.0.0.1:47057
+1661101106983	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "35421" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilep93ASV"
+1661101108378	Marionette	INFO	Marionette enabled
+1661101108388	Marionette	INFO	Listening on port 45501
+Read port: 45501
+WebDriver BiDi listening on ws://localhost:35421
+1661101108618	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilep93ASV/search.json.mozlz4", (void 0)))
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
+DevTools listening on ws://localhost:35421/devtools/browser/00478776-06a5-457f-90b9-02eff9109681
+JavaScript error: resource://gre/modules/URIFixup.jsm, line 278: NS_ERROR_FAILURE: Should pass a non-null uri
+console.error: Region.jsm: "Error fetching region" (new Error("TIMEOUT", "resource://gre/modules/Region.jsm", 769))
+console.error: Region.jsm: "Failed to fetch region" (new Error("TIMEOUT", "resource://gre/modules/Region.jsm", 421))
+1661101189125	geckodriver	INFO	Listening on 127.0.0.1:47589
+1661101189134	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "35529" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileKvA1VC"
+*** You are running in headless mode.
+1661101190151	Marionette	INFO	Marionette enabled
+1661101190160	Marionette	INFO	Listening on port 44393
+WebDriver BiDi listening on ws://localhost:35529
+Read port: 44393
+1661101190439	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileKvA1VC/search.json.mozlz4", (void 0)))
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
+DevTools listening on ws://localhost:35529/devtools/browser/023ab1ca-3df0-43bb-a7cb-94aeedecfbcc
+1661101594442	geckodriver	INFO	Listening on 127.0.0.1:42443
+1661101594944	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "52993" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilepPa8JN"
+*** You are running in headless mode.
+1661101595654	Marionette	INFO	Marionette enabled
+1661101595664	Marionette	INFO	Listening on port 42185
+WebDriver BiDi listening on ws://localhost:52993
+Read port: 42185
+1661101595837	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilepPa8JN/search.json.mozlz4", (void 0)))
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
+DevTools listening on ws://localhost:52993/devtools/browser/83b3166d-354d-410f-9a8e-f7d7f7705f2d
+1661101868461	geckodriver	INFO	Listening on 127.0.0.1:39825
+1661101868474	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "34835" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofile3Nz3ER"
+*** You are running in headless mode.
+1661101869492	Marionette	INFO	Marionette enabled
+1661101869508	Marionette	INFO	Listening on port 34109
+WebDriver BiDi listening on ws://localhost:34835
+Read port: 34109
+1661101869710	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofile3Nz3ER/search.json.mozlz4", (void 0)))
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
+DevTools listening on ws://localhost:34835/devtools/browser/db73421f-c77c-4d81-b20b-d22edbbbaa7a
