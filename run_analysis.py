@@ -5,10 +5,10 @@ from prediction import analysis_choice
 from prediction import swissprotIDSequenceLength
 from prediction import epitope_distribution_plots
 from prediction import dssp_analysis
-from analyse_linear import make_inputs_for_analysis
-from analyse_linear import analyse_all
-from analyse_linear import make_csv_from_results
-from analyse_linear import read_prediction_results
+from analyse import make_inputs_for_analysis
+from analyse import analyse_all
+from analyse import make_csv_from_results
+from analyse import read_prediction_results
 
 
 

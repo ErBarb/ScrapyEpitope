@@ -93,10 +93,11 @@ def mhci(conserved_sequences_dict, list_of_alleles, list_of_lengths):
     #print(conserved_sequences_dict)
     for key, value in conserved_sequences_dict.items():
         print("Predicting linear epitopes of protein " + key + " with MHCI")
-        time.sleep(10)
         for conserved_sequence in value:
             
             for allele in list_of_alleles:
+                time.sleep(10)
+                print(key, allele)
                 input_allele = []
                 for i in range(len(list_of_lengths)):
                     input_allele.append(allele)
@@ -193,10 +194,11 @@ def mhci_proc(conserved_sequences_dict, list_of_alleles, list_of_lengths):
 
     for key, value in conserved_sequences_dict.items():
         print("Predicting linear epitopes of protein " + key + " with MHCI Processing")
-        time.sleep(10)
         for conserved_sequence in value:
 
             for allele in list_of_alleles:
+                time.sleep(10)
+                print(key, allele)
                 input_allele = []
                 for i in range(len(list_of_lengths)):
                     input_allele.append(allele)

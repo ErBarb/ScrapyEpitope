@@ -498,3 +498,74 @@ JavaScript error: http://tools.iedb.org/static/js/sequence_validation.js, line 8
 
 ###!!! [Child][MessageChannel] Error: (msgtype=0x5A000A,name=PHttpChannel::Msg_DeletingChannel) Channel closing: too late to send/recv, messages will be lost
 
+1661096788881	geckodriver	INFO	Listening on 127.0.0.1:49247
+1661096789382	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "46083" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileWzhPb2"
+*** You are running in headless mode.
+1661096790072	Marionette	INFO	Marionette enabled
+1661096790083	Marionette	INFO	Listening on port 43169
+Read port: 43169
+WebDriver BiDi listening on ws://localhost:46083
+1661096790273	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileWzhPb2/search.json.mozlz4", (void 0)))
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
+DevTools listening on ws://localhost:46083/devtools/browser/f5910da0-5d74-4caf-a215-449d8b24fe40
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://web.expasy.org"
+1661096800473	Marionette	INFO	Stopped listening on port 43169
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
+console.error: "Error during quit-application-granted: [Exception... \"File error: Not found\"  nsresult: \"0x80520012 (NS_ERROR_FILE_NOT_FOUND)\"  location: \"JS frame :: resource:///modules/BrowserGlue.jsm :: _onQuitApplicationGranted/tasks< :: line 2006\"  data: no]"
+1661096801281	geckodriver	INFO	Listening on 127.0.0.1:39975
+1661096801288	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "41069" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilejHE33U"
+*** You are running in headless mode.
+1661096802009	Marionette	INFO	Marionette enabled
+1661096802019	Marionette	INFO	Listening on port 45123
+WebDriver BiDi listening on ws://localhost:41069
+Read port: 45123
+1661096802232	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilejHE33U/search.json.mozlz4", (void 0)))
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
+DevTools listening on ws://localhost:41069/devtools/browser/b4a3381b-6332-40eb-b399-e4b7d7eb284f
+1661096805897	geckodriver	INFO	Listening on 127.0.0.1:49217
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+1661096806405	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "36657" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileyCQCmq"
+*** You are running in headless mode.
+1661096806993	Marionette	INFO	Marionette enabled
+1661096807004	Marionette	INFO	Listening on port 38235
+Read port: 38235
+WebDriver BiDi listening on ws://localhost:36657
+1661096807203	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileyCQCmq/search.json.mozlz4", (void 0)))
+1661096894519	geckodriver	INFO	Listening on 127.0.0.1:48211
+1661096895026	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "53155" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilenXX7vJ"
+1661096896140	Marionette	INFO	Marionette enabled
+1661096896150	Marionette	INFO	Listening on port 36803
+WebDriver BiDi listening on ws://localhost:53155
+Read port: 36803
+1661096896343	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilenXX7vJ/search.json.mozlz4", (void 0)))
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
+DevTools listening on ws://localhost:53155/devtools/browser/9bf2a413-9c16-4f30-8857-8db8d36d92d9
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://web.expasy.org"
+1661096913073	Marionette	INFO	Stopped listening on port 36803
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
+console.error: "Error during quit-application-granted: [Exception... \"File error: Not found\"  nsresult: \"0x80520012 (NS_ERROR_FILE_NOT_FOUND)\"  location: \"JS frame :: resource:///modules/BrowserGlue.jsm :: _onQuitApplicationGranted/tasks< :: line 2006\"  data: no]"
+1661096913966	geckodriver	INFO	Listening on 127.0.0.1:49415
+1661096913976	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "43261" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileLyYnJS"
+1661096915123	Marionette	INFO	Marionette enabled
+1661096915132	Marionette	INFO	Listening on port 38735
+WebDriver BiDi listening on ws://localhost:43261
+Read port: 38735
+1661096915340	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileLyYnJS/search.json.mozlz4", (void 0)))
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.jsm
+Missing chrome or resource URL: resource://gre/modules/UpdateListener.sys.mjs
+DevTools listening on ws://localhost:43261/devtools/browser/ace1f637-1b7a-4077-96b1-12e09fc90305
