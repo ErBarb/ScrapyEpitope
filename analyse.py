@@ -81,7 +81,6 @@ def read_prediction_results():
     discotope_prediction_list = [df.columns.tolist()] + df.values.tolist()
     #print(discotope_prediction_list)
 
-
     return mhci_prediction_list, mhci_proc_prediction_list, mhcii_prediction_list, bepipred2_prediction_list, \
         bepipred_prediction_list, emini_prediction_list, choufasman_prediction_list, karplusschulz_prediction_list, \
             kolaskartongaonkar_prediction_list, parker_prediction_list, ellipro_linear_prediction_list, ellipro_discontinous_prediction_list, \
@@ -713,21 +712,21 @@ def expasy_and_solubility(list_of_epitopes, linear = 'Yes'):
 
     if linear == 'Yes':
         print("Expasy analysis on linear epitopes done")
-        with open('results/aa_composition.csv', 'w') as f:
+        with open('analysis_results/aa_composition.csv', 'w') as f:
             writer = csv.writer(f)
             writer.writerows(aa_composition_results)
 
-        with open('results/atomic_composition.csv', 'w') as f:
+        with open('analysis_results/atomic_composition.csv', 'w') as f:
             writer = csv.writer(f)
             writer.writerows(atomic_composition_results)
 
     elif linear == 'No':
         print("Expasy analysis on nonlinear epitopes done")
-        with open('results/nonlinear_aa_composition.csv', 'w') as f:
+        with open('analysis_results/nonlinear_aa_composition.csv', 'w') as f:
             writer = csv.writer(f)
             writer.writerows(aa_composition_results)
 
-        with open('results/nonlinear_atomic_composition.csv', 'w') as f:
+        with open('analysis_results/nonlinear_atomic_composition.csv', 'w') as f:
             writer = csv.writer(f)
             writer.writerows(atomic_composition_results)
 
@@ -845,7 +844,7 @@ def analyse_all(tuple_inputs):
     # except:
     #     print("Immunogenicity failed")
 
-    cluster(list_of_linear_epitopes)
+    # cluster(list_of_linear_epitopes)
     # conservancy()
     # try_population_coverage()
 
