@@ -65,7 +65,7 @@ list_of_pdb_ids = ['6VSB', '5WRG', '7M51', '4L72', '7CYD', '7KIP',
 # analysis_choice(list_of_swissprot_ids, list_of_pdb_ids)
 
 prediction_results = read_prediction_results()
-analysis_input = make_inputs_for_analysis(prediction_results)
+analysis_input = make_inputs_for_analysis(prediction_results, list_of_swissprot_ids)
 print("Analysing sequences...")
 analysis_results = analyse_all(analysis_input)
 make_csv_from_results(prediction_results, analysis_results)
