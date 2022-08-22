@@ -1747,19 +1747,20 @@ Please enter 1, 2 or 3...\n""")
 
         method = choose_method()
         protein = choose_protein(list_of_swissprot_ids)
-        print(method, protein)
+        #print(method, protein)
 
         for swissprot_id, seq_length in protein_dict.items():
             if swissprot_id == protein:
                 length = seq_length[1]
                 
-        count = [0]*length
+        
         for key, value in epitopes_dict.items():
             if key == method:
                 for k, v in value.items():
                     if k == protein:
                         start_pos = v[0]
                         end_pos = v[1]
+                        count = [0]*length
                         for i in range(0,len(start_pos)):
                             for j in range(start_pos[i],end_pos[i]):
                                 count[j] = count[j]+1

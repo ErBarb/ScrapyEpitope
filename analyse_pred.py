@@ -6,6 +6,7 @@ from xmlrpc.client import ProtocolError
 import requests
 import time
 import csv
+import random
 from csv import reader
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -128,12 +129,12 @@ def make_inputs_for_analysis(results_from_prediction, list_of_swissprot_ids):
 
 
 
-    list_of_all_linear_epitopes = []
+    big_list_of_all_linear_epitopes = []
     immunogenicity_input = ''
     immunogenicity_indexes = len(results_from_prediction[0][1:]) + len(results_from_prediction[1][1:])
     for i in range(len(results_from_prediction)-2):
         for x in results_from_prediction[i][1:]:
-            list_of_all_linear_epitopes.append(x[0])
+            big_list_of_all_linear_epitopes.append(x[0])
         if i == 0 or i == 1:
             for x in results_from_prediction[i][1:]:
                 immunogenicity_input = immunogenicity_input + x[0] + '\n'
@@ -161,7 +162,7 @@ def make_inputs_for_analysis(results_from_prediction, list_of_swissprot_ids):
             list_of_all_nonlinear_epitopes.append(nonlinear_epitope)
     # print(list_of_all_nonlinear_epitopes)
 
-
+    list_of_all_linear_epitopes = random.sample(big_list_of_all_linear_epitopes, 1000)
 
     input_string = ''
     for i in range(len(list_of_all_linear_epitopes)):
@@ -319,7 +320,7 @@ def vaxijen():
         vaxijen = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
         vaxijen.get(vaxijen_url)
         time.sleep(5)
-        vaxijen.find_element(By.XPATH, "/html/body/div/table/tbody/tr[4]/td[3]/form/table/tbody/tr[1]/td[2]/p/input").send_keys(os.getcwd()+"/seq_file.txt")
+        vaxijen.find_element(By.XPATH, "/html/body/div/table/tbody/tr[4]/td[3]/form/table/tbody/tr[1]/td[2]/p/input").send_keys(os.getcwd()+"/pred_seq_file.txt")
         vaxijen.find_element(By.XPATH, "/html/body/div/table/tbody/tr[4]/td[3]/form/table/tbody/tr[2]/td[2]/p/select/option[2]").click()
         vaxijen.find_element(By.XPATH, "/html/body/div/table/tbody/tr[4]/td[3]/form/table/tbody/tr[2]/td[3]/input").send_keys('0.5')
         vaxijen.find_element(By.XPATH, "/html/body/div/table/tbody/tr[4]/td[3]/form/table/tbody/tr[3]/td[2]/input[1]").click()
@@ -885,7 +886,6 @@ def analyse_all(tuple_inputs):
     except:
         pass
 
-
     vaxijen_results = vaxijen()
     try:
         for i in range(len(vaxijen_results)):
@@ -909,20 +909,15 @@ def analyse_all(tuple_inputs):
     # conservancy()
     # try_population_coverage()
 
-    # algpred_results = algpred(algpred_chunks)
-    # try:
-    #     for i in range(len(analysis_results)):
-    #         analysis_results[i].append(algpred_results[i])
-    # except:
-    #     pass
-
-    # toxinpred_results = toxinpred(toxinpred_chunks, toxinpred_excluded_indexes)
-    # try:
-    #     for i in range(len(analysis_results)):
-    #         for n in range(len(toxinpred_results[i])):
-    #             analysis_results[i].append(toxinpred_results[i][n])
-    # except:
-    #     pass
+    pepstats_results = pepstats(list_of_linear_epitopes)
+    try:
+        for i in range(len(analysis_results)):
+            for n in range(len(pepstats_results[i])):
+                analysis_results[i].append(pepstats_results[i][n])
+        print("Pepstats analysis done")
+    except:
+        print("Pepstats failed")
+    print(analysis_results)
 
     # discontinous_expasy = expasy_and_solubility(list_of_all_nonlinear_epitopes, linear = 'No')
     expasy_linear_results = expasy_and_solubility(list_of_linear_epitopes)
@@ -936,17 +931,20 @@ def analyse_all(tuple_inputs):
     # for i in range(len(analysis_results)):
     #     analysis_results[i].append(expasy_and_solubility_results[1][i])
 
-    pepstats_results = pepstats(list_of_linear_epitopes)
+    algpred_results = algpred(algpred_chunks)
     try:
         for i in range(len(analysis_results)):
-            for n in range(len(pepstats_results[i])):
-                analysis_results[i].append(pepstats_results[i][n])
-        print("Pepstats analysis done")
+            analysis_results[i].append(algpred_results[i])
     except:
-        print("Pepstats failed")
-    print(analysis_results)
+        pass
 
-
+    toxinpred_results = toxinpred(toxinpred_chunks, toxinpred_excluded_indexes)
+    try:
+        for i in range(len(analysis_results)):
+            for n in range(len(toxinpred_results[i])):
+                analysis_results[i].append(toxinpred_results[i][n])
+    except:
+        pass
 
 
 

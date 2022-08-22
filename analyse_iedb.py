@@ -6,6 +6,7 @@ import os
 from xmlrpc.client import ProtocolError
 import requests
 import time
+import random
 import csv
 from csv import reader
 import pandas as pd
@@ -307,7 +308,8 @@ def make_inputs_for_analysis(prediction_results):
     #         list_of_all_nonlinear_epitopes.append(nonlinear_epitope)
     # print(list_of_all_nonlinear_epitopes)
 
-    list_of_all_epitopes = prediction_results[0] + prediction_results[1] + prediction_results[2]
+    big_list_of_all_epitopes = prediction_results[0] + prediction_results[1] + prediction_results[2]
+    list_of_all_epitopes = random.sample(big_list_of_all_epitopes, 1000)
     #print(all(isinstance(item, str) for item in list_of_all_epitopes))
 
     input_string = ''
@@ -1108,20 +1110,14 @@ def analyse_all(tuple_inputs):
     # conservancy()
     # try_population_coverage()
 
-    # algpred_results = algpred(algpred_chunks)
-    # try:
-    #     for i in range(len(analysis_results)):
-    #         analysis_results[i].append(algpred_results[i])
-    # except:
-    #     pass
-
-    # toxinpred_results = toxinpred(toxinpred_chunks, toxinpred_excluded_indexes)
-    # try:
-    #     for i in range(len(analysis_results)):
-    #         for n in range(len(toxinpred_results[i])):
-    #             analysis_results[i].append(toxinpred_results[i][n])
-    # except:
-    #     pass
+    pepstats_results = pepstats(list_of_linear_epitopes)
+    try:
+        for i in range(len(analysis_results)):
+            for n in range(len(pepstats_results[i])):
+                analysis_results[i].append(pepstats_results[i][n])
+        print("Pepstats analysis done")
+    except:
+        print("Pepstats failed")
 
     # #discontinous_expasy = expasy_and_solubility(list_of_all_nonlinear_epitopes, linear = 'No')
     expasy_linear_results = expasy_and_solubility(list_of_linear_epitopes)
@@ -1135,15 +1131,21 @@ def analyse_all(tuple_inputs):
     # for i in range(len(analysis_results)):
     #     analysis_results[i].append(expasy_and_solubility_results[1][i])
 
-    pepstats_results = pepstats(list_of_linear_epitopes)
+
+    algpred_results = algpred(algpred_chunks)
     try:
         for i in range(len(analysis_results)):
-            for n in range(len(pepstats_results[i])):
-                analysis_results[i].append(pepstats_results[i][n])
-        print("Pepstats analysis done")
+            analysis_results[i].append(algpred_results[i])
     except:
-        print("Pepstats failed")
-    # print(analysis_results)
+        pass
+
+    toxinpred_results = toxinpred(toxinpred_chunks, toxinpred_excluded_indexes)
+    try:
+        for i in range(len(analysis_results)):
+            for n in range(len(toxinpred_results[i])):
+                analysis_results[i].append(toxinpred_results[i][n])
+    except:
+        pass
 
 
     os.remove(os.getcwd()+"/iedb_seq_file.txt")
