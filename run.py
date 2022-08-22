@@ -23,11 +23,12 @@ from analyse import read_prediction_results
 #                         'Q3LZX7', 'Q3LZX3', 'Q4VID0', 'Q7TFA1', 'K9N638', 'P0C6U7', 'P0C6U8', 'P0DTC1', 'K9N7C7', 'P0C6W2', 'P0C6X6', 'P0C6X7', 'P0DTD1', 'A0A0P0G321', 'A0A0P0K6L9', 
 #                         'A0A140H1H1', 'A3EX94', 'F1DB20', 'K9N5Q8', 'P07946', 'P0DTC2', 'P36334', 'P59594', 'Q3LZX1', 'Q7TLC7']
 
-list_of_swissprot_ids = ['P0DTC2', 'P59594', 'P36334', 'K9N5Q8', 'U3N9S7', 'P15423', 'Q6Q1S2', 
+list_of_swissprot_ids = ['P0DTD1', 'P0C6X7', 'P0C6U8', 'P0C6X6', 'K9N7C7', 'P0C6X2', 'P0C6X1', 'P0C6X5',
+                        'P0DTC2', 'P59594', 'P36334', 'K9N5Q8', 'U3N9S7', 'P15423', 'Q6Q1S2', 
                         'P0DTC9', 'P59595', 'P33469', 'K9N4V7', 'Q5MQC6', 'P15130', 'Q6Q1R8',
                         'P0DTC5', 
-                        'P0DTD1', 'P0C6X7', 'P0C6U8', 'P0C6X6', 'K9N7C7', 'P0C6X2', 'P0C6X1', 'P0C6X5', 
-                        'P0DTC3', 'P59632']
+                        'P0DTC3', 'P59632',
+                        ]
 
 # mhci_alleles = ['HLA-A*01:01', 'HLA-A*02:01', 'HLA-A*02:06', 'HLA-A*03:01', 'HLA-A*11:01', 'HLA-A*23:01', 'HLA-A*24:02', 'HLA-A*25:01', 'HLA-A*26:01', 'HLA-A*29:02', 'HLA-A*30:01',
 #                 'HLA-A*30:02', 'HLA-A*31:01', 'HLA-A*32:01', 'HLA-A*33:03', 'HLA-A*68:01', 'HLA-A*68:02', 'HLA-A*74:01', 'HLA-B*07:02', 'HLA-B*08:01', 'HLA-B*13:01', 'HLA-B*13:02',
@@ -62,7 +63,7 @@ print("Trying to get PDB IDs...")
 print("PDB IDs collected")
 predict_all(mhci_alleles, mhci_lengths, mhcii_alleles, mhcii_lengths, list_of_pdb_ids)
 print("Epitope prediction done")
-# analysis_choice(list_of_swissprot_ids, list_of_pdb_ids)
+#analysis_choice(list_of_swissprot_ids, list_of_pdb_ids)
 
 # prediction_results = read_prediction_results()
 # analysis_input = make_inputs_for_analysis(prediction_results, list_of_swissprot_ids)

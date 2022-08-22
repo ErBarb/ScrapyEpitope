@@ -1,5 +1,6 @@
 from ast import Continue
 from multiprocessing.sharedctypes import Value
+from queue import Empty
 import re
 import os
 from xmlrpc.client import ProtocolError
@@ -307,6 +308,7 @@ def make_inputs_for_analysis(prediction_results):
     # print(list_of_all_nonlinear_epitopes)
 
     list_of_all_epitopes = prediction_results[0] + prediction_results[1] + prediction_results[2]
+    #print(all(isinstance(item, str) for item in list_of_all_epitopes))
 
     input_string = ''
     for i in range(len(list_of_all_epitopes)):
@@ -330,14 +332,22 @@ def make_inputs_for_analysis(prediction_results):
         if toxinpred_input != '':
             toxinpred_chunks.append(toxinpred_input)
 
+    def has_numbers(inputString):
+        return any(char.isdigit() for char in inputString)
+
     algpred_chunks = []
     for i in range(0, len(list_of_all_epitopes), 400):
         algpred_400e_chunk = list_of_all_epitopes[i:i + 400]
         algpred_input = ''
         for n in range(len(algpred_400e_chunk)):
+            #print(algpred_400e_chunk[n])
             algpred_input = algpred_input + '>seq' + str(n + 1) + '\n' + algpred_400e_chunk[n] + '\n'
-        if algpred_input != '':
+            #algpred_input = algpred_input + algpred_400e_chunk[n] + '\n'
+            if has_numbers(algpred_400e_chunk[n]) == True:
+                print(algpred_400e_chunk[n])
+        if algpred_input is not Empty:
             algpred_chunks.append(algpred_input)
+    
 
     # all_protein_fasta = ''
     # for id in list_of_swissprot_ids:
@@ -347,7 +357,7 @@ def make_inputs_for_analysis(prediction_results):
     #     cData=''.join(response.text)
     #     all_protein_fasta = all_protein_fasta + cData
 
-    seq_file = open('seq_file.txt', 'a')
+    seq_file = open('iedb_seq_file.txt', 'a')
     seq_file.write(input_string[:-1])
     seq_file.close()
 
@@ -381,9 +391,18 @@ def make_inputs_for_analysis(prediction_results):
 
 def protparam(list_of_linear_epitopes):
 
+    # protparam_file = open('iedb_analysis_results/protparam_analysis.csv', 'a')
+    # protparam_file.write(input_string[:-1])
+    # protparam_file.close()
+    columns_to_add = ['peptide', 'mol_weight', 'isoelectric_point', 'aromaticity','instability_index','helix_2_struc', 'turn_2_struc', 'sheet_2_struc', 'reduces_cys', 'disulfide_bridge',
+    'hydropathicity', 'charge_at_pH7']
+    with open('analysis_iedb_results/protparam_analysis.csv', 'a') as f:
+            writer = csv.writer(f)
+            writer.writerow(columns_to_add)
+
     output_list = []
     for index, epitope in enumerate(list_of_linear_epitopes):
-        print(index, epitope)
+        #print(index, epitope)
         row = []
         x = ProteinAnalysis(epitope)
         mol_weight = x.molecular_weight()
@@ -411,6 +430,10 @@ def protparam(list_of_linear_epitopes):
         #row.extend((mol_weight, isoel_point, aromaticity, insta_index, helix_2_struc, turn_2_struc, sheet_2_struc, reduCys, disulfBridge, hydropathicity, flexibility, chpH))
         row.extend((mol_weight, isoel_point, aromaticity, insta_index, helix_2_struc, turn_2_struc, sheet_2_struc, reduCys, disulfBridge, hydropathicity, chpH))
         output_list.insert(index, row)
+        row.insert(0,epitope)
+        with open('analysis_iedb_results/protparam_analysis.csv', 'a') as f:
+            writer = csv.writer(f)
+            writer.writerow(row)
 
     print("Protparam analysis done")
     return output_list
@@ -443,6 +466,11 @@ def immunogenicity():
 
 def vaxijen():
 
+    columns_to_add = ['antigenicity_score', 'antigen_prediction']
+    with open('analysis_iedb_results/vaxijen_analysis.csv', 'a') as f:
+            writer = csv.writer(f)
+            writer.writerow(columns_to_add)
+
     options = Options()
     options.headless = True
     try:
@@ -450,7 +478,7 @@ def vaxijen():
         vaxijen = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
         vaxijen.get(vaxijen_url)
         time.sleep(5)
-        vaxijen.find_element(By.XPATH, "/html/body/div/table/tbody/tr[4]/td[3]/form/table/tbody/tr[1]/td[2]/p/input").send_keys(os.getcwd()+"/seq_file.txt")
+        vaxijen.find_element(By.XPATH, "/html/body/div/table/tbody/tr[4]/td[3]/form/table/tbody/tr[1]/td[2]/p/input").send_keys(os.getcwd()+"/iedb_seq_file.txt")
         vaxijen.find_element(By.XPATH, "/html/body/div/table/tbody/tr[4]/td[3]/form/table/tbody/tr[2]/td[2]/p/select/option[2]").click()
         vaxijen.find_element(By.XPATH, "/html/body/div/table/tbody/tr[4]/td[3]/form/table/tbody/tr[2]/td[3]/input").send_keys('0.5')
         vaxijen.find_element(By.XPATH, "/html/body/div/table/tbody/tr[4]/td[3]/form/table/tbody/tr[3]/td[2]/input[1]").click()
@@ -471,8 +499,13 @@ def vaxijen():
                 else:
                     result.append('Probable Non-Antigen')
                 vaxijen_results.append(result)
+        
+        with open('analysis_iedb_results/vaxijen_analysis.csv', 'a') as f:
+            writer = csv.writer(f)
+            writer.writerows(vaxijen_results)
         print("Vaxijen antigenicity analysis done")
         return vaxijen_results
+
     except:
         print("Vaxijen antigenicity analysis failed")
 
@@ -617,7 +650,12 @@ def try_population_coverage(counter=10):
         
 def algpred(algpred_chunks):
 
-    def algpred_try_until_it_works(chunk_of_400, counter = 10):
+    columns_to_add = ['peptide', 'allergen_prediction']
+    with open('analysis_iedb_results/algpred_analysis.csv', 'a') as f:
+            writer = csv.writer(f)
+            writer.writerow(columns_to_add)
+
+    def algpred_try_until_it_works(chunk_of_400, counter = 5):
 
         """The following function tries 10 times to make algpred2 work, since it can run into errors. It uploads the sequences in chunks of 400
         and clicks submit. It then waits for the results and saves them in their respective order. After all sequences are analysed it returns a
@@ -627,7 +665,8 @@ def algpred(algpred_chunks):
             print("Algpred failed after 10 tries")
             return
         
-        algpred_seq_file = open('algpred_seq_file.txt', 'a') 
+        algpred_seq_file = open('algpred_iedb_seq_file.txt', 'a')
+        print(chunk_of_400) 
         algpred_seq_file.write(chunk_of_400)
         algpred_seq_file.close()
 
@@ -638,13 +677,13 @@ def algpred(algpred_chunks):
         try:
             algpred2 = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
             algpred2.get(algpred2_url)
-            algpred2.find_element(By.XPATH, "/html/body/header/div[3]/section/form/table/tbody/tr/td/font/p/font[2]/input").send_keys(os.getcwd()+"/algpred_seq_file.txt")
+            algpred2.find_element(By.XPATH, "/html/body/header/div[3]/section/form/table/tbody/tr/td/font/p/font[2]/input").send_keys(os.getcwd()+"/algpred_iedb_seq_file.txt")
             algpred2.find_element(By.XPATH, "/html/body/header/div[3]/section/form/table/tbody/tr/td/font/font/p[3]/font/font[2]/input[2]").click()
             wait_algpred2 = WebDriverWait(algpred2, 1200)
             wait_algpred2.until(ec.visibility_of_element_located((By.CLASS_NAME, "scrollable")))
             algpred2_results_table = algpred2.find_element(By.XPATH, '/html/body/header/div[3]/main/div/table[2]/tbody').text.splitlines()
             algpred2.close()
-            os.remove(os.getcwd()+"/algpred_seq_file.txt")
+            os.remove(os.getcwd()+"/algpred_iedb_seq_file.txt")
             input_for_results = []
             for index, row in enumerate(algpred2_results_table):
                 algpred2_result_row = row.split(' ')
@@ -658,6 +697,7 @@ def algpred(algpred_chunks):
                         continue
                 else:
                     input_for_results.append(algpred2_result_row[-1])
+
             return input_for_results
 
         except:
@@ -665,25 +705,42 @@ def algpred(algpred_chunks):
                 algpred2.close()
             except:
                 pass
-            os.remove(os.getcwd()+"/algpred_seq_file.txt")
+            os.remove(os.getcwd()+"/algpred_iedb_seq_file.txt")
             print("Retrying algpred ...")
-            algpred_try_until_it_works(counter-1)
+            algpred_try_until_it_works(chunk_of_400, counter-1)
             return
     
     algpred_all_results = []
     for seq_of_400_epitopes in algpred_chunks:
         algpred_results = algpred_try_until_it_works(seq_of_400_epitopes)
+
         if algpred_results is not None:
             for parameter in algpred_results:
                 algpred_all_results.append(parameter)
+                with open('analysis_iedb_results/algpred_analysis.csv', 'a') as f:
+                    writer = csv.writer(f)
+                    writer.writerows(parameter)
+
         elif algpred_results is None:
             for empty_index in range(400):
                 algpred_all_results.append(None)
+
+                algpred_write_to_file = []
+                #algpred_write_to_file.append(seq_of_400_epitopes[empty_index])
+                algpred_write_to_file.append(None)
+                with open('analysis_iedb_results/algpred_analysis.csv', 'a') as f:
+                        writer = csv.writer(f)
+                        writer.writerow(algpred_write_to_file)
 
     print("Algpred2 allergenicity analysis done")
     return algpred_all_results
 
 def toxinpred(toxinpred_chunks, toxinpred_excluded_indexes):
+
+    columns_to_add = ['peptide', 'toxinpred_svm_score', 'toxicity_prediction', 'hydrophobicity', 'steric_hinderance', 'sidebulk', 'amphipathicity', 'hydrophilicity', 'net_hydrogen']
+    with open('analysis_iedb_results/toxinpred_analysis.csv', 'a') as f:
+            writer = csv.writer(f)
+            writer.writerow(columns_to_add)
 
     def toxinpred_try_until_it_works(chunk_of_400, counter=10):
 
@@ -716,7 +773,7 @@ def toxinpred(toxinpred_chunks, toxinpred_excluded_indexes):
         toxinpred_url = 'https://webs.iiitd.edu.in/raghava/toxinpred/multi_submit.php'
 
         try:
-            toxinpred = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
+            toxinpred = webdriver.Firefox(executable_path = '../ScrapyEpitope/geckodriver')
             wait_toxinpred = WebDriverWait(toxinpred, 1200)
             toxinpred.get(toxinpred_url)
             toxinpred.find_element(By.XPATH, "/html/body/table[2]/tbody/tr/td/form/fieldset/table[1]/tbody/tr[2]/td/textarea").send_keys(chunk_of_400)
@@ -746,6 +803,14 @@ def toxinpred(toxinpred_chunks, toxinpred_excluded_indexes):
                 toxinpred_row_included_indexes = [2,3,4,5,6,8,9,10]
                 toxinpred_new_result_row = [toxinpred_result_row[x] for x in toxinpred_row_included_indexes]
                 toxinpred_results.append(toxinpred_new_result_row)
+
+                toxinpred_write_to_file = []
+                for value in range(len(toxinpred_result_row)):
+                    toxinpred_write_to_file.append(value)
+                with open('analysis_iedb_results/toxinpred_analysis.csv', 'a') as f:
+                        writer = csv.writer(f)
+                        writer.writerow(toxinpred_write_to_file)
+
                 # for parameter in toxinpred_new_result_row:
                 #     toxinpred_results[400*index + results_index].append(parameter)
         elif toxinpred_results_table is None:
@@ -753,6 +818,13 @@ def toxinpred(toxinpred_chunks, toxinpred_excluded_indexes):
             for i in range(400):
                 #toxinpred_results[400*index + empty_index].append(empty_list)
                 toxinpred_results.append(empty_list)
+            
+                toxinpred_write_to_file = []
+                for value in range(len(empty_list)):
+                    toxinpred_write_to_file.append(value)
+                with open('analysis_iedb_results/toxinpred_analysis.csv', 'a') as f:
+                        writer = csv.writer(f)
+                        writer.writerow(toxinpred_write_to_file)
     
     print("Toxinpred toxicity analysis done")
 
@@ -766,9 +838,22 @@ def expasy_and_solubility(list_of_epitopes, linear = 'Yes'):
 
     expasy_results = []
     protein_sol_results = []
+
+    columns_to_add = ['peptide', '(-)_charged_residues (asp+glu)','(+)_charged_residues (arg+lys)', 'half_life_hours (mammalian reticulocytes, in vitro)', 
+    'aliphatic_index']
+    with open('analysis_iedb_results/expasy_analysis.csv', 'a') as f:
+        writer = csv.writer(f)
+        writer.writerow(columns_to_add)
+
     aa_composition_results = [['peptide', 'Ala (A)', 'Arg (R)', 'Asn (N)', 'Asp (D)', 'Cys (C)', 'Gln (Q)', 'Glu (E)', 'Gly (G)', 'His (H)', 'Ile (I)', 'Leu (L)'
     , 'Lys (K)', 'Met (M)', 'Phe (F)', 'Pro (P)', 'Ser (S)', 'Thr (T)', 'Trp (W)', 'Tyr (Y)', 'Val (V)', 'Pyl (O)', 'Sec (U)']]
     atomic_composition_results = [['peptide', 'Carbon (C)', 'Hydrogen (H)', 'Nitrogen (N)', 'Oxygen (O)', 'Sulfur (S)']]
+    with open('analysis_iedb_results/iter_aa_composition_analysis.csv', 'a') as f:
+        writer = csv.writer(f)
+        writer.writerow(aa_composition_results[0])
+    with open('analysis_iedb_results/iter_atomic_composition_analysis.csv', 'a') as f:
+        writer = csv.writer(f)
+        writer.writerow(atomic_composition_results[0])
 
     options = Options()
     options.headless = True
@@ -777,6 +862,7 @@ def expasy_and_solubility(list_of_epitopes, linear = 'Yes'):
 
     for index, seq in enumerate(list_of_epitopes):
         try:
+            print("Analysing sequence with expasy: ", seq)
             expasy = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
             wait_expasy = WebDriverWait(expasy, 60)
             expasy.get(expasy_url)
@@ -823,11 +909,19 @@ def expasy_and_solubility(list_of_epitopes, linear = 'Yes'):
                 aa_row.append(cell[2])
             aa_composition_results.append(aa_row)
 
+            with open('analysis_iedb_results/iter_aa_composition_analysis.csv', 'a') as f:
+                writer = csv.writer(f)
+                writer.writerow(aa_row)
+
             atomic_row = [seq]
             for i in range(len(atomic_composition)):
                 cell = atomic_composition[i].split()
                 atomic_row.append(cell[2])
             atomic_composition_results.append(atomic_row)
+
+            with open('analysis_iedb_results/iter_atomic_composition_analysis.csv', 'a') as f:
+                writer = csv.writer(f)
+                writer.writerow(aa_row)
 
             expasy_row = []
             expasy_row.append(neg_residues[-1])
@@ -835,8 +929,15 @@ def expasy_and_solubility(list_of_epitopes, linear = 'Yes'):
             expasy_row.append(half_life[4].split()[4])
             expasy_row.append(float(aliphatic_index.split()[2]))
             expasy_results.append(expasy_row)
+
+            expasy_row.insert(0, seq)
+            with open('analysis_iedb_results/expasy_analysis.csv', 'a') as f:
+                writer = csv.writer(f)
+                writer.writerow(expasy_row)
             
         except:
+            print(seq + " expasy failed")
+
             none_list = [None] * 4
             expasy_results.append(none_list)
 
@@ -880,11 +981,18 @@ def expasy_and_solubility(list_of_epitopes, linear = 'Yes'):
 
 
 def pepstats(list_of_sequences):
-        
+    
+    columns_to_add = ['peptide', 'tiny_aa_percentage', 'small_aa_percentage', 'aliphatic_aa_percentage', 'aromatic_aa_percentage', 'non_polar_aa_percentage', 'polar_aa_percentage', 
+    'charged_aa_percentage', 'basic_aa_percentage', 'acidic_aa_percentage']
+    with open('analysis_iedb_results/pepstats_analysis.csv', 'a') as f:
+        writer = csv.writer(f)
+        writer.writerow(columns_to_add)
+
     pepstats_results = []
     for seq in list_of_sequences:
 
         try:
+            print("Analysing sequence with pepstats: ", seq)
             os.system(
                 'python embosspepstats.py --email erald.bb@gmail.com --sequence ' + seq + ' --outfile pepstats_results --quiet')
             # python embosspepstats.py --email erald.bb@gmail.com --sequence SVDCNMYICGDSTEC --outfile pepstats_results --quiet
@@ -914,14 +1022,20 @@ def pepstats(list_of_sequences):
                 results_row.append(charged_aa)
                 results_row.append(basic_aa)
                 results_row.append(acidic_aa)
-                results_row.append(exp_inclusion_bodies)
+                #results_row.append(exp_inclusion_bodies)
 
                 pepstats_results.append(results_row)
+            
+            results_row.insert(0, seq)
+            with open('analysis_iedb_results/pepstats_analysis.csv', 'a') as f:
+                writer = csv.writer(f)
+                writer.writerow(results_row)
 
             os.remove(os.getcwd()+"/pepstats_results.out.txt")
             os.remove(os.getcwd()+"/pepstats_results.sequence.txt")
 
         except:
+            print(seq + " pepstats failed")
             none_pepstats_row = []
             for i in range(10):
                 none_pepstats_row.append(None)
@@ -994,22 +1108,22 @@ def analyse_all(tuple_inputs):
     # conservancy()
     # try_population_coverage()
 
-    algpred_results = algpred(algpred_chunks)
-    try:
-        for i in range(len(analysis_results)):
-            analysis_results[i].append(algpred_results[i])
-    except:
-        pass
+    # algpred_results = algpred(algpred_chunks)
+    # try:
+    #     for i in range(len(analysis_results)):
+    #         analysis_results[i].append(algpred_results[i])
+    # except:
+    #     pass
 
-    toxinpred_results = toxinpred(toxinpred_chunks, toxinpred_excluded_indexes)
-    try:
-        for i in range(len(analysis_results)):
-            for n in range(len(toxinpred_results[i])):
-                analysis_results[i].append(toxinpred_results[i][n])
-    except:
-        pass
+    # toxinpred_results = toxinpred(toxinpred_chunks, toxinpred_excluded_indexes)
+    # try:
+    #     for i in range(len(analysis_results)):
+    #         for n in range(len(toxinpred_results[i])):
+    #             analysis_results[i].append(toxinpred_results[i][n])
+    # except:
+    #     pass
 
-    #discontinous_expasy = expasy_and_solubility(list_of_all_nonlinear_epitopes, linear = 'No')
+    # #discontinous_expasy = expasy_and_solubility(list_of_all_nonlinear_epitopes, linear = 'No')
     expasy_linear_results = expasy_and_solubility(list_of_linear_epitopes)
     try:
         for i in range(len(analysis_results)):
@@ -1029,10 +1143,10 @@ def analyse_all(tuple_inputs):
         print("Pepstats analysis done")
     except:
         print("Pepstats failed")
-    print(analysis_results)
+    # print(analysis_results)
 
 
-    os.remove(os.getcwd()+"/seq_file.txt")
+    os.remove(os.getcwd()+"/iedb_seq_file.txt")
     # os.remove(os.getcwd()+"/pop_cov_file.txt")
     # os.remove(os.getcwd()+"/immunogenicity_file.txt")
     # os.remove(os.getcwd()+"/cluster_file.txt")
@@ -1047,17 +1161,17 @@ def make_csv_from_results(results_from_prediction, results_from_analysis):
 
     """The returned results from the analysis are added to the lists of prediction and saved as csv files for each different method."""
 
-    columns_to_add = ['peptide', 'mol_weight', 'isoelectric_point', 'aromaticity','instability_index','helix_2_struc', 'turn_2_struc', 'sheet_2_struc', 'reduces_cys', 'disulfide_bridge',
-    'hydropathicity', 'charge_at_pH7', 'antigenicity_score', 'antigen_prediction', 'allergen_prediction','toxinpred_svm_score', 'toxicity_prediction', 'hydrophobicity', 'steric_hinderance',
-    'sidebulk', 'amphipathicity', 'hydrophilicity', 'net_hydrogen','(-)_charged_residues (asp+glu)','(+)_charged_residues (arg+lys)', 'half_life_hours (mammalian reticulocytes, in vitro)', 
-    'aliphatic_index', 'tiny_aa_percentage', 'small_aa_percentage', 'aliphatic_aa_percentage', 'aromatic_aa_percentage', 'non_polar_aa_percentage', 'polar_aa_percentage', 
-    'charged_aa_percentage', 'basic_aa_percentage', 'acidic_aa_percentage', 'improbability_of_expression_in_inclusion_bodies']
-
     # columns_to_add = ['peptide', 'mol_weight', 'isoelectric_point', 'aromaticity','instability_index','helix_2_struc', 'turn_2_struc', 'sheet_2_struc', 'reduces_cys', 'disulfide_bridge',
     # 'hydropathicity', 'charge_at_pH7', 'antigenicity_score', 'antigen_prediction', 'allergen_prediction','toxinpred_svm_score', 'toxicity_prediction', 'hydrophobicity', 'steric_hinderance',
     # 'sidebulk', 'amphipathicity', 'hydrophilicity', 'net_hydrogen','(-)_charged_residues (asp+glu)','(+)_charged_residues (arg+lys)', 'half_life_hours (mammalian reticulocytes, in vitro)', 
-    # 'aliphatic_index', 'solubility', 'tiny_aa_percentage', 'small_aa_percentage', 'aliphatic_aa_percentage', 'aromatic_aa_percentage', 'non_polar_aa_percentage', 'polar_aa_percentage', 
+    # 'aliphatic_index', 'tiny_aa_percentage', 'small_aa_percentage', 'aliphatic_aa_percentage', 'aromatic_aa_percentage', 'non_polar_aa_percentage', 'polar_aa_percentage', 
     # 'charged_aa_percentage', 'basic_aa_percentage', 'acidic_aa_percentage', 'improbability_of_expression_in_inclusion_bodies']
+
+    columns_to_add = ['peptide', 'mol_weight', 'isoelectric_point', 'aromaticity','instability_index','helix_2_struc', 'turn_2_struc', 'sheet_2_struc', 'reduces_cys', 'disulfide_bridge',
+    'hydropathicity', 'charge_at_pH7', 'antigenicity_score', 'antigen_prediction', '(-)_charged_residues (asp+glu)','(+)_charged_residues (arg+lys)', 'half_life_hours (mammalian reticulocytes, in vitro)', 
+    'aliphatic_index', 'tiny_aa_percentage', 'small_aa_percentage', 'aliphatic_aa_percentage', 'aromatic_aa_percentage', 'non_polar_aa_percentage', 'polar_aa_percentage', 
+    'charged_aa_percentage', 'basic_aa_percentage', 'acidic_aa_percentage']
+
 
     # Divide results_from_analysis into 11 lists
     results_lists = []

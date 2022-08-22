@@ -236,6 +236,12 @@ def make_inputs_for_analysis(results_from_prediction, list_of_swissprot_ids):
 
 def protparam(list_of_linear_epitopes):
 
+    columns_to_add = ['peptide', 'mol_weight', 'isoelectric_point', 'aromaticity','instability_index','helix_2_struc', 'turn_2_struc', 'sheet_2_struc', 'reduces_cys', 'disulfide_bridge',
+    'hydropathicity', 'charge_at_pH7']
+    with open('analysis_results/protparam_analysis.csv', 'a') as f:
+            writer = csv.writer(f)
+            writer.writerow(columns_to_add)
+
     output_list = []
     for index, epitope in enumerate(list_of_linear_epitopes):
         row = []
@@ -265,6 +271,10 @@ def protparam(list_of_linear_epitopes):
         #row.extend((mol_weight, isoel_point, aromaticity, insta_index, helix_2_struc, turn_2_struc, sheet_2_struc, reduCys, disulfBridge, hydropathicity, flexibility, chpH))
         row.extend((mol_weight, isoel_point, aromaticity, insta_index, helix_2_struc, turn_2_struc, sheet_2_struc, reduCys, disulfBridge, hydropathicity, chpH))
         output_list.insert(index, row)
+        row.insert(0,epitope)
+        with open('analysis_results/protparam_analysis.csv', 'a') as f:
+            writer = csv.writer(f)
+            writer.writerow(row)
 
     print("Protparam analysis done")
     return output_list
@@ -297,6 +307,11 @@ def immunogenicity():
 
 def vaxijen():
 
+    columns_to_add = ['antigenicity_score', 'antigen_prediction']
+    with open('analysis_results/vaxijen_analysis.csv', 'a') as f:
+            writer = csv.writer(f)
+            writer.writerow(columns_to_add)
+
     options = Options()
     options.headless = True
     try:
@@ -325,6 +340,10 @@ def vaxijen():
                 else:
                     result.append('Probable Non-Antigen')
                 vaxijen_results.append(result)
+
+        with open('analysis_results/vaxijen_analysis.csv', 'a') as f:
+            writer = csv.writer(f)
+            writer.writerows(vaxijen_results)
         print("Vaxijen antigenicity analysis done")
         return vaxijen_results
     except:
@@ -620,9 +639,22 @@ def expasy_and_solubility(list_of_epitopes, linear = 'Yes'):
 
     expasy_results = []
     protein_sol_results = []
+
+    columns_to_add = ['peptide', '(-)_charged_residues (asp+glu)','(+)_charged_residues (arg+lys)', 'half_life_hours (mammalian reticulocytes, in vitro)', 
+    'aliphatic_index']
+    with open('analysis_results/expasy_analysis.csv', 'a') as f:
+        writer = csv.writer(f)
+        writer.writerow(columns_to_add)
+
     aa_composition_results = [['peptide', 'Ala (A)', 'Arg (R)', 'Asn (N)', 'Asp (D)', 'Cys (C)', 'Gln (Q)', 'Glu (E)', 'Gly (G)', 'His (H)', 'Ile (I)', 'Leu (L)'
     , 'Lys (K)', 'Met (M)', 'Phe (F)', 'Pro (P)', 'Ser (S)', 'Thr (T)', 'Trp (W)', 'Tyr (Y)', 'Val (V)', 'Pyl (O)', 'Sec (U)']]
     atomic_composition_results = [['peptide', 'Carbon (C)', 'Hydrogen (H)', 'Nitrogen (N)', 'Oxygen (O)', 'Sulfur (S)']]
+    with open('analysis_results/iter_aa_composition_analysis.csv', 'a') as f:
+        writer = csv.writer(f)
+        writer.writerow(aa_composition_results[0])
+    with open('analysis_results/iter_atomic_composition_analysis.csv', 'a') as f:
+        writer = csv.writer(f)
+        writer.writerow(atomic_composition_results[0])
 
     options = Options()
     options.headless = True
@@ -631,6 +663,7 @@ def expasy_and_solubility(list_of_epitopes, linear = 'Yes'):
 
     for index, seq in enumerate(list_of_epitopes):
         try:
+            print("Analysing sequence with expasy: ", seq)
             expasy = webdriver.Firefox(options=options, executable_path = '../ScrapyEpitope/geckodriver')
             wait_expasy = WebDriverWait(expasy, 60)
             expasy.get(expasy_url)
@@ -677,11 +710,19 @@ def expasy_and_solubility(list_of_epitopes, linear = 'Yes'):
                 aa_row.append(cell[2])
             aa_composition_results.append(aa_row)
 
+            with open('analysis_results/iter_aa_composition_analysis.csv', 'a') as f:
+                writer = csv.writer(f)
+                writer.writerow(aa_row)
+
             atomic_row = [seq]
             for i in range(len(atomic_composition)):
                 cell = atomic_composition[i].split()
                 atomic_row.append(cell[2])
             atomic_composition_results.append(atomic_row)
+
+            with open('analysis_results/iter_atomic_composition_analysis.csv', 'a') as f:
+                writer = csv.writer(f)
+                writer.writerow(aa_row)
 
             expasy_row = []
             expasy_row.append(neg_residues[-1])
@@ -689,8 +730,15 @@ def expasy_and_solubility(list_of_epitopes, linear = 'Yes'):
             expasy_row.append(half_life[4].split()[4])
             expasy_row.append(float(aliphatic_index.split()[2]))
             expasy_results.append(expasy_row)
+
+            expasy_row.insert(0, seq)
+            with open('analysis_results/expasy_analysis.csv', 'a') as f:
+                writer = csv.writer(f)
+                writer.writerow(expasy_row)
             
         except:
+            print(seq + " expasy failed")
+
             none_list = [None] * 4
             expasy_results.append(none_list)
 
@@ -734,11 +782,18 @@ def expasy_and_solubility(list_of_epitopes, linear = 'Yes'):
 
 
 def pepstats(list_of_sequences):
-        
+    
+    columns_to_add = ['peptide', 'tiny_aa_percentage', 'small_aa_percentage', 'aliphatic_aa_percentage', 'aromatic_aa_percentage', 'non_polar_aa_percentage', 'polar_aa_percentage', 
+    'charged_aa_percentage', 'basic_aa_percentage', 'acidic_aa_percentage']
+    with open('analysis_results/pepstats_analysis.csv', 'a') as f:
+        writer = csv.writer(f)
+        writer.writerow(columns_to_add)
+
     pepstats_results = []
     for seq in list_of_sequences:
 
         try:
+            print("Analysing sequence with pepstats: ", seq)
             os.system(
                 'python embosspepstats.py --email erald.bb@gmail.com --sequence ' + seq + ' --outfile pepstats_results --quiet')
             # python embosspepstats.py --email erald.bb@gmail.com --sequence SVDCNMYICGDSTEC --outfile pepstats_results --quiet
@@ -771,11 +826,17 @@ def pepstats(list_of_sequences):
                 results_row.append(exp_inclusion_bodies)
 
                 pepstats_results.append(results_row)
+            
+            results_row.insert(0, seq)
+            with open('analysis_results/pepstats_analysis.csv', 'a') as f:
+                writer = csv.writer(f)
+                writer.writerow(results_row)
 
             os.remove(os.getcwd()+"/pepstats_results.out.txt")
             os.remove(os.getcwd()+"/pepstats_results.sequence.txt")
 
         except:
+            print(seq + " pepstats failed")
             none_pepstats_row = []
             for i in range(10):
                 none_pepstats_row.append(None)

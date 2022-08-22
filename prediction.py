@@ -60,7 +60,7 @@ def getStartEndPositions(pattern, seq):
     elif len(all_instances) == 0:
         return None
 
-    return (all_instances[0] + 1, all_instances[0] + 1 + len(pattern))
+    return (all_instances[0], all_instances[0] + len(pattern))
 
 def swissprotIDSequenceLength(list_of_swissprot_ids):
 
@@ -94,61 +94,29 @@ def mhci(conserved_sequences_dict, list_of_alleles, list_of_lengths):
     for key, value in conserved_sequences_dict.items():
         print("Predicting linear epitopes of protein " + key + " with MHCI")
         for conserved_sequence in value:
+            if len(conserved_sequence) <= 4000:
             
-            for allele in list_of_alleles:
-                time.sleep(10)
-                print(key, allele)
-                input_allele = []
-                for i in range(len(list_of_lengths)):
-                    input_allele.append(allele)
-                alleles = ",".join(input_allele)     
+                for allele in list_of_alleles:
+                    time.sleep(10)
+                    print(key, allele)
+                    input_allele = []
+                    for i in range(len(list_of_lengths)):
+                        input_allele.append(allele)
+                    alleles = ",".join(input_allele)     
 
-                if len(conserved_sequence) >= max(list_of_lengths):
-                    
-                    try:
-
-                        headers = {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        }
+                    if len(conserved_sequence) >= max(list_of_lengths):
                         
-                        data = 'method=recommended&sequence_text=' + conserved_sequence + '&allele=' + alleles + '&length=' + lengths
-                        
-                        response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/mhci/', headers=headers, data=data)
-                        response_data_split_by_line = response.content.decode('utf-8').splitlines()
-                        
-                        response_body = []
-                        for line in response_data_split_by_line:
-                            split_line = line.split("\t")
-                            response_body.append(split_line)
-
-                        df = pd.DataFrame(response_body[1:], columns=response_body[0])
-                        df["percentile_rank"] = pd.to_numeric(df["percentile_rank"], errors='coerce')
-                        df = df.loc[df['percentile_rank'] <= 1]
-
-                        if df.empty == True:
-                            #print("No epitopes predicted for protein " + key + " with sequence length " + str(len(conserved_sequence)) + " and allele " + allele)
-                            continue
-                        else:
-                            rows = [[i for i in row[1:]] for row in df.itertuples()]
-                            for i in rows:
-                                i = [key] + [conserved_sequence] + i
-                                mhci_results.append(i)
-
-                    except:
-                        
-                        #print("Retrying prediction of linear epitopes of protein " + key + " and allele " + allele + " with MHCI")
-
                         try:
 
                             headers = {
                                 'Content-Type': 'application/x-www-form-urlencoded',
                             }
-                    
+                            
                             data = 'method=recommended&sequence_text=' + conserved_sequence + '&allele=' + alleles + '&length=' + lengths
-                    
+                            
                             response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/mhci/', headers=headers, data=data)
                             response_data_split_by_line = response.content.decode('utf-8').splitlines()
-                    
+                            
                             response_body = []
                             for line in response_data_split_by_line:
                                 split_line = line.split("\t")
@@ -159,17 +127,53 @@ def mhci(conserved_sequences_dict, list_of_alleles, list_of_lengths):
                             df = df.loc[df['percentile_rank'] <= 1]
 
                             if df.empty == True:
-                                #print("No epitopes predicted for protein " + key + " with sequence length " + str(len(conserved_sequence))  + " and allele " + allele)
+                                #print("No epitopes predicted for protein " + key + " with sequence length " + str(len(conserved_sequence)) + " and allele " + allele)
                                 continue
                             else:
                                 rows = [[i for i in row[1:]] for row in df.itertuples()]
                                 for i in rows:
                                     i = [key] + [conserved_sequence] + i
                                     mhci_results.append(i)
-                        
+
                         except:
-                            print("Epitope prediction for protein " + key + " with sequence length " + str(len(conserved_sequence)) + " and allele " + allele + " failed")
-                            continue
+                            
+                            #print("Retrying prediction of linear epitopes of protein " + key + " and allele " + allele + " with MHCI")
+
+                            try:
+
+                                headers = {
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                }
+                        
+                                data = 'method=recommended&sequence_text=' + conserved_sequence + '&allele=' + alleles + '&length=' + lengths
+                        
+                                response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/mhci/', headers=headers, data=data)
+                                response_data_split_by_line = response.content.decode('utf-8').splitlines()
+                        
+                                response_body = []
+                                for line in response_data_split_by_line:
+                                    split_line = line.split("\t")
+                                    response_body.append(split_line)
+
+                                df = pd.DataFrame(response_body[1:], columns=response_body[0])
+                                df["percentile_rank"] = pd.to_numeric(df["percentile_rank"], errors='coerce')
+                                df = df.loc[df['percentile_rank'] <= 1]
+
+                                if df.empty == True:
+                                    #print("No epitopes predicted for protein " + key + " with sequence length " + str(len(conserved_sequence))  + " and allele " + allele)
+                                    continue
+                                else:
+                                    rows = [[i for i in row[1:]] for row in df.itertuples()]
+                                    for i in rows:
+                                        i = [key] + [conserved_sequence] + i
+                                        mhci_results.append(i)
+                            
+                            except:
+                                print("Epitope prediction for protein " + key + " with sequence length " + str(len(conserved_sequence)) + " and allele " + allele + " failed")
+                                continue
+            else:
+                print("Protein too long.")
+                continue
 
     with open('epitope_prediction_results/mhci_epitopes.csv', 'w', newline="") as f: 
         writer = csv.writer(f)
@@ -195,47 +199,16 @@ def mhci_proc(conserved_sequences_dict, list_of_alleles, list_of_lengths):
     for key, value in conserved_sequences_dict.items():
         print("Predicting linear epitopes of protein " + key + " with MHCI Processing")
         for conserved_sequence in value:
+            if len(conserved_sequence) <= 4000:
+                for allele in list_of_alleles:
+                    time.sleep(10)
+                    print(key, allele)
+                    input_allele = []
+                    for i in range(len(list_of_lengths)):
+                        input_allele.append(allele)
+                    alleles = ",".join(input_allele)
 
-            for allele in list_of_alleles:
-                time.sleep(10)
-                print(key, allele)
-                input_allele = []
-                for i in range(len(list_of_lengths)):
-                    input_allele.append(allele)
-                alleles = ",".join(input_allele)
-
-                if len(conserved_sequence) >= max(list_of_lengths):
-                    
-                    try:
-                        headers = {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        }
-                        
-                        data = 'method=recommended&sequence_text=' + conserved_sequence + '&allele=' + alleles + '&length=' + lengths
-                        
-                        response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/processing/', headers=headers, data=data)
-                        response_data_split_by_line = response.content.decode('utf-8').splitlines()
-                        
-                        response_body = []
-                        for line in response_data_split_by_line:
-                            split_line = line.split("\t")
-                            response_body.append(split_line)
-                        
-                        df = pd.DataFrame(response_body[1:], columns=response_body[0])
-                        df["total_score"] = pd.to_numeric(df["total_score"])
-                        df = df.loc[df['total_score'] > 0]
-
-                        if df.empty == True:
-                            #print("No epitopes predicted for protein " + key + " with sequence length " + str(len(conserved_sequence)) + " and allele " + allele)
-                            continue
-                        else:
-                            rows = [[i for i in row[1:]] for row in df.itertuples()]
-                            for i in rows:
-                                i = [key] + [conserved_sequence] + i
-                                mhci_proc_results.append(i)
-                    except:
-
-                        #print("Retrying prediction of linear epitopes of protein " + key + " and allele " + allele + " with MHCI")
+                    if len(conserved_sequence) >= max(list_of_lengths):
                         
                         try:
                             headers = {
@@ -252,23 +225,57 @@ def mhci_proc(conserved_sequences_dict, list_of_alleles, list_of_lengths):
                                 split_line = line.split("\t")
                                 response_body.append(split_line)
                             
-                            
                             df = pd.DataFrame(response_body[1:], columns=response_body[0])
                             df["total_score"] = pd.to_numeric(df["total_score"])
                             df = df.loc[df['total_score'] > 0]
 
                             if df.empty == True:
-                                #print("No epitopes predicted for protein " + key + " with sequence length " + str(len(conserved_sequence))  + " and allele " + allele)
+                                #print("No epitopes predicted for protein " + key + " with sequence length " + str(len(conserved_sequence)) + " and allele " + allele)
                                 continue
                             else:
                                 rows = [[i for i in row[1:]] for row in df.itertuples()]
                                 for i in rows:
                                     i = [key] + [conserved_sequence] + i
                                     mhci_proc_results.append(i)
-
                         except:
-                            print("Epitope prediction for protein " + key + " with sequence length " + str(len(conserved_sequence)) + " and allele " + allele + " failed")
-                            continue
+
+                            #print("Retrying prediction of linear epitopes of protein " + key + " and allele " + allele + " with MHCI")
+                            
+                            try:
+                                headers = {
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                }
+                                
+                                data = 'method=recommended&sequence_text=' + conserved_sequence + '&allele=' + alleles + '&length=' + lengths
+                                
+                                response = requests.post('http://tools-cluster-interface.iedb.org/tools_api/processing/', headers=headers, data=data)
+                                response_data_split_by_line = response.content.decode('utf-8').splitlines()
+                                
+                                response_body = []
+                                for line in response_data_split_by_line:
+                                    split_line = line.split("\t")
+                                    response_body.append(split_line)
+                                
+                                
+                                df = pd.DataFrame(response_body[1:], columns=response_body[0])
+                                df["total_score"] = pd.to_numeric(df["total_score"])
+                                df = df.loc[df['total_score'] > 0]
+
+                                if df.empty == True:
+                                    #print("No epitopes predicted for protein " + key + " with sequence length " + str(len(conserved_sequence))  + " and allele " + allele)
+                                    continue
+                                else:
+                                    rows = [[i for i in row[1:]] for row in df.itertuples()]
+                                    for i in rows:
+                                        i = [key] + [conserved_sequence] + i
+                                        mhci_proc_results.append(i)
+
+                            except:
+                                print("Epitope prediction for protein " + key + " with sequence length " + str(len(conserved_sequence)) + " and allele " + allele + " failed")
+                                continue
+            else:
+                print("Protein too long.")
+                continue
 
 
     with open('epitope_prediction_results/mhci_proc_epitopes.csv', 'w', newline="") as f:
