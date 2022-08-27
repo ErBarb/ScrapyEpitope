@@ -14,6 +14,8 @@ import re
 from collections import defaultdict
 import itertools
 import matplotlib.pyplot as plt
+from scipy.interpolate import make_interp_spline
+import numpy as np
 
 
 def get_pdb_from_swissprot(list_of_swissprot_ids):
@@ -1976,11 +1978,106 @@ def dssp_analysis(list_of_pdb_ids):
                 os.makedirs(final_directory)
 
             lst = list(range(1,len(dssp_only_table)+1))
-            plt.plot(lst, acc_results)
+
+            df_discotope = pd.read_csv('epitope_prediction_results/discotope_epitopes.csv')
+            df_discotope = df_discotope.loc[(df_discotope['pdb_id'] == '6VSB')]
+            discotope_epitopes = df_discotope['peptide'].tolist()
+            df_ellipro = pd.read_csv('epitope_prediction_results/ellipro_discontinous_epitopes.csv')
+            df_ellipro = df_ellipro.loc[(df_ellipro['pdb_id'] == '6VSB')]
+            ellipro_epitopes = df_ellipro['peptide'].tolist()
+            print(discotope_epitopes)
+            print(ellipro_epitopes)
+
+            all_epitopes = []
+            for i in discotope_epitopes:
+                epitope_lst = i.split(',')
+                for pos in epitope_lst:
+                    all_epitopes.append(int(pos[1:]))
+            for i in ellipro_epitopes:
+                epitope_lst = i.split(',')
+                for pos in epitope_lst:
+                    all_epitopes.append(int(pos[1:]))
+            print(all_epitopes)
+
+            count = []
+            # for e in all_epitopes:
+            #     nr = all_epitopes.count(e)
+            #     count.append(nr)
+            
+            
+            print(len(count))
+            print(len(all_epitopes))
+
+
+            # count = [0]*len(lst)
+            # for i in range(0,len(start_pos)):
+            #         for j in range(start_pos[i],end_pos[i]):
+            #             count[j] = count[j]+1
+
+
+            #print(lst)
+            print(lst)
+            # print(acc_results)
+            print(len(lst))
+            print(len(acc_results))
+            for i in range(len(lst)):
+                if i in all_epitopes:
+                    nr = all_epitopes.count(i)
+                    count.append(nr)
+                else:
+                    count.append(0)
+
+                # for e in range(len(all_epitopes)):
+                #     if lst[i] == all_epitopes[e]:
+                #         print(lst[i], all_epitopes[e])
+            print(count)
+                # if lst(i) in all_epitopes:
+                #     print(lst(i))
+                #     for e in all_epitopes:
+                #         nr = all_epitopes.count(e)
+                #         count.append(nr)
+                # else:
+                #     count.append(0)
+
+            plt.figure(figsize=(30, 5))
+            plt.plot(lst, acc_results, linewidth = 0.5)
             plt.ylabel('ACC')
             plt.xlabel('Residue #')
-            plt.savefig('dssp_acc_results/' + id + '.png')
+            #plt.savefig('dssp_acc_results/' + id + '.png')
+            #plt.clf()
+
+            x = np.array(lst)
+            y = np.array(acc_results)
+
+            X_Y_Spline = make_interp_spline(x, y)
+ 
+            # Returns evenly spaced numbers
+            # over a specified interval.
+            X_ = np.linspace(x.min(), x.max(), 250)
+            Y_ = X_Y_Spline(X_)
+            
+            # Plotting the Graph
+            plt.plot(X_, Y_, linewidth = 1)
+            plt.title("Plot Smooth Curve " + id + '.png')
+            plt.xlabel("X")
+            plt.ylabel("Y")
+            #plt.plot(all_epitopes, kind="barh")
+            #plt.savefig('dssp_acc_results/Plot Smooth Curve of ' + id + '.png')
+            plt.show()
+            
+            # X_ = np.linspace(x.min(), x.max(), 500)
+            # Y_ = X_Y_Spline(X_)
+            
+            # # Plotting the Graph
+            # #plt.plot(X_, Y_, linewidth = 1)
+            # plt.title("Plot Smooth Curve " + id + '.png')
+            # plt.xlabel("X")
+            # plt.ylabel("Y")
+            # #plt.plot(all_epitopes, kind="barh")
+            # plt.savefig('dssp_acc_results/Plot Smooth Curve of ' + id + '.png')
+            
             plt.clf()
+            #plt.show()
 
         except:
             print("Failed to fetch DSSP output for: " + id)
