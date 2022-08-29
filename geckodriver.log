@@ -1,0 +1,37 @@
+1661776882867	geckodriver	INFO	Listening on 127.0.0.1:38743
+1661776883375	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "51555" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileZsoLWm"
+*** You are running in headless mode.
+1661776916533	geckodriver	INFO	Listening on 127.0.0.1:53095
+1661776916548	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "59483" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilexquzA0"
+*** You are running in headless mode.
+1661776918308	Marionette	INFO	Marionette enabled
+1661776918331	Marionette	INFO	Listening on port 36419
+WebDriver BiDi listening on ws://localhost:59483
+Read port: 36419
+1661776924929	geckodriver	INFO	Listening on 127.0.0.1:60907
+1661776924939	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "52053" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofile9azzrr"
+*** You are running in headless mode.
+1661776925929	Marionette	INFO	Marionette enabled
+1661776925939	Marionette	INFO	Listening on port 36885
+Read port: 36885
+WebDriver BiDi listening on ws://localhost:52053
+1661776926164	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+1661776966250	geckodriver	INFO	Listening on 127.0.0.1:54099
+1661776966266	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "54455" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileFXWKyq"
+*** You are running in headless mode.
+1661776967127	Marionette	INFO	Marionette enabled
+1661776967137	Marionette	INFO	Listening on port 34583
+WebDriver BiDi listening on ws://localhost:54455
+Read port: 34583
+1661776967407	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+1661776973675	geckodriver	INFO	Listening on 127.0.0.1:43315
+1661776973685	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "50795" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileSDyNYj"
+*** You are running in headless mode.
+1661776974587	Marionette	INFO	Marionette enabled
+1661776974595	Marionette	INFO	Listening on port 33105
+WebDriver BiDi listening on ws://localhost:50795
+Read port: 33105
+1661776974794	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+1661776979197	geckodriver	INFO	Listening on 127.0.0.1:53465
+1661776979212	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "--remote-debugging-port" "59009" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilesfX0fP"
+*** You are running in headless mode.
